@@ -1,0 +1,12 @@
+{
+  "name": "sign-tx",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "source .env && node index.js"
+  },
+  "dependencies": {
+    "alchemy-sdk": "^2.2.5"
+  }
+}
