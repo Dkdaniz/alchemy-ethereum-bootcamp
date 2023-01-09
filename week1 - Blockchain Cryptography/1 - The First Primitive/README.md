@@ -1,20 +1,5 @@
 # The First Primitive
 
-## 🧪 Run Test
-
-Access this path in your terminal and run the following command:
-
-```bash
-yarn test
-```
-
-or 
-
-```bash
-yarn mocha ./src/test.js
-```
-
-
 ## 🏁 Your Goal: Find the Color
 
 Given a SHA256 hash, find the color input that would generate that hash. You can assume that all the hashes be generated only from colors provided in the COLORS array.
@@ -36,4 +21,18 @@ const bHash = sha256(bBytes);
 
 console.log(toHex(aHash) === toHex(aHash)); // true
 console.log(toHex(aHash) === toHex(bHash)); // fals
+```
+
+## 🧪 Run Test
+
+Access this path in your terminal and run the following command:
+
+```bash
+yarn test
+```
+
+or 
+
+```bash
+yarn mocha ./src/test.js
 ```
