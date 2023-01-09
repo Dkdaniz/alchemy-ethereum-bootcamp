@@ -3,7 +3,7 @@ const blocks = [];
 
 function mine() {
     const blocksSize = blocks.length;
-    const newBlock = {id: blocksSize}
+    const newBlock = {id: blocksSize};
     
     blocks.push(newBlock)
 }
@@ -16,4 +16,4 @@ module.exports = {
     addTransaction,
     mine,
     blocks
-};
+}
