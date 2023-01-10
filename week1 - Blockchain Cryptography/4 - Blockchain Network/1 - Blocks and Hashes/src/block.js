@@ -7,7 +7,7 @@ class Block {
     }
 
     toHash() {
-        return SHA256(this.data + this.previousHash)
+        return SHA256('')
     }
 }
 
