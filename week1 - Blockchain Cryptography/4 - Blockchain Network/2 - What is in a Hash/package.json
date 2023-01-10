@@ -14,8 +14,6 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "assert": "^2.0.0",
-    "chai": "^4.3.7",
-    "faker": "^6.6.6",
     "mocha": "^10.2.0"
   }
 }
