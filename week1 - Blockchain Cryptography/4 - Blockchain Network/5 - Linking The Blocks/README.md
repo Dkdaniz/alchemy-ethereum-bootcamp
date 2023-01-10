@@ -1,21 +1,28 @@
-# Target Difficulty
+# Previous Hash
 
-In bitcoin, the difficulty is adjusted every 2016 blocks, which is about every two weeks with the blocks being mined on average every 10 minutes.
+It's time to add one more `crucial` input to our block's hash calculation: the `hash of the previous block` in the chain.
 
-At that point, the difficulty is adjusted to attempt to keep the mining intervals around that 10 minute per block mark.
+<img src="../../../img/previousHash.png">
 
-## 🏁 Your Goal: Proof of Work
+This creates a chain where any change to the data of an earlier block will affect each subsequent block.
 
-Now it's time to actually `mine` the block. This is where we get the work part of proof of `work`!
+> 🔍 Let's take a look at what a change would do in [details](https://university.alchemy.com/course/ethereum/sc/5b3afd70d9f99763e5c4b4fe/stage/5b3fa85ad9f997a550e7ca2b?tab=details).
 
-1. In the `mine` function, prior to hashing the block, add a `nonce` property. This property should start at 0
-2. Keep changing the nonce until you find a hash that is less than the `TARGET_DIFFICULTY`
+## 🏁 Your Goal: Link Blocks
 
-You can compare a BigInt to another BigInt using the JavaScript comparison operators. You can convert from a hash to be a BigInt by:
+To link the blocks you have to accomplish two things:
+
+1. Add a previousHash property to each block. The value of this property should be the hash of the block `before it` in the chain.
+2. Use this previousHash property in the calculation of the block's hash.
+
+> 💡 **`Hint`**
+
+- A good spot to add the previousHash property on the block would be in the addBlock function, where a block is placed on the chain.
+- So far, the Block class in your Block.js file does not yet contain a previousHash property and currently only hashes this.data of a block - you must also include the block's this.previousHash property in the toHash function!
+- You can add multiple inputs to the SHA256 function by using the + operator, for example:
 
 ```js
-const hash = SHA256("example");
-const int = BigInt(`0x${hash}`);
+const hash = SHA256("dog" + "cat); // hash of dog and cat together
 ```
 
 ## 🧪 Run Test

@@ -1,22 +1,21 @@
-# Target Difficulty
+# Adding Data to the Hash
 
-In bitcoin, the difficulty is adjusted every 2016 blocks, which is about every two weeks with the blocks being mined on average every 10 minutes.
+Now it's time to add `data` to our hash. This will ensure that the block's hash is tied to its [contents](https://university.alchemy.com/course/ethereum/sc/5b3afd70d9f99763e5c4b4fe/stage/5b3b0b26d9f99763e5c4b518?tab=details!
 
-At that point, the difficulty is adjusted to attempt to keep the mining intervals around that 10 minute per block mark.
+## 🏁 Your Goal: Hash the Data
 
-## 🏁 Your Goal: Proof of Work
-
-Now it's time to actually `mine` the block. This is where we get the work part of proof of `work`!
-
-1. In the `mine` function, prior to hashing the block, add a `nonce` property. This property should start at 0
-2. Keep changing the nonce until you find a hash that is less than the `TARGET_DIFFICULTY`
-
-You can compare a BigInt to another BigInt using the JavaScript comparison operators. You can convert from a hash to be a BigInt by:
+When creating a new block, `data` will be passed to its constructor:
 
 ```js
-const hash = SHA256("example");
-const int = BigInt(`0x${hash}`);
+const block = new Block("Alice sent Bob 1 BTC");
+
+console.log( block.data ); // Alice sent Bob 1 BTC
 ```
+☝️ As shown above, let's add a data property to the Block.
+
+1. Add a constructor to our Block class that takes one argument data and assigns it to this.data
+
+2. Once you have added data to the block, use this data to calculate the block's hash in the toHash function!
 
 ## 🧪 Run Test
 

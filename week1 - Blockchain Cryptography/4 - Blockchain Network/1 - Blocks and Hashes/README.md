@@ -1,22 +1,15 @@
-# Target Difficulty
+# Blocks and Hashes
 
-In bitcoin, the difficulty is adjusted every 2016 blocks, which is about every two weeks with the blocks being mined on average every 10 minutes.
+Blockchain is aptly named! It is, in fact, a chain of blocks. 🅱️⛓️
 
-At that point, the difficulty is adjusted to attempt to keep the mining intervals around that 10 minute per block mark.
+Each block contains transactional data, some metadata describing the block itself, and a link to the previous block before it. These components are fed into a hash function to create a unique sequence of bits to represent the block.
+## 🏁 Your Goal: Return a Hash
 
-## 🏁 Your Goal: Proof of Work
+In your `Block.js` file, we have a class `Block`. Using the `SHA256` function from the [Crypto JS Library](https://university.alchemy.com/course/ethereum/sc/5b3afd70d9f99763e5c4b4fe/stage/5b3afdd3d9f99763e5c4b502?tab=details&scroll=Crypto-JS), return a valid hash in the `toHash` function.
 
-Now it's time to actually `mine` the block. This is where we get the work part of proof of `work`!
+For now, there's no need to hash anything in particular since the block contains none of the components we mentioned above.
 
-1. In the `mine` function, prior to hashing the block, add a `nonce` property. This property should start at 0
-2. Keep changing the nonce until you find a hash that is less than the `TARGET_DIFFICULTY`
-
-You can compare a BigInt to another BigInt using the JavaScript comparison operators. You can convert from a hash to be a BigInt by:
-
-```js
-const hash = SHA256("example");
-const int = BigInt(`0x${hash}`);
-```
+>🎨 Feel free to hash a message, your own name, or nothing at all! So long as it is a 64 character [hexidecimal](https://university.alchemy.com/course/ethereum/sc/5b3afd70d9f99763e5c4b4fe/stage/5b3afdd3d9f99763e5c4b502?tab=details&scroll=Hexadecimal) string you will pass this stage.
 
 ## 🧪 Run Test
 

@@ -1,22 +1,26 @@
-# Target Difficulty
+# Chain Validation
 
-In bitcoin, the difficulty is adjusted every 2016 blocks, which is about every two weeks with the blocks being mined on average every 10 minutes.
+Blockchains are run by a network of computers. When a computer finds a new block, it broadcasts its new version of the blockchain to all of its peers. There may be multiple versions of the blockchain at any given time. However, the `longest valid blockchain` is the accepted one.
 
-At that point, the difficulty is adjusted to attempt to keep the mining intervals around that 10 minute per block mark.
+> 🔍 Let's take a closer look at the logic behind this in [details](https://university.alchemy.com/course/ethereum/sc/5b3afd70d9f99763e5c4b4fe/stage/5b3bb51dd9f997b30859bb81?tab=details).
 
-## 🏁 Your Goal: Proof of Work
+## 🏁 Your Goal: Create an isValid Function
 
-Now it's time to actually `mine` the block. This is where we get the work part of proof of `work`!
+1. Create a function called `isValid` on our `Blockchain` that will return `true` or `false` if a block is valid or invalid respectively
 
-1. In the `mine` function, prior to hashing the block, add a `nonce` property. This property should start at 0
-2. Keep changing the nonce until you find a hash that is less than the `TARGET_DIFFICULTY`
+2. `isValid` should check the integrity of every block in its chain by looking at each block's previousHash field and making sure that it is equal to the hash of the block before it
 
-You can compare a BigInt to another BigInt using the JavaScript comparison operators. You can convert from a hash to be a BigInt by:
+> To compare the output of the `SHA256` function you will need to convert it into a string (`.toString`) before comparing. Example:
 
 ```js
-const hash = SHA256("example");
-const int = BigInt(`0x${hash}`);
+const hash1 = SHA256("a");
+const hash2 = SHA256("a");
+
+console.log(hash1 === hash2); // false
+console.log(hash1.toString() === hash2.toString()); // true
 ```
+
+> 👀 Notice that first one is `false`! These two are objects and are compared by `reference` which is why we need to convert it to a string!
 
 ## 🧪 Run Test
 

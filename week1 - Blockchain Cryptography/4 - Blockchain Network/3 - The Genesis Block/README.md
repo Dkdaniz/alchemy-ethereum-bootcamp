@@ -1,22 +1,14 @@
-# Target Difficulty
+# Blockchain Time
 
-In bitcoin, the difficulty is adjusted every 2016 blocks, which is about every two weeks with the blocks being mined on average every 10 minutes.
+We have a new file: `Blockchain.js`. How exciting! 😁
 
-At that point, the difficulty is adjusted to attempt to keep the mining intervals around that 10 minute per block mark.
+This stage is going to focus on adding the first block to our new Blockchain class! The first block is often referred to as the [Genesis Block](https://university.alchemy.com/course/ethereum/sc/5b3afd70d9f99763e5c4b4fe/stage/5b3ba85bd9f997b30859bb70?tab=details).
 
-## 🏁 Your Goal: Proof of Work
+## 🏁 Your Goal: Add the Genesis Block
 
-Now it's time to actually `mine` the block. This is where we get the work part of proof of `work`!
+The `Blockchain.js` file contains the `Blockchain` class with a `chain` array. Let's add the **`Genesis Block`** to this array.
 
-1. In the `mine` function, prior to hashing the block, add a `nonce` property. This property should start at 0
-2. Keep changing the nonce until you find a hash that is less than the `TARGET_DIFFICULTY`
-
-You can compare a BigInt to another BigInt using the JavaScript comparison operators. You can convert from a hash to be a BigInt by:
-
-```js
-const hash = SHA256("example");
-const int = BigInt(`0x${hash}`);
-```
+Create a `new Block` in the Blockchain constructor then add it to the `chain` array.
 
 ## 🧪 Run Test
 
