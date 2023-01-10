@@ -6,7 +6,7 @@
   "author": "<daniel@descentralizado.com.br>",
   "license": "MIT",
   "scripts": {
-    "test": "yarn mocha ./src/hashTest.js"
+    "test": "yarn mocha ./src/blockchainTest.js"
   },
   "dependencies": {
     "crypto-js": "^4.1.1"
