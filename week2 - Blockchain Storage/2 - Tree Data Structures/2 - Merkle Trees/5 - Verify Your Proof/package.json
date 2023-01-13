@@ -1,0 +1,13 @@
+{
+  "name": "alchemy-ethereum-bootcamp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "yarn mocha ./src/testVerify.js"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0"
+  }
+}
