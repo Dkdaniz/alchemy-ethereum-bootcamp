@@ -3,6 +3,7 @@
 ## Activity Requirements
 
 [Apex Wallet](https://chrome.google.com/webstore/detail/apex-wallet/oppceojapmdmhpnmjpballbbdclocdhj): Browser extension wallet that provides key storage and secure account login, allows you to send transactions, and acts as a JSON-RPC gateway. We’ll be using Apex in these instructions but free to use any browser based wallet for this activity.
+
 [Alchemy University Discord](https://discord.com/invite/alchemy-university): Community of thousands of students learning web3 development together. We’ll be using the AU discord to make friends and send test Ether to for this activity!
 
 ## Setup
