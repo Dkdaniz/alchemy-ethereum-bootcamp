@@ -1,15 +1,24 @@
-# Get Balance
+# Let's Make Wallets
 
-Every Ethereum address has an associated balance. You can see this balance if you go to Etherscan: here's an [example address](https://etherscan.io/address/0xa57bd00134b2850b2a1c55860c9e9ea100fdd6cf).
+First task is simple: create two wallets!
+
+We're going to look at two different ways to instantiate a wallet: from a private key and from a mnemonic phrase.
 
 ## 🏁 Your Goal: Retrieve the Balance
 
-We're going to make another JSON-RPC call just like we did on the last stage! This time we're going to retrieve the balance of an address using [eth_getBalance](https://docs.alchemy.com/reference/eth-getbalance).
+In ethers.js you can create a [new wallet](https://docs.ethers.org/v5/api/signer/#Wallet-constructor) by invoking its constructor with a private key, or by using the `.fromMnemonic` method
 
-☝️ This method requires you to fill in two parameters: an address and a block number (or a block tag, which is one of the strings: `"pending"`, `"latest"`, `"safe"`,`"finalized"`, or `"earliest"` - you can learn more about blog tags on the [docs](https://docs.alchemy.com/reference/eth-getbalance)).
+Use this private key as a string to create the first wallet:
 
-1. Get the balance for the address passed into our `getBalance` function and return it
-2. We're going to want to get the balance as of the most recently mined block (`"latest"`)
+> "0xf2f48ee19680706196e2e339e5da3491186e0c4c5030670656b0e0164837257d"
+
+> ⚠️ **`Never use this private key to store anything on a mainnet!`** Once private keys have been shared publicly, they are no longer safe. In fact, there are machines watching activity on addresses with known private keys. If you send money to such an address, it will likely be gone in seconds!
+
+2. Pass these words to create the second wallet:
+
+> "plate lawn minor crouch bubble evidence palace fringe bamboo laptop dutch ice"
+
+> ⚠️ **`Be just as cautious with mnemonic phrases as you would be with private keys.`** Don't share a mnemonic phrase that is storing funds on the mainnet, and certainly don't use the one above for storing anything of value!
 
 ## 🧪 Run Test
 
