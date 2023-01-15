@@ -2,7 +2,7 @@ const { assert } = require('chai');
 const ethers = require('ethers');
 
 const { ganacheProvider } = require('./config');
-const sendEther = require('./sendEther');
+const sendEther = require('./findMyBalance');
 
 const provider = new ethers.providers.Web3Provider(ganacheProvider);
 describe('sendEther', () => {
