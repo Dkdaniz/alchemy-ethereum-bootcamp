@@ -94,3 +94,6 @@ If you found any issue in the solutions, feel free to raise it.
 |                                 |                                            |                                | 4 - Block Transactions         |             |
 |                                 |                                            |                                | 5 - Total Wei                  |             |
 |                                 |                                            |                                | 6 - Code a Transaction         | 1 - sign-tx |
+|                                 | 4 - Front-End Libraries                    |                                |                                |             |
+|                                 |                                            | 1 - Intro to Ethers.js         |                                |             |
+|                                 |                                            |                                | 1 - Making Wallets             |             |
