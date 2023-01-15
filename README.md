@@ -99,3 +99,4 @@ If you found any issue in the solutions, feel free to raise it.
 |                                 |                                            |                                | 1 - Making Wallets             |             |
 |                                 |                                            |                                | 2 - Sign a Transaction         |             |
 |                                 |                                            |                                | 3 - Connect to Ethereum        |             |
+|                                 |                                            |                                | 4 - Account Nonce              |             |
