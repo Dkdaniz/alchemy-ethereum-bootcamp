@@ -10,7 +10,6 @@ describe('findMyBalance', () => {
 
     it('should resolve with the initial balance', async () => {
         const balance = await findMyBalance(PRIVATE_KEY);
-        console.log(INITIAL_BALANCE, balance)
         assert(INITIAL_BALANCE.eq(balance));
     });
 });
