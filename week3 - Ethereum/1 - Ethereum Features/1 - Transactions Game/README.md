@@ -12,7 +12,7 @@
 
 For this activity we’ll use our wallet to connect to a test network on Ethereum. If you haven’t already installed a wallet, you can install the Apex wallet for free by following [these instructions](https://docs.alchemy.com/docs/how-to-create-an-apex-wallet). Remember to **`write down`** your seed phrase!
 
-> We love Apex! Why? [Here is an article on why we prefer this wallet](https://docs.alchemy.com/docs/why-use-apex-wallet). 👀
+> We love Apex! Why? [Here is an article on why we prefer this wallet](https://docs.alchemy.com/docs/why-use-apex-wallet?a=dkdaniz). 👀
 
 > ⚠️ **`Recommendation`** It is best practice to separate out your “testing” wallet used in development from your actual wallet that stores real funds. For this reason, we recommend either of the following options:
 
@@ -31,15 +31,16 @@ Once you have Apex installed, let's make sure to select the correct test network
 <img style="display: block; margin-left: auto; margin-right: auto;width: 50%;" src="https://media.giphy.com/media/uSc9pJnMU14GjYjJuK/giphy.gif" />
 
 ## 3. Acquire Goerli ETH
+
 Visit https://goerlifaucet.com/ and enter your wallet address to receive test ETH.
 
 > ✅ PRO Tip: Login with your Alchemy account to unlock even more test ETH.
 
 ## 4. How to send a transaction
+
 In your wallet, now toggled to Goerli Test Network...
 
 <img style="display: block; margin-left: auto; margin-right: auto;width: 50%;" src="https://media.giphy.com/media/4lo785RgKlEiAtKxCH/giphy.gif" />
-
 
 1. Select 'Send'
 2. In the 'Add Recipient' field, copy-paste the public key of the group member you want to tip
@@ -69,7 +70,7 @@ Like this:
 
 1. Scroll through this channel to see some of the other fun facts + addresses posted by fellow AU colleagues.
 
-3. If you see a fun fact that you like or resonates with you, send that person some Göerli ETH! (and send them a friend request!)
+2. If you see a fun fact that you like or resonates with you, send that person some Göerli ETH! (and send them a friend request!)
 
 Let's create an AU tipping economy on the Göerli Test Network!!!!
 

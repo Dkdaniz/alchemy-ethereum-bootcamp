@@ -14,7 +14,7 @@ The account nonce is simply a **`counter of all the transactions`** sent by an a
 
 Time to find the nonce for the account! It's up to you to find the correct method on this one. 🧐📖
 
-Use the [Ethereum API documentation](https://docs.alchemy.com/reference/ethereum-api-quickstart) and your knowledge from the section above to find the appropriate method! 🧠
+Use the [Ethereum API documentation](https://docs.alchemy.com/reference/ethereum-api-quickstart?a=dkdaniz) and your knowledge from the section above to find the appropriate method! 🧠
 
 Once you retrieve the nonce, return it.
 

@@ -2,7 +2,7 @@
 
 ## Activity Requirements
 
-**THE TIME HAS COME... TO SET UP AN [ALCHEMY](https://www.alchemy.com/?a=eth-bootcamp) ACCOUNT**
+**THE TIME HAS COME... TO SET UP AN [ALCHEMY](https://www.alchemy.com/?a=dkdaniz) ACCOUNT**
 
 <img style="display: block; margin-left: auto; margin-right: auto; width: 50%;" src="../../../gif/activityQueryEthereum.gif" />
 
@@ -12,11 +12,11 @@ Quick recap: **What does Alchemy do?** Alchemy is a web3 development platform th
 
 - creating an HTTP URL to an Ethereum node on the network of your choice
 - analytics for your web3 dApp
-- other development goodies like [Enhanced APIs](https://www.alchemy.com/enhanced-apis), the [NFT API](https://www.alchemy.com/nft-api) and the [Alchemy SDK](https://www.alchemy.com/sdk)
+- other development goodies like [Enhanced APIs](https://www.alchemy.com/enhanced-apis?a=dkdaniz), the [NFT API](https://www.alchemy.com/nft-api?a=dkdaniz) and the [Alchemy SDK](https://www.alchemy.com/sdk?a=dkdaniz)
 
 **Follow these steps below or check out [this video](https://www.youtube.com/watch?v=tfggWxfG9o0) to get set up with a RPC URL:**
 
-1. Go to [Alchemy](https://www.alchemy.com/?a=eth-bootcamp) and sign up for an account
+1. Go to [Alchemy](https://www.alchemy.com/?a=dkdaniz) and sign up for an account
 2. Once you are in the dashboard, select Create App
 3. Name your app and choose your app's settings (choose a testnet!)
 4. Select View Key
@@ -47,19 +47,21 @@ You can even try making a JSON-RPC request in your own command line. Open a term
 ```
 curl -X POST --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":83}' https://eth-mainnet.alchemyapi.io/v2/gZgOOh1X3cpVWXeVR9EL51zC1vpbggIF
 ```
+
 If you are running Windows, you will need to formulate this request just a bit differently by not using single quotes and escaping the inner double ones. Try running:
 
 ```
 curl -X POST --data “{\“jsonrpc\”:\”2.0\”,\”method\”:\”eth_blockNumber\”,\”params\”:[],\”id\”:83}” https://eth-mainnet.alchemyapi.io/v2/gZgOOh1X3cpVWXeVR9EL51zC1vpbggIF
 ```
+
 The response will look something like this:
 
 ```js
 {
     "jsonrpc": "2.0",
-    "id": 83, 
+    "id": 83,
     "result": "0xc30ba7" // block number in hex format, 12782503
-} 
+}
 ```
 
 Ethereum Full Nodes can provide access for queries and transactions by running a JSON-RPC API. You can form queries like: running transactions, querying address balances, or deploying a new contract! Very cool.
@@ -82,35 +84,38 @@ The [Ethereum JSON-RPC API](https://ethereum.org/en/developers/docs/apis/json-rp
 In the `index.js` file, copy-paste the following:
 
 ```js
-const axios = require('axios');
+const axios = require("axios");
 
 // copy-paste your URL provided in your Alchemy.com dashboard
 const ALCHEMY_URL = "";
 
-axios.post(ALCHEMY_URL, {
-  jsonrpc: "2.0",
-  id: 1,
-  method: "eth_getBlockByNumber",
-  params: [
-    "0xb443", // block 46147
-    false  // retrieve the full transaction object in transactions array
-  ]
-}).then((response) => {
-  console.log(response.data.result);
-});
+axios
+  .post(ALCHEMY_URL, {
+    jsonrpc: "2.0",
+    id: 1,
+    method: "eth_getBlockByNumber",
+    params: [
+      "0xb443", // block 46147
+      false, // retrieve the full transaction object in transactions array
+    ],
+  })
+  .then((response) => {
+    console.log(response.data.result);
+  });
 ```
-- Notice, you'll need to copy-paste your Alchemy HTTPS endpoint - if you haven't already done so, [check out this quick start guide](https://docs.alchemy.com/docs/alchemy-quickstart-guide) for more in-depth instructions on setting up Alchemy.
+
+- Notice, you'll need to copy-paste your Alchemy HTTPS endpoint - if you haven't already done so, [check out this quick start guide](https://docs.alchemy.com/docs/alchemy-quickstart-guide?a=dkdaniz) for more in-depth instructions on setting up Alchemy.
 
 > Feel free to choose whichever network you like today, including mainnet, as we will only be structuring READ-only queries.
 
 <img style="display: block; margin-left: auto; margin-right: auto; width: 50%;" src="../../../img/activityQueryEthereum.png" />
 
-Notice the script above is already set up with a request: [eth_getBlockByNumber](https://docs.alchemy.com/reference/eth-getblockbynumber).
+Notice the script above is already set up with a request: [eth_getBlockByNumber](https://docs.alchemy.com/reference/eth-getblockbynumber?a=dkdaniz).
 
 Try running it (remember to save the file!) by running `node index` - you should see the contents of mainnet block #46147 printed out on your console.
 
 2. Run the Axios Request With Another Method!
-Now that we have a file setup and it is successfully querying the Ethereum blockchain via JSON-RPC, pick a different method from the [Ethereum JSON-RPC API](https://docs.alchemy.com/reference/ethereum-api-quickstart) and plug it into your script!
+   Now that we have a file setup and it is successfully querying the Ethereum blockchain via JSON-RPC, pick a different method from the [Ethereum JSON-RPC API](https://docs.alchemy.com/reference/ethereum-api-quickstart?a=dkdaniz) and plug it into your script!
 
 Remember, you'll need to re-structure the script to account for the new method. Particularly, the `params` will most likely be different per method call.
 
@@ -130,9 +135,8 @@ Access ethereum-json-rpc-activity folder in your terminal and run the following 
 yarn start
 ```
 
-or 
+or
 
 ```bash
 source .env && node index.js
 ```
-

@@ -6,7 +6,7 @@ Has the transaction been processed on Ethereum? … No? 🤔
 
 Oh! **`We need to broadcast the transaction to the network`**! 💻➡️🌐
 
-It's time to connect to Ethereum! For this, we'll use an ethers.js provider . In our case we'll be connecting to a local ganache instance for testing purposes. If you wanted to connect to the mainnet, you could simply configure the provider to point at our [Alchemy API key](https://www.alchemy.com/).
+It's time to connect to Ethereum! For this, we'll use an ethers.js provider . In our case we'll be connecting to a local ganache instance for testing purposes. If you wanted to connect to the mainnet, you could simply configure the provider to point at our [Alchemy API key](https://alchemy.com/?a=dkdaniz).
 
 ## 🏁 Your Goal: Fill in the Properties
 
