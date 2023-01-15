@@ -101,3 +101,4 @@ If you found any issue in the solutions, feel free to raise it.
 |                                 |                                            |                                | 3 - Connect to Ethereum        |             |
 |                                 |                                            |                                | 4 - Account Nonce              |             |
 |                                 |                                            |                                | 5 - Find Balance               |             |
+|                                 |                                            |                                | 6 - Charitable Donations       |             |
