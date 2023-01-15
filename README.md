@@ -102,3 +102,5 @@ If you found any issue in the solutions, feel free to raise it.
 |                                 |                                            |                                | 4 - Account Nonce              |             |
 |                                 |                                            |                                | 5 - Find Balance               |             |
 |                                 |                                            |                                | 6 - Charitable Donations       |             |
+|                                 |                                            | 2 - Where is the Ether?        |                                |             |
+|                                 |                                            |                                | 1 - Project                    |             |
