@@ -34,6 +34,10 @@ Store true in the variable a and false in the value b.
 
 > 🔍 You'll see the **`checkmarks`** appear on your ABI Validations tab when you have successfully made two public variables `a` and `b`. Learn more about ABI Validations in details.
 
+## 🧪 Run Test
+
+Access this path in your terminal and run the following command:
+
 ```bash
 yarn test
 ```
