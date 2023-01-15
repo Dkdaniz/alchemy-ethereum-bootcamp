@@ -97,3 +97,4 @@ If you found any issue in the solutions, feel free to raise it.
 |                                 | 4 - Front-End Libraries                    |                                |                                |             |
 |                                 |                                            | 1 - Intro to Ethers.js         |                                |             |
 |                                 |                                            |                                | 1 - Making Wallets             |             |
+|                                 |                                            |                                | 2 - Sign a Transaction         |             |
