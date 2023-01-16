@@ -32,3 +32,17 @@ constructor(bool _isOpen) {
 
 1. Create a constructor which will take a `uint` as an argument.
 2. Store this `uint` value inside a public state variable called `x`.
+
+## 🧪 Run Test
+
+Access this path in your terminal and run the following command:
+
+```bash
+yarn test
+```
+
+or
+
+```bash
+yarn mocha ./src/test.js
+```

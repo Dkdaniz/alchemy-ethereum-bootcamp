@@ -21,3 +21,16 @@ Let's build on your code from the previous stage!
 
 Create an external function called `increment` that will add 1 to the state variable x.
 📖 Many of the shorthand operators we've become accustomed to in languages like JavaScript will also available in Solidity: `-=`, `*=`, `/=`, `%=`, `|=`, `&=`, `^=`, `++` and `--`.
+
+## 🧪 Run Test
+
+Access this path in your terminal and run the following command:
+
+```bash
+yarn test
+```
+or
+
+```bash
+yarn mocha ./src/test.js
+```
