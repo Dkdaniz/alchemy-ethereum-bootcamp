@@ -1,87 +1,34 @@
-# Variable Shadowing
-
-We're quite early in our Solidity lessons and we're already discussing **`Variable Shadowing`**. Yet this didn't come up in the JavaScript lessons. Was it still an issue? Let's think back. 💭
-
-# JavaScript
-
-In JavaScript we talked about variable **`scope`**. 🔭
-
-For example we know that `let` scopes a variable a block `{}`. If we tried to access that variable outside of the scope, we'd be out of luck!
-
-Let's see an example **`in JavaScript`**:
+# Solidity Arguments
+The first function we'll talk about is the constructor:
 
 ```js
-if(true) {
-    let a = "Hello World!";
-}
+bool public isOpen;
 
-console.log(a); // ReferenceError: a is not defined
-```
-
-☝️ Here, the JavaScript engine will throw a **`ReferenceError`** because `a` is restricted to the block scope after the if statement.
-
-So that's an example of **`variable scope`**. What about **`variable shadowing in JavaScript`**? 🤔
-
-Let's see another example:
-
-```js
-let a = "Hello World";
-
-if(true) {
-    let a = "Hello World 2";
-    console.log(a); // Hello World 2
+constructor() {
+    isOpen = true;
 }
 ```
 
-☝️ Here is a case where the outer `a` is shadowed by the inner `a` variable. At the c`onsole.log` line we don't have access to the outer a variable.
+☝️ Here we are setting the value of a state variable upon the contract's deployment.
 
-Kind of a silly example, to be honest! 😅
+> 📖 The **`constructor`** for Solidity contracts is quite similar to the **`constructor`** in classes of many object-oriented languages. The constructor function is invoked **`only once`** during the contract's deployment and never again. It is generally used for setting up initial contract values.
 
-Shadowing just doesn't come up that often in JavaScript naturally.
+What if we wanted to let the deployer of the contract decide the value of isOpen? 🤔
 
-Let's consider the `class` keyword:
-
-```js
-class Food {
-    constructor() {
-        this.name = "pizza"; 
-    }
-    changeName(name) {
-        // not shadowed! 
-        this.name = name;
-    }
-}
-```
-
-☝️ `this` is the **`big difference.`** 😉
-
-In JavaScript we use the `this` keyword to refer to member variables within the class. Even if we use the same parameter name it won't shadow it since we need to preface our member variable with `this`.
-
-# Solidity
-
-Now back to Solidity! In Solidity we are much more likely to see variable shadowing:
+We can **`pass an argument`** to our constructor! Let's see that in action:
 
 ```js
-string public name;
+bool public isOpen;
 
-constructor(string name) {
-    // name is shadowed!
+constructor(bool _isOpen) {
+    isOpen = _isOpen;
 }
 ```
+☝️ Check it out! Now the contract deployer can decide the value of isOpen.
 
-☝️ In this case the state variable `name` is shadowed by the parameter `name`!
+> 🔍 Notice how the parameter name (`_isOpen`) has an underscore in front of it? This prevents the variable from having the same name as the state variable. When the names collide it is referred to as variable shadowing. It can happen in Solidity quite often since we can refer to state variables without using `this`. Let's explore this further in details.
 
-⚠️ The compiler will warn us when we do something like this. The compiler will say: "Warning: This declaration shadows an existing declaration." showing us both the shadowing variable and the existing declaration. Compiler warnings can be very helpful for debugging and avoiding common mistakes.
+## 🏁 Your Goal: Unsigned Int Constructor
 
-Technically there is a way around this:
-
-```js
-contract MyContract {
-    string public name;
-
-    constructor(string name) {
-        MyContract.name = name;
-    }
-}
-```
-☝️ Now we're using the reference to `MyContract` to update the state variable. This is not the typical approach. In general you'll see the undescore parameter (i.e. `_variableName`) over anything else.
+1. Create a constructor which will take a `uint` as an argument.
+2. Store this `uint` value inside a public state variable called `x`.
