@@ -1,38 +1,38 @@
-# Unsigned Integers
+# State Variables
 
-What the heck is an unsigned integer? 🤨
+Let's get started by writing some **`state variables`**! **`State Variables`** are stored in the contract's persistent memory. Modifying a state variable in one transaction will change its value for anyone who tries to read the variable afterwards.
 
-First, let's go over integers. Integers include all positive and negative numbers without fractions. The numbers `-2`,`-1`,`0`,`1`,`2` are all integers. This range continues in both the positive and negative direction as far as you can count!
+In Solidity, declaring a state variable is as simple as declaring the variable inside of the contract:
 
-To determine if the number is above or below zero we use the **`sign`**: `+` or `-`. An **`unsigned integer`** is an integer that has no sign. 😲
+```solidity
+contract Contract {
+	bool myVariable;
+}
+```
 
-Solidity has a specific data type for unsigned integers called `uint`. A `uint` can be suffixed with the number of bits reserved for it. For instance `uint8` means that there are **`eight bits`** provided for the value of the variable.
+The `Contract` now has a boolean state variable called `myVariable`! Sweet. 😁
 
-What is the range of unsigned integers in eight bits? 🤔
+> 💭 What is the value of `myVariable` at this point? Data Types in Solidity have default values, for booleans it is `false`. So, after deploying this contract, `myVariable` would be `false`.
 
-Eight bits can range from `00000000` to `11111111`. This range can represent **`256`** unique values.
+Now we're going to do two things to our variable: **`make it public`** and **`give it an initial value `**of `true`:
 
-Since the range of unsigned integer values does not include negative numbers, it is simply `0` to `255`. In decimal, the unsigned value of `00000000` is `0` and the value of `11111111` is 255.
+```solidity
+contract Contract {
+    bool public myVariable = true;
+}
+```
 
-> 🔍 Wondering what happens if we add two `uint8` values together whose sum will exceed `255`? Let's take a look at this in details.
+☝️ See how we added the keyword public here? This automatically creates a **`getter`** function for the variable.
 
-## 🏁 Your Goal: Create Unsigned Integers!
+Now we can access the value in `myVariable` by calling a function on the contract with that very name: `myVariable()`.
 
-Let's create three public state unsigned integers in our Contract: `a`, `b`, and `sum`.
+## 🏁 Your Goal: Add two boolean variables
 
-1. Define the variable a as an uint8 with an initial value between `0` and `255`.
+Create two public boolean state variables on the contract: `a` and `b`.
 
-> 💡 If you declare the variable `a` as a `uint8` you will actually be unable to store a value outside the range `0` to `255`. If you try this directly in your program, you'll get a comrpile-time error!
+Store true in the variable a and false in the value b.
 
-2. Define the variable `b` as an `uint16` with a value of at **`least 256`**. The range for a `uint16` is `0` to `65535`.
-
-3. The variable `sum` should be a `uint256` with the sum of the values stored in `a` and `b`.
-
-> 🔍 It's perfectly valid to add a `uint8` and a `uint16` and store them in a `uint256`. Mix it up!
-
-In Solidity we can use the same math operators we've become familiar with from JavaScript `+`, `-`, `*`, `/`. `%` and `**`.
-
-> ✅ You can use `uint256` or `uint` to declare the `sum`. The keyword `uint` is an alias for `uint256` and it is often used!
+> 🔍 You'll see the **`checkmarks`** appear on your ABI Validations tab when you have successfully made two public variables `a` and `b`. Learn more about ABI Validations in details.
 
 ## 🧪 Run Test
 
@@ -47,3 +47,4 @@ or
 ```bash
 yarn mocha ./src/test.js
 ```
+
