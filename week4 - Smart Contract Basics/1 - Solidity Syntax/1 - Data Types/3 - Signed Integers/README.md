@@ -13,7 +13,7 @@ Since a integer is signed, the range covers **`both negative and positive number
 
 ## 🏁 Your Goal: Create Signed Integers!
 
-1.Create three public state integers `a`, `b`, and `difference`.
+1. Create three public state integers `a`, `b`, and `difference`.
 
 2. Declare the variables `a` and `b` as `int8`. One of the values must be **`positive`**, the other must be **`negative`**.
 
