@@ -1,39 +1,28 @@
 # Enum Type
 
-The Enum Type helps us write clean code! 🚿
+he first function we'll talk about is the constructor:
 
-Consider this example:
+bool public isOpen;
 
-```js
-if(player.movement == 0) {
-    // player is moving up
+constructor() {
+    isOpen = true;
 }
-else if(player.movement == 1) {
-    // player is moving left
+☝️ Here we are setting the value of a state variable upon the contract's deployment.
+
+📖 The constructor for Solidity contracts is quite similar to the constructor in classes of many object-oriented languages. The constructor function is invoked only once during the contract's deployment and never again. It is generally used for setting up initial contract values.
+
+What if we wanted to let the deployer of the contract decide the value of isOpen? 🤔
+
+We can pass an argument to our constructor! Let's see that in action:
+
+bool public isOpen;
+
+constructor(bool _isOpen) {
+    isOpen = _isOpen;
 }
-```
+☝️ Check it out! Now the contract deployer can decide the value of isOpen.
 
-☝️ Those comments are helpful, but they aren't exactly a **`foolproof`** plan! The movement number is being generated somewhere else in the code. If that ever changed, it would break our code! 🐛
-
-Plus, without the comments, there would be no way to tell which direction is which! 😱
-
-An enum can clean this up! Let's see:
-
-```js
-enum Directions = { Up, Left, Down, Right }
-if(player.movement == Directions.Up) {
-
-}
-else if(player.movement == Directions.Left) {
-    
-}
-```
-
-😌 Much cleaner! 🧘
-
-Not only are the numbers replaced with clear directions, we also have a structure for defining all our directions. We can share this structure, `Directions`, with other contracts to ensure that if the numbers change they won't break the rest of the code!
-
-> 📖 Underneath the hood, enum values are stored as unsigned integers. If there are less than 256 values, it will be stored as a `uint8`. If you have more than 256 values it will use a `uint16` and will grow from there as needed (although I'm not sure how many contracts will ever need more than **`65536 values`** in their enum...). The way this data is stored will become more important when we look to parse our smart contracts from the outside world through the ABI.
+🔍 Notice how the parameter name (_isOpen) has an underscore in front of it? This prevents the variable from having the same name as the state variable. When the names collide it is referred to as variable shadowing. It can happen in Solidity quite often since we can refer to state variables without using this. Let's explore this further in details.
 
 ## 🏁 Your Goal: Make Some Food!
 
