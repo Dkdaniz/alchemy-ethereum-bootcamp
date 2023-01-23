@@ -1,0 +1,269 @@
+{
+    "contracts": {
+        "/Users/dkdaniz/Documents/develop/Pessoal/alchemy-ethereum-bootcamp/week4 - Smart Contract Basics/3 - Smart Contract Communication/1 - Contracts with ethers/1 - Getter/src/contract.sol": {
+            "Contract": {
+                "abi": [
+                    {
+                        "inputs": [
+                            {
+                                "internalType": "uint256",
+                                "name": "_value",
+                                "type": "uint256"
+                            }
+                        ],
+                        "stateMutability": "nonpayable",
+                        "type": "constructor"
+                    },
+                    {
+                        "inputs": [],
+                        "name": "value",
+                        "outputs": [
+                            {
+                                "internalType": "uint256",
+                                "name": "",
+                                "type": "uint256"
+                            }
+                        ],
+                        "stateMutability": "view",
+                        "type": "function"
+                    }
+                ],
+                "devdoc": {
+                    "kind": "dev",
+                    "methods": {},
+                    "version": 1
+                },
+                "evm": {
+                    "bytecode": {
+                        "generatedSources": [],
+                        "linkReferences": {},
+                        "object": "608060405234801561001057600080fd5b506040516100c73803806100c78339818101604052602081101561003357600080fd5b50516000556081806100466000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80633fa4f24514602d575b600080fd5b60336045565b60408051918252519081900360200190f35b6000548156fea264697066735822122007c357eec232686dfe134ccea32e6f3bf075b662247525dd7d2ef0c94df8601e64736f6c63430007050033",
+                        "opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x10 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x40 MLOAD PUSH2 0xC7 CODESIZE SUB DUP1 PUSH2 0xC7 DUP4 CODECOPY DUP2 DUP2 ADD PUSH1 0x40 MSTORE PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x33 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP MLOAD PUSH1 0x0 SSTORE PUSH1 0x81 DUP1 PUSH2 0x46 PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x4 CALLDATASIZE LT PUSH1 0x28 JUMPI PUSH1 0x0 CALLDATALOAD PUSH1 0xE0 SHR DUP1 PUSH4 0x3FA4F245 EQ PUSH1 0x2D JUMPI JUMPDEST PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH1 0x33 PUSH1 0x45 JUMP JUMPDEST PUSH1 0x40 DUP1 MLOAD SWAP2 DUP3 MSTORE MLOAD SWAP1 DUP2 SWAP1 SUB PUSH1 0x20 ADD SWAP1 RETURN JUMPDEST PUSH1 0x0 SLOAD DUP2 JUMP INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 SMOD 0xC3 JUMPI 0xEE 0xC2 ORIGIN PUSH9 0x6DFE134CCEA32E6F3B CREATE PUSH22 0xB662247525DD7D2EF0C94DF8601E64736F6C63430007 SDIV STOP CALLER ",
+                        "sourceMap": "56:91:0:-:0;;;98:47;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;98:47:0;127:5;:14;56:91;;;;;;"
+                    },
+                    "deployedBytecode": {
+                        "generatedSources": [],
+                        "immutableReferences": {},
+                        "linkReferences": {},
+                        "object": "6080604052348015600f57600080fd5b506004361060285760003560e01c80633fa4f24514602d575b600080fd5b60336045565b60408051918252519081900360200190f35b6000548156fea264697066735822122007c357eec232686dfe134ccea32e6f3bf075b662247525dd7d2ef0c94df8601e64736f6c63430007050033",
+                        "opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x4 CALLDATASIZE LT PUSH1 0x28 JUMPI PUSH1 0x0 CALLDATALOAD PUSH1 0xE0 SHR DUP1 PUSH4 0x3FA4F245 EQ PUSH1 0x2D JUMPI JUMPDEST PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH1 0x33 PUSH1 0x45 JUMP JUMPDEST PUSH1 0x40 DUP1 MLOAD SWAP2 DUP3 MSTORE MLOAD SWAP1 DUP2 SWAP1 SUB PUSH1 0x20 ADD SWAP1 RETURN JUMPDEST PUSH1 0x0 SLOAD DUP2 JUMP INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 SMOD 0xC3 JUMPI 0xEE 0xC2 ORIGIN PUSH9 0x6DFE134CCEA32E6F3B CREATE PUSH22 0xB662247525DD7D2EF0C94DF8601E64736F6C63430007 SDIV STOP CALLER ",
+                        "sourceMap": "56:91:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;77:17;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;:::o"
+                    },
+                    "gasEstimates": {
+                        "creation": {
+                            "codeDepositCost": "25800",
+                            "executionCost": "infinite",
+                            "totalCost": "infinite"
+                        },
+                        "external": {
+                            "value()": "976"
+                        }
+                    },
+                    "methodIdentifiers": {
+                        "value()": "3fa4f245"
+                    }
+                },
+                "metadata": "{\"compiler\":{\"version\":\"0.7.5+commit.eb77ed08\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"value\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/dkdaniz/Documents/develop/Pessoal/alchemy-ethereum-bootcamp/week4 - Smart Contract Basics/3 - Smart Contract Communication/1 - Contracts with ethers/1 - Getter/src/contract.sol\":\"Contract\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/dkdaniz/Documents/develop/Pessoal/alchemy-ethereum-bootcamp/week4 - Smart Contract Basics/3 - Smart Contract Communication/1 - Contracts with ethers/1 - Getter/src/contract.sol\":{\"keccak256\":\"0xf4bab93468cfa879ba18724afd80a2ea6d97b82ddef8d723237862d80229bb2a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4b5051ab1238cd094cd494006e25fcb084dbd6e04433ac836e439c398ff51aed\",\"dweb:/ipfs/Qmc9WChqL7XXqhx2JGjDuLnThvqXKzrvxrgiNunEB5ctgK\"]}},\"version\":1}",
+                "storageLayout": {
+                    "storage": [
+                        {
+                            "astId": 3,
+                            "contract": "/Users/dkdaniz/Documents/develop/Pessoal/alchemy-ethereum-bootcamp/week4 - Smart Contract Basics/3 - Smart Contract Communication/1 - Contracts with ethers/1 - Getter/src/contract.sol:Contract",
+                            "label": "value",
+                            "offset": 0,
+                            "slot": "0",
+                            "type": "t_uint256"
+                        }
+                    ],
+                    "types": {
+                        "t_uint256": {
+                            "encoding": "inplace",
+                            "label": "uint256",
+                            "numberOfBytes": "32"
+                        }
+                    }
+                },
+                "userdoc": {
+                    "kind": "user",
+                    "methods": {},
+                    "version": 1
+                }
+            }
+        }
+    },
+    "sources": {
+        "/Users/dkdaniz/Documents/develop/Pessoal/alchemy-ethereum-bootcamp/week4 - Smart Contract Basics/3 - Smart Contract Communication/1 - Contracts with ethers/1 - Getter/src/contract.sol": {
+            "ast": {
+                "absolutePath": "/Users/dkdaniz/Documents/develop/Pessoal/alchemy-ethereum-bootcamp/week4 - Smart Contract Basics/3 - Smart Contract Communication/1 - Contracts with ethers/1 - Getter/src/contract.sol",
+                "exportedSymbols": {
+                    "Contract": [
+                        14
+                    ]
+                },
+                "id": 15,
+                "license": "MIT",
+                "nodeType": "SourceUnit",
+                "nodes": [
+                    {
+                        "id": 1,
+                        "literals": [
+                            "solidity",
+                            "0.7",
+                            ".5"
+                        ],
+                        "nodeType": "PragmaDirective",
+                        "src": "32:22:0"
+                    },
+                    {
+                        "abstract": false,
+                        "baseContracts": [],
+                        "contractDependencies": [],
+                        "contractKind": "contract",
+                        "fullyImplemented": true,
+                        "id": 14,
+                        "linearizedBaseContracts": [
+                            14
+                        ],
+                        "name": "Contract",
+                        "nodeType": "ContractDefinition",
+                        "nodes": [
+                            {
+                                "constant": false,
+                                "functionSelector": "3fa4f245",
+                                "id": 3,
+                                "mutability": "mutable",
+                                "name": "value",
+                                "nodeType": "VariableDeclaration",
+                                "scope": 14,
+                                "src": "77:17:0",
+                                "stateVariable": true,
+                                "storageLocation": "default",
+                                "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                },
+                                "typeName": {
+                                    "id": 2,
+                                    "name": "uint",
+                                    "nodeType": "ElementaryTypeName",
+                                    "src": "77:4:0",
+                                    "typeDescriptions": {
+                                        "typeIdentifier": "t_uint256",
+                                        "typeString": "uint256"
+                                    }
+                                },
+                                "visibility": "public"
+                            },
+                            {
+                                "body": {
+                                    "id": 12,
+                                    "nodeType": "Block",
+                                    "src": "123:22:0",
+                                    "statements": [
+                                        {
+                                            "expression": {
+                                                "id": 10,
+                                                "isConstant": false,
+                                                "isLValue": false,
+                                                "isPure": false,
+                                                "lValueRequested": false,
+                                                "leftHandSide": {
+                                                    "id": 8,
+                                                    "name": "value",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 3,
+                                                    "src": "127:5:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_uint256",
+                                                        "typeString": "uint256"
+                                                    }
+                                                },
+                                                "nodeType": "Assignment",
+                                                "operator": "=",
+                                                "rightHandSide": {
+                                                    "id": 9,
+                                                    "name": "_value",
+                                                    "nodeType": "Identifier",
+                                                    "overloadedDeclarations": [],
+                                                    "referencedDeclaration": 5,
+                                                    "src": "135:6:0",
+                                                    "typeDescriptions": {
+                                                        "typeIdentifier": "t_uint256",
+                                                        "typeString": "uint256"
+                                                    }
+                                                },
+                                                "src": "127:14:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "id": 11,
+                                            "nodeType": "ExpressionStatement",
+                                            "src": "127:14:0"
+                                        }
+                                    ]
+                                },
+                                "id": 13,
+                                "implemented": true,
+                                "kind": "constructor",
+                                "modifiers": [],
+                                "name": "",
+                                "nodeType": "FunctionDefinition",
+                                "parameters": {
+                                    "id": 6,
+                                    "nodeType": "ParameterList",
+                                    "parameters": [
+                                        {
+                                            "constant": false,
+                                            "id": 5,
+                                            "mutability": "mutable",
+                                            "name": "_value",
+                                            "nodeType": "VariableDeclaration",
+                                            "scope": 13,
+                                            "src": "110:11:0",
+                                            "stateVariable": false,
+                                            "storageLocation": "default",
+                                            "typeDescriptions": {
+                                                "typeIdentifier": "t_uint256",
+                                                "typeString": "uint256"
+                                            },
+                                            "typeName": {
+                                                "id": 4,
+                                                "name": "uint",
+                                                "nodeType": "ElementaryTypeName",
+                                                "src": "110:4:0",
+                                                "typeDescriptions": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                }
+                                            },
+                                            "visibility": "internal"
+                                        }
+                                    ],
+                                    "src": "109:13:0"
+                                },
+                                "returnParameters": {
+                                    "id": 7,
+                                    "nodeType": "ParameterList",
+                                    "parameters": [],
+                                    "src": "123:0:0"
+                                },
+                                "scope": 14,
+                                "src": "98:47:0",
+                                "stateMutability": "nonpayable",
+                                "virtual": false,
+                                "visibility": "public"
+                            }
+                        ],
+                        "scope": 15,
+                        "src": "56:91:0"
+                    }
+                ],
+                "src": "32:116:0"
+            },
+            "id": 0
+        }
+    }
+}

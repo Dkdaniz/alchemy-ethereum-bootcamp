@@ -15,6 +15,6 @@
     "dotenv": "^16.0.3"
   },
   "dependencies": {
-
+    "ethers": "^5.7.2"
   }
 }

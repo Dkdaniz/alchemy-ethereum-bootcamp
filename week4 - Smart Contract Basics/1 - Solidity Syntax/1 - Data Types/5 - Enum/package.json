@@ -10,11 +10,10 @@
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
     "@nomiclabs/hardhat-etherscan": "^3.1.5",
     "chai": "^4.3.7",
-    "ethers": "^5.7.2",
     "hardhat": "^2.12.6",
     "dotenv": "^16.0.3"
   },
   "dependencies": {
-
+    "ethers": "^5.7.2"
   }
 }
