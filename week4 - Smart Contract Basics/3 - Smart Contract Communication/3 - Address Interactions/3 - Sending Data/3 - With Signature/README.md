@@ -27,7 +27,7 @@ bytes memory payload = abi.encodeWithSignature("rumble(uint256,uint256)", 10, 5)
 ```
 
 
-## 🏁 Your Goal: Alert Hero, Manually
+## 🏁 Your Goal: Alert the Hero with Arguments
 
 Alert the `Hero` by calling `alert` and passing the number of enemies and whether or not they are armed!
 
