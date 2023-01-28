@@ -26,7 +26,7 @@ if(!someBooleanCondition) {
 }
 ```
 
-Note that as of Solidity `^0.8.0`, `revert` is a statement and **`NOT`** a function. However, for backward compatability reasons, revert can still be used in function form. So `revert` can also be used like:
+Note that as of Solidity `^0.8.0`, `revert` is a statement and **`NOT`** a function. However, for backward compatibility reasons, revert can still be used in function form. So `revert` can also be used like:
 
 ```js
 if(!someBooleanCondition) {
