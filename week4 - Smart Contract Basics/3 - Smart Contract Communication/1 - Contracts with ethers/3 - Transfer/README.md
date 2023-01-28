@@ -1,6 +1,6 @@
 # Multiple Arguments
 
-Calling solidity contracts with multiple arguments in ethers.js is not much different from what you might expect!
+Calling solidity contracts with multiple arguments in `ethers.js` is not much different from what you might expect!
 
 We can define an `Adder` contract:
 

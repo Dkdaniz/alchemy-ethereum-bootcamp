@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const transfer = require('../index');
+const transfer = require('./index');
 
 describe('Token', function () {
     let contract;
