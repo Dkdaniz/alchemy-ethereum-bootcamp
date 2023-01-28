@@ -49,3 +49,16 @@ or
 ```bash
 yarn hardhat test ./src/test.js
 ```
+
+## 🧪 Run deploy
+
+Access this path in your terminal and run the following command:
+
+```bash
+yarn build
+```
+or
+
+```bash
+yarn hardhat --network goerli run ./scripts/deploy.js
+```
