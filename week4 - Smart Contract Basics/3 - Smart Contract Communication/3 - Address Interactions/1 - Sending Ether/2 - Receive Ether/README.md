@@ -39,7 +39,7 @@ The receive function must be **`external`**, **`payable`**, it cannot receive ar
 
 > 🔍 Another option to receive ether without specifying a function signature on a contract is to use a payable fallback function (Details section).
 
-## 🏁 Your Goal: Store the Owner
+## 🏁 Your Goal: Receive Ether
 
 Add a function to the `contract` that will allow it to recieve ether on a transaction without any **`calldata`**.
 

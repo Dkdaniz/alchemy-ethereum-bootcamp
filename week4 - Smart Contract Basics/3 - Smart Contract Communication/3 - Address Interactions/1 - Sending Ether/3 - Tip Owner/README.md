@@ -28,7 +28,7 @@ contract Contract {
 
 ☝️ We have two pay methods `payA` and `payB` which will transfer ether to the respective address. It takes a uint amount of Wei and transfers it from the contract account to the address.
 
-## 🏁 Your Goal: Store the Owner
+## 🏁 Your Goal: Transfer Tips
 
 Let's create a way to tip the contract owner!
 
