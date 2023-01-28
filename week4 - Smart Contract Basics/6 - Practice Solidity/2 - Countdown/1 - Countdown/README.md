@@ -1,10 +1,10 @@
 # Sum and Average
 
-## 🏁 Your Goal: Sum and Average
+## 🏁 Your Goal: Tick, Tick, Tick
 
-Create an external, pure function called `sumAndAverage` that has four uint parameters.
+Add an external function to the contract called `tick`.
 
-Find both the **`sum`** and the **`average`** of the four numbers. Return these two values in this order as unsigned integers.
+After calling tick 10 times, it should `selfdestruct` the contract.
 
 ## 🧪 Run Test
 
