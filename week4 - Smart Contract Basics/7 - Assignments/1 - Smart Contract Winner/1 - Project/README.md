@@ -1,41 +1,42 @@
-# Ready to be a winner?
+# Mapping
 
-You'll need to prove your smart contract skills to us. Don't worry, you totally got this! 💪
+Mappings allow you to store and retrieve elements quickly with a **`key`**. The key points to a location in memory where the **`value`** is stored.
 
-## 🏁 Your Goal: Emit the Winner event
+The **`key`** can be any **`value data type`** in Solidity. It cannot be a reference data type like a struct or an array.
 
-Your goal is simple! Emit the winner event on this smart contract on the Goerli testnet: https://goerli.etherscan.io/address/0xcF469d3BEB3Fc24cEe979eFf83BE33ed50988502#code
+The **`value`**, on the other hand, can be any Solidity type. It can be a struct, an array or even another mapping!
 
-If you take a look at the [Code tab in Etherscan](https://goerli.etherscan.io/address/0xcF469d3BEB3Fc24cEe979eFf83BE33ed50988502#code), you'll see that the source code for this contract looks like this:
+Let's see an example of a mapping:
 
 ```solidity
-// SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
-
+import "hardhat/console.sol";
 contract Contract {
-    event Winner(address);
+    // create a score state variable 
+    // maps an address (key) to a uint (value)
+    mapping(address => uint) public score;
 
-    function attempt() external {
-        require(msg.sender != tx.origin, "msg.sender is equal to tx.origin");
-        emit Winner(msg.sender);
+    function addPoint() external {
+        // we're using msg.sender as the key 
+        // to look up the score in memory
+        console.log(score[msg.sender]); // 0
+
+        // we can also update that location in memory
+        score[msg.sender]++;
+        console.log(score[msg.sender]); // 1
     }
 }
 ```
 
-How do we possibly make it so the `tx.origin` (the EOA who originated the transaction) is not equal to the `msg.sender`? 🤔
+☝️ The variable `score` takes an `address` and maps it to a `uint`. Each address will be mapped to its own unique `uint` value that it can retrieve and modify.
 
-We'll leave that challenge up to you!
+The `addPoint` function uses the `msg.sender` as the key to update a location in memory. This location in memory for a value is **`initialized at zero`**. We can add to it using the `msg.sender` as the key, as shown above.
 
-Helpful links:
+> 💡 The `score` mapping is `public` which means that there will be a getter function created automatically. We can make a request to an Ethereum node invoking this getter function with an `address` and get a `uint` back.
 
-Hardhat Overview - https://hardhat.org/hardhat-runner/docs/getting-started#overview
-NPM - https://www.npmjs.com/
-Alchemy - https://www.alchemy.com/
-Goerli Faucet - https://goerlifaucet.com/
+## 🏁 Your Goal: Members Mapping
 
-## The Leaderboard
-
-Once you've completed the challenge you should find your address amongst the list of winners on the events tab. Check out how many other people have completed this challenge!
+1. Create a public mapping called `members` which maps an `address` to a `bool`. The bool will indicate whether or not the `address` is currently a member!
+2. Create an external function called `addMember` which takes an `address` and adds it as a member. You can do this by storing `true` in the data location corresponding to the address in the `members` mapping.
 
 ## 🧪 Run Test
 
@@ -48,17 +49,4 @@ or
 
 ```bash
 yarn hardhat test ./src/test.js
-```
-
-## 🧪 Run deploy
-
-Access this path in your terminal and run the following command:
-
-```bash
-yarn build
-```
-or
-
-```bash
-yarn hardhat --network goerli run ./scripts/deploy.js
 ```
