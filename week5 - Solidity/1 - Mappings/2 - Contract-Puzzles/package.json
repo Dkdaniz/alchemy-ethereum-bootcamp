@@ -1,0 +1,28 @@
+{
+  "name": "puzzles-v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test:game:1": "hardhat test ./test/game1Test.js",
+    "test:game:2": "hardhat test ./test/game2Test.js",
+    "test:game:3": "hardhat test ./test/game3Test.js",
+    "test:game:4": "hardhat test ./test/game4Test.js",
+    "test:game:5": "hardhat test ./test/game5Test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.1",
+    "@nomiclabs/hardhat-etherscan": "^3.1.5",
+    "chai": "^4.3.7",
+    "dotenv": "^16.0.3",
+    "hardhat": "^2.12.6"
+  },
+  "dependencies": {
+    "ethers": "^5.7.2"
+  }
+}
+
+
