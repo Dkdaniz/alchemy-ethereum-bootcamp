@@ -21,7 +21,7 @@ function exampleFunction() external {
 
 > 🔍 Curious to see how we can look up events after the transaction? Let's take a look in details.
 
-## 🏁 Your Goal: Sum and Average
+## 🏁 Your Goal: Deployed Event
 
 1. Create a new `event` called `Deployed`. This event should take one argument: an `address`.
 2. This address will be the first **`owner`** of this collectible. The owner in this case will be the address that deployed the contract.

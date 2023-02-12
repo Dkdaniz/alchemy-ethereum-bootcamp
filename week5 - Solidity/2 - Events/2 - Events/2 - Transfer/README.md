@@ -17,7 +17,7 @@ Then we can invoke it the same way we would with one argument:
 emit ExampleEvent(3, true);
 ```
 
-## 🏁 Your Goal: Sum and Average
+## 🏁 Your Goal: Transfer the Collectible
 
 1. Create a new event called `Transfer` which has two `address` parameters: the original owner and the new owner.
 2. Create an external function called `transfer` which takes a receipient `address` to send the collectible to. In this function, transfer the ownership of the collectible to the recipient.

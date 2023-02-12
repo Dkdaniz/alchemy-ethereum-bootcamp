@@ -1,6 +1,6 @@
 # Up For Sale
 
-## 🏁 Your Goal: Sum and Average
+## 🏁 Your Goal: Mark the Price
 
 1. Create a new event called ForSale which takes two uint parameters: the price and the current block timestamp.
 2. Create a new external function called markPrice which has a single uint parameter: the asking price.
