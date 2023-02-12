@@ -34,3 +34,24 @@ The way to solve these challenges is: **`do it using the relevant contract's tes
 5. Once you are able to `run npx hardhat test` and get all the tests passing green with ✅✅✅✅✅ check marks, you have successfully solved all the challenges! 🧠
 
 Some of these are simple... some of these can be a little tougher! 😈 The contracts use mappings as a base component in order to solidify your understanding. Buckle up, you got this!! 💪
+
+
+## 🧪 Run Tests
+Access this path in your terminal and run the following command:
+
+```bash
+yarn test:game:1
+yarn test:game:2
+yarn test:game:3
+yarn test:game:4
+yarn test:game:5
+```
+or
+
+```bash
+yarn hardhat test ./test/game1Test.js
+yarn hardhat test ./test/game2Test.js
+yarn hardhat test ./test/game3Test.js
+yarn hardhat test ./test/game4Test.js
+yarn hardhat test ./test/game5Test.js
+```
