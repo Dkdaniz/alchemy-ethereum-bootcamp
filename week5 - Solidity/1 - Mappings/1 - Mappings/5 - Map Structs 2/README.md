@@ -1,28 +1,51 @@
-# Types of Balances
+# Nested Mappings
 
-Smart Contracts will often store balances for two different reasons:
+As shown in the previous stage, we can provide more complex types in our mapping values.
 
-1. **`Ether Balance`** - Keep track of the ether deposited by each user
-2. **`Token Balance`** - Keep track of the amount of tokens held by each user
+Last stage we showed it with structs, now let's try it with `other mappings`!
 
-For ether, we use the native `value` on the message and the transaction. Sending `value` will update the user's account balance in the ethereum global state.
+```solidity
+mapping(uint => mapping(address => bool)) voteToAddressChoice;
 
-For tokens, we update a `balances` mapping. The smart contract is solely responsible for mantaining the user's balance.
+function getVote(uint _id, address _addr) 
+    external
+    view 
+    returns(bool)
+{
+    return voteToAddressChoice[_id][_addr];
+} 
+```
+☝️ In this scenario each **`vote id`** points to a **`mapping of addresses to bool`** votes. This allows each address to register a different vote with each vote id.
 
-In the smart contract you are building, you are mantaining your own balances in the `User` struct that has no relation to ether. To transfer balances from one user to another, you can just update the struct value! There is no need to send `value` over message call (i.e. using <address>.call).
+As a voter we might call a function with an id to register our choice:
+
+```solidity
+function registerVote(uint _id, bool _choice) external {
+    voteToAddressChoice[_id][msg.sender] = _choice;
+}
+```
+
+Let's say there were 3 votes with the ids: `212`, `72` and `409`.
+
+We could for make the following transactions from an EOA:
+
+```js
+// for true for vote id 212
+registerVote(212, true);
+// for false for vote id 72
+registerVote(72, false);
+// for true for vote id 409
+registerVote(409, true);
+```
+
+☝️ This would register a `true` for the ids `212` and `409` at our address. For `72` it would register `false`.
+
+> 📖 Of course, the default value for a `bool` is `false`, so this second vote may be pointless unless we were to add in some other way to provide an non-existent vote.
 
 ## 🏁 Your Goal: Sum and Average
 
-Let's create a new token where every new user will receive 100 tokens!
-
-1. Create an external `function` called transfer which takes two parameters: an `address` for the recipient and a `uint` for the amount.
-2. In this function, transfer the `amount` specified from the balance of the `msg.sender` to the balance of the recipient `address`.
-
-## 🔒 Contract Security
-
-1. Ensure that both addresses used in the `transfer` function have active users.
-2. Ensure that the `msg.sender` has enough in their balance to make the transfer without going into a negative balance.
-3. If either of these conditions aren't satisfied, revert the transaction.
+1. Create a public mapping called `connections` which will map an `address` to a mapping of an address to a `ConnectionTypes` enum value.
+2. In the `connectWith` function, create a connection from the `msg.sender` to the `other` address.
 
 ## 🧪 Run Test
 Access this path in your terminal and run the following command:
