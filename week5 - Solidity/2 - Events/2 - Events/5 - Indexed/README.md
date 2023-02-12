@@ -9,7 +9,7 @@ Now we can filter for both the HighScore event as well as the address of the pla
 
 ## 🏁 Your Goal: Index the Addresses
 
-Modify all the `address` data types in the events to be indexed.
+Modify all the address data types in the events to be indexed.
 
 ## 🧪 Run Test
 
