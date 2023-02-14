@@ -8,7 +8,8 @@ describe('Contract', function () {
     });
 
     it('should return the sum', async () => {
-        assert.equal(await contract.sum([1, 1, 1, 1, 1]), 5);
+        assert.equal(await contract.sum([5]), 5);
+        assert.equal(await contract.sum([1, 1, 1]), 3);
         assert.equal(await contract.sum([1, 2, 3, 4, 5]), 15);
     });
 });
