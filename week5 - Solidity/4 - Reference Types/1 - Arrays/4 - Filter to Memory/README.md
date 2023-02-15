@@ -26,8 +26,10 @@ contract Contract {
 
 ## 🏁 Your Goal: Filter Even Numbers
 
-1. Create a public, dynamic sized array of unsigned integers as a state variable called `evenNumbers`.
-2. Create an external function called `filterEven` which takes an dynamic size array of unsigned integers as its only argument. Find all of the even numbers in this array and push them into the `evenNumbers` storage array.
+1. Create a pure, external function called `filterEven` which takes an dynamic size array of unsigned integers as its only argument.
+2. Find all the even numbers and add them to a new array in memory. This array should **`contain only`** the even numbers.
+
+Return this new array.
 
 ## 🧪 Run Test
 Access this path in your terminal and run the following command:

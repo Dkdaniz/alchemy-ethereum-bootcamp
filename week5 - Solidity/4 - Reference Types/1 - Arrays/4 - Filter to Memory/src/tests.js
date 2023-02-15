@@ -7,24 +7,11 @@ describe('Contract', function () {
         await contract.deployed();
     });
 
-    it('should store the filtered evenNumbers', async () => {
-        await contract.filterEven([1, 2, 1, 4, 5]);
-        assert.sameMembers(await getArrayElements(contract.evenNumbers), [2, 4]);
-    });
+    it('should return the filtered numbers', async () => {
+        const result = await contract.filterEven([1, 2, 1, 4, 1]);
+        assert.sameMembers(result.map(x => Number(x)), [2, 4]);
 
-    it('should store the filtered evenNumbers', async () => {
-        await contract.filterEven([1, 1, 2, 10, 2]);
-        assert.sameMembers(await getArrayElements(contract.evenNumbers), [2, 10, 2]);
+        const result2 = await contract.filterEven([1, 1, 2, 10, 2]);
+        assert.sameMembers(result2.map(x => Number(x)), [2, 10, 2]);
     });
 });
-
-async function getArrayElements(getterFn) {
-    let vals = [];
-    try {
-        for (i = 0; ; i++) {
-            vals.push(await getterFn(i));
-        }
-    }
-    catch (ex) { }
-    return vals.map(x => Number(x));
-}
