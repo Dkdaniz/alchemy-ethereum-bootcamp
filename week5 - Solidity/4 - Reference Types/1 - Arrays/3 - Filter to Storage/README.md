@@ -20,7 +20,7 @@ contract Contract {
 
 ☝️ As you might expect the `length` member adjusts when new elements are pushed onto the end of the array.
 
-## 🏁 Your Goal: Sum Dynamic Array
+## 🏁 Your Goal: Filter Even Numbers
 
 1. Create a public, dynamic sized array of unsigned integers as a state variable called `evenNumbers`.
 2. Create an external function called `filterEven` which takes an dynamic size array of unsigned integers as its only argument. Find all of the even numbers in this array and push them into the `evenNumbers` storage array.
