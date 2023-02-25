@@ -32,7 +32,7 @@ console.log(inAir); // true
 
 > 🔍 Notice that the order of the parameters matters when creating a new struct, we could have also named the properties instead.
 
-## 🏁 Your Goal: Remove Members
+## 🏁 Your Goal: Create a Vote
 
 1. Create a new struct called `Vote` that contains two properties: a `Choices choice` and an `address voter`.
 2. Then create a public state variable called `vote` which is of the `Vote` type.
