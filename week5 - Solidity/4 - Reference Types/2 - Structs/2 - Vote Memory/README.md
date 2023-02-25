@@ -32,7 +32,7 @@ function getHero() external view returns (Hero memory) {
 
 > 🔍 Let's see what the ABI for a struct would look like on the Details Tab.
 
-## 🏁 Your Goal: Remove Members
+## 🏁 Your Goal: Return Memory Vote
 
 1. Create an external, view function called `createVote` which takes `Choices` value as a parameter and returns an instance of type `Vote`.
 2. This function should use the `Choices` value and the `msg.sender` as the values to create the vote.
