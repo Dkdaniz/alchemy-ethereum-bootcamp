@@ -1,18 +1,20 @@
 body {
-  background-color: #eee;
+  background-color: #222831;
   display: flex;
+  flex-direction: column;
   font-family: 'Muli', sans-serif;
 }
 
 .contract, .existing-contracts {
   margin: 20px;
-  display: inline-block;
   padding: 40px;
-  border: 1px solid #ddd;
-  background-color: #fff;
+  border: 1px solid #eee;
+  background-color: #393E46;
+  border-radius: 12px;
 }
 
 h1 {
+  color: #eee;
   margin: 10px;
   padding: 10px;
   border-bottom: 1px solid #eee;
@@ -29,6 +31,8 @@ label {
 input[type="text"] {
   padding: 6px;
   font-size: 18px;
+  border-radius: 6px;
+  border-color: transparent;
 }
 
 .button {
@@ -42,6 +46,7 @@ input[type="text"] {
   font-size: 14px;
   letter-spacing: 1px;
   cursor: pointer;
+  border-radius: 6px;
 }
 
 .existing-contract ul {
