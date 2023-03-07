@@ -1,12 +1,12 @@
 const axios = require('axios');
 
 // copy-paste your URL provided in your Alchemy.com dashboard
-const API_KEY = process.env.API_KEY;
+const ALCHEMY_URL = process.env.ALCHEMY_URL;
 
 const run = async () => {
 
     try {
-        const response = await axios.post(`https://eth-mainnet.g.alchemy.com/v2/${API_KEY}`, {
+        const response = await axios.post(ALCHEMY_URL, {
             jsonrpc: "2.0",
             id: 1,
             method: "eth_getBlockByNumber",
