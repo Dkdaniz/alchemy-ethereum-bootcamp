@@ -9,6 +9,10 @@ export default function Escrow({
     <div className="existing-contract">
       <ul className="fields">
         <li>
+          <div> Contract </div>
+          <div> {address} </div>
+        </li>
+        <li>
           <div> Arbiter </div>
           <div> {arbiter} </div>
         </li>
@@ -18,7 +22,7 @@ export default function Escrow({
         </li>
         <li>
           <div> Value </div>
-          <div> {value} </div>
+          <div> {value} Ether</div>
         </li>
         <div
           className="button"
@@ -26,10 +30,17 @@ export default function Escrow({
           onClick={(e) => {
             e.preventDefault();
 
-            handleApprove();
+            if (parseFloat(value) > 0){
+              handleApprove();
+            }else{
+              document.getElementById(address).className =
+                'complete';
+              document.getElementById(address).innerText =
+                "✓ It's been approved!";
+            }
           }}
         >
-          Approve
+          {parseFloat(value) > 0 ? "Approve" : "Approved" }
         </div>
       </ul>
     </div>
