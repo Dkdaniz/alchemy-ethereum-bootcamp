@@ -2,7 +2,7 @@
 
 The multisig wallet would be pointless and insecure if anyone could confirm a signature. Let's make sure we handle this!
 
-## 🏁 Your Goal: Confirm Transaction
+## 🏁 Your Goal: Confirmation Security
 
 1. Ensure that `confirmTransaction` can only be called by the `owners` stored in the constructor. If anyone else calls this function, revert the transaction.
 
