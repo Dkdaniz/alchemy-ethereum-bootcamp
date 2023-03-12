@@ -1,24 +1,20 @@
-# Pay the Bill
+# Error Handling
 
-## 🏁 Your Goal: Setup
+Great! We've setup the owners and required signatures. ✍️
 
-Let's create a Multi-Sig Wallet!
+Now, what if the deployer of the contract makes a mistake during deployment? 😨
 
-When this wallet is deployed it will be configured with the owners addresses and how many signatures are required to move funds.
+When developing a user friendly contract we should be validating user inputs for common sources of error. We should definitely be checking the owners and signatures to ensure situations do not occur where the funds are immediately locked. 🔏
 
-## 📦 State Variables
+These situations include deploying **`no owner addresses`** and when the number of signatures is **`zero`** or **`more than`** the **`number of owners`**.
 
-1. Declare a public `address[] owners` to store wallet owner addresses.
-   
-2. Declare a public `uint256 required` to store the required amount of confirmations needed to execute a transaction.
+## 🏁 Your Goal: Handle Constructor Mistakes
 
-## 🏗️ Constructor
+Let's revert the deployment transaction in the following situations:
 
-3. Define a constructor function that has two parameters: an array of owner addresses and the `uint256` required amount of confirmations.
-   
-4. Store the two arguments in their respective state variables created above.
-
-<img style="display: block; margin-left: auto; margin-right: auto;width: 50%;" src="../../../img/contructorMultiSigWallet.png">
+1. No owner addresses are sent.
+2. Number of required confirmations is zero.
+3. Number of required confirmations is more than the total number of owner addresses.
 
 ## 🧪 Run Test
 
