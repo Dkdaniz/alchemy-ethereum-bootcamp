@@ -26,13 +26,13 @@ This requirement comes from the base contract `Depositable` and is used through 
 
 ## 🏁 Your Goal: Only Owner
 
-On the Collectible.sol tab you'll see that Collectible contract inherits from the Ownable contract.
+On the `Collectible.sol` tab you'll see that `Collectible` contract inherits from the `Ownable` contract.
 
-1. Your goal is to fill out the Ownable base contract, which will be used by the Collectible contract!
-2. The owner should be defined in the Ownable base contract
-3. Ensure that markPrice can only be called by the owner (the deployer of the collectible)
+1. Your goal is to fill out the `Ownable` base contract, which will be used by the `Collectible` contract!
+2. The `owner` should be defined in the `Ownable` base contract
+3. Ensure that `markPrice` can only be called by the `owner` (the deployer of the collectible)
 
-> 💡 HINT: The markPrice function uses an onlyOwner modifier which is currently not implemented anywhere!
+> 💡 HINT: The `markPrice` function uses an `onlyOwner` modifier which is currently not implemented anywhere!
 
 ## 🧪 Run Test
 
