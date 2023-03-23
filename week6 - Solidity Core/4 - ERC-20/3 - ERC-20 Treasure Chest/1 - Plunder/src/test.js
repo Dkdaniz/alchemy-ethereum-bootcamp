@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 
 describe('Chest', function () {
-    let coinCreator, coinCreatorSigner, hunter, hunterSigner; 
+    let coinCreator, coinCreatorSigner, hunter, hunterSigner;
 
     describe('storing erc20 tokens', () => {
         let token1;
@@ -9,7 +9,7 @@ describe('Chest', function () {
         let chest;
         beforeEach(async () => {
             const ERC20 = await ethers.getContractFactory("ERC20FixedSupply");
-            
+
             token1 = await ERC20.deploy(10000);
             await token1.deployed();
 
