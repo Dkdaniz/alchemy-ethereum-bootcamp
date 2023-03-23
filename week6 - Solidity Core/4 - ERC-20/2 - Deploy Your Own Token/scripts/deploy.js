@@ -3,7 +3,7 @@ async function main() {
 
   console.log("Deploying contracts with the account:", deployer.address);
 
-  const weiAmount = (await deployer.getBalance()).toString();
+  const weiAmount = (await deployer.getBalance()).toString();s
 
   console.log("Account balance:", (await ethers.utils.formatEther(weiAmount)));
 
