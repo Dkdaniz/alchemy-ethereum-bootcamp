@@ -1,13 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import App from './App'
-import './index.css'
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 
-console.log(import.meta.env.VITE_ALCHEMY_API_KEY)
+import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <ChakraProvider>
+      <App />
+    </ChakraProvider>
   </React.StrictMode>,
 )

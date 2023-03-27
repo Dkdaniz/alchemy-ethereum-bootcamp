@@ -10,9 +10,13 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.4.6",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@metamask/detect-provider": "^2.0.0",
     "alchemy-sdk": "^2.2.5",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
+    "framer-motion": "^10.9.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

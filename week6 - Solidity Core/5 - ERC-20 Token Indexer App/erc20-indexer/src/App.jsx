@@ -1,3 +1,8 @@
+
+import { Alchemy, Network, Utils } from 'alchemy-sdk';
+import { useEffect, useState } from 'react';
+import detectEthereumProvider from '@metamask/detect-provider';
+
 import {
   Box,
   Button,
@@ -8,15 +13,49 @@ import {
   Input,
   SimpleGrid,
   Text,
+  useToast
 } from '@chakra-ui/react';
-import { Alchemy, Network, Utils } from 'alchemy-sdk';
-import { useState } from 'react';
+
+const ethereum = window.ethereum;
 
 function App() {
+  const toast = useToast();
+
   const [userAddress, setUserAddress] = useState('');
   const [results, setResults] = useState([]);
   const [hasQueried, setHasQueried] = useState(false);
   const [tokenDataObjects, setTokenDataObjects] = useState([]);
+  const [address, setAddress] = useState('');
+
+  const getAddress = async () => {
+    try {
+      const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+      const account = accounts[0];
+      console.log(account)
+      setAddress(account);
+      setUserAddress(account);
+    } catch (error) {
+      console.log({error})
+      const {code} = error;
+        if(code === 4001){
+          toast({
+          title: 'Error Connect Account',
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (typeof ethereum === 'undefined') {
+      console.log('MetaMask no is installed!');
+    }else{
+      getAddress();
+    }
+  },[])
 
   async function getTokenBalance() {
     const config = {
@@ -75,6 +114,7 @@ function App() {
           p={4}
           bgColor="white"
           fontSize={24}
+          value={userAddress}
         />
         <Button fontSize={20} onClick={getTokenBalance} mt={36} bgColor="blue">
           Check ERC-20 Token Balances
