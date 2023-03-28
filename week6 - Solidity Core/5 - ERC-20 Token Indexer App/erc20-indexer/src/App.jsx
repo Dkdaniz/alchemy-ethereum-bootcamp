@@ -1,19 +1,16 @@
 
 import { Alchemy, Network, Utils } from 'alchemy-sdk';
+import Header from './components/Header/index';
+import Search from './components/Search/index';
+import TabOptions from './components/TabOptions/index';
+import Tokens from './components/Tokens/index';
+
 import { useEffect, useState } from 'react';
-import detectEthereumProvider from '@metamask/detect-provider';
+
 
 import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  Image,
-  Input,
-  SimpleGrid,
-  Text,
-  useToast
+  useToast,
+  Container
 } from '@chakra-ui/react';
 
 const ethereum = window.ethereum;
@@ -22,17 +19,14 @@ function App() {
   const toast = useToast();
 
   const [userAddress, setUserAddress] = useState('');
-  const [results, setResults] = useState([]);
-  const [hasQueried, setHasQueried] = useState(false);
-  const [tokenDataObjects, setTokenDataObjects] = useState([]);
-  const [address, setAddress] = useState('');
+  const [userTokens, setUserTokens] = useState([]);
+  const [typeTokens, setTypeTokens] = useState([]);
+  const [typeSelected, setTypeSelected] = useState('');
 
   const getAddress = async () => {
     try {
       const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
       const account = accounts[0];
-      console.log(account)
-      setAddress(account);
       setUserAddress(account);
     } catch (error) {
       console.log({error})
@@ -49,110 +43,101 @@ function App() {
     }
   }
 
+  async function getTokens() {
+    const config = {
+      apiKey: import.meta.env.VITE_ALCHEMY_API_KEY,
+      network: Network.ETH_MAINNET,
+    };
+
+    const alchemy = new Alchemy(config);
+    const tokensERC20 = alchemy.core.getTokenBalances("0xshah.eth");
+    const nfts = alchemy.nft.getNftsForOwner("0xshah.eth", {});
+
+    const userTokensTemp = []
+    const typesTokenTemp = []
+
+    Promise.all([tokensERC20, nfts]).then(allTokensAndNfts => {
+      if(allTokensAndNfts[1].ownedNfts.length > 0){
+        const tokensNFT = allTokensAndNfts[1].ownedNfts;
+        for (let i = 0; i < tokensNFT.length; i++) {
+          const {contract, tokenId, tokenType, spamInfo, balance, tokenUri} = tokensNFT[i];
+
+            userTokensTemp.push({
+              name: contract.name, 
+              title: `${contract.name} #${tokenId}`,
+              description: contract?.openSea?.description,
+              tokenId: tokenId,
+              contractAddress: contract.address,
+              balance: balance,
+              isSpam: spamInfo?.isSpam,
+              type: tokenType,
+              imgSrc: [tokenUri?.gateway ||  tokenUri?.raw, contract?.openSea?.imageUrl]
+            })
+
+            typesTokenTemp.push({name: tokenType, callback: () => {console.log(tokenType)}});
+        }
+      }
+      
+      if(allTokensAndNfts[0].tokenBalances.length > 0){
+        const tokenDataPromises = [];
+        const tokensERC20 = allTokensAndNfts[0];
+
+        for (let i = 0; i < tokensERC20.tokenBalances.length; i++) {
+          const tokenData = alchemy.core.getTokenMetadata(
+            tokensERC20.tokenBalances[i].contractAddress
+          );
+          tokenDataPromises.push(tokenData);
+        }
+    
+    
+        Promise.all(tokenDataPromises).then(allTokensDetailUser => {
+          for (let i = 0; i < allTokensDetailUser.length; i++) {
+            const tokenDetail = allTokensDetailUser[i];
+            const tokenContract = tokensERC20.tokenBalances[i]
+
+            userTokensTemp.push({
+              name: tokenDetail.name, 
+              symbol: tokenDetail.symbol, 
+              decimals: tokenDetail.decimals,  
+              contractAddress: tokenContract.contractAddress,
+              balance: tokenContract.tokenBalance,
+              type: "ERC20"
+            })
+
+            typesTokenTemp.push({name: "ERC20", callback: () => {console.log("ERC20")}});
+          }        
+
+          const unique = [...new Map(typesTokenTemp.map((m) => [m.name, m])).values()];
+          setTypeTokens(unique)
+        })
+      }
+
+      setUserTokens(userTokensTemp)
+    })
+  }
+
   useEffect(() => {
     if (typeof ethereum === 'undefined') {
       console.log('MetaMask no is installed!');
     }else{
       getAddress();
     }
-  },[])
+  }, [])
 
-  async function getTokenBalance() {
-    const config = {
-      apiKey: import.meta.env.VITE_ALCHEMY_API_KEY,
-      network: Network.ETH_GOERLI,
-    };
+  useEffect(() => {
+    if(userAddress !== '') getTokens();
+  },[userAddress])
 
-    const alchemy = new Alchemy(config);
-    const data = await alchemy.core.getTokenBalances(userAddress);
 
-    setResults(data);
 
-    const tokenDataPromises = [];
-
-    for (let i = 0; i < data.tokenBalances.length; i++) {
-      const tokenData = alchemy.core.getTokenMetadata(
-        data.tokenBalances[i].contractAddress
-      );
-      tokenDataPromises.push(tokenData);
-    }
-
-    setTokenDataObjects(await Promise.all(tokenDataPromises));
-    setHasQueried(true);
-  }
   return (
-    <Box w="100vw">
-      <Center>
-        <Flex
-          alignItems={'center'}
-          justifyContent="center"
-          flexDirection={'column'}
-        >
-          <Heading mb={0} fontSize={36}>
-            ERC-20 Token Indexer
-          </Heading>
-          <Text>
-            Plug in an address and this website will return all of its ERC-20
-            token balances!
-          </Text>
-        </Flex>
-      </Center>
-      <Flex
-        w="100%"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent={'center'}
-      >
-        <Heading mt={42}>
-          Get all the ERC-20 token balances of this address:
-        </Heading>
-        <Input
-          onChange={(e) => setUserAddress(e.target.value)}
-          color="black"
-          w="600px"
-          textAlign="center"
-          p={4}
-          bgColor="white"
-          fontSize={24}
-          value={userAddress}
-        />
-        <Button fontSize={20} onClick={getTokenBalance} mt={36} bgColor="blue">
-          Check ERC-20 Token Balances
-        </Button>
-
-        <Heading my={36}>ERC-20 token balances:</Heading>
-
-        {hasQueried ? (
-          <SimpleGrid w={'90vw'} columns={4} spacing={24}>
-            {results.tokenBalances.map((e, i) => {
-              return (
-                <Flex
-                  flexDir={'column'}
-                  color="white"
-                  bg="blue"
-                  w={'20vw'}
-                  key={e.id}
-                >
-                  <Box>
-                    <b>Symbol:</b> ${tokenDataObjects[i].symbol}&nbsp;
-                  </Box>
-                  <Box>
-                    <b>Balance:</b>&nbsp;
-                    {Utils.formatUnits(
-                      e.tokenBalance,
-                      tokenDataObjects[i].decimals
-                    )}
-                  </Box>
-                  <Image src={tokenDataObjects[i].logo} />
-                </Flex>
-              );
-            })}
-          </SimpleGrid>
-        ) : (
-          'Please make a query! This may take a few seconds...'
-        )}
-      </Flex>
-    </Box>
+    <>
+      <Container maxW='5xl' centerContent>
+        <Header value={"Token Indexer"}/>
+        <Search />
+        <TabOptions tokens={typeTokens} selected={typeSelected}/>
+      </Container>
+    </>
   );
 }
 
