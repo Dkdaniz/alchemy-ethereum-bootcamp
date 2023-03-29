@@ -24,3 +24,11 @@ Here are a few challenge suggestions:
 7. There are ways to make this app faster... can you implement some of them? How can the query be made _even_ quicker?
 8. Can you add ENS support for inputs?
 9. Completely open-ended!! Use this as the base for your next hackathon project, dream company or personal expedition :)
+
+## My Layout
+
+Figma: [Token Indexer - Design](https://www.figma.com/file/cQX1sBfMwsI4W0RRHo9n91/Token-Indexer?node-id=0%3A1&t=yT2m4IAiRKL12gex-1)
+
+
+<img style="margin-left: auto; margin-right: auto;width: 50%; float: left;" src=".../../../../../img/ERC20.png">
+<img style="margin-left: auto; margin-right: auto;width: 50%;" src=".../../../../../img/ERC721.png">
