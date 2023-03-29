@@ -1,12 +1,15 @@
 
-import { Alchemy, Network, Utils } from 'alchemy-sdk';
+import { useEffect, useState } from 'react';
+import { Alchemy, Network } from 'alchemy-sdk';
+import { ethers } from 'ethers';
+
+
 import Header from './components/Header/index';
 import Search from './components/Search/index';
 import TabOptions from './components/TabOptions/index';
 import Tokens from './components/Tokens/index';
 
-import { useEffect, useState } from 'react';
-
+import tokenImg from './assets/token.png'
 
 import {
   useToast,
@@ -22,6 +25,9 @@ function App() {
   const [userTokens, setUserTokens] = useState([]);
   const [typeTokens, setTypeTokens] = useState([]);
   const [typeSelected, setTypeSelected] = useState('');
+  const [searchAddress, setSearchAddress] = useState('');
+  const [isCallAlchemy, setIsCallAlchemy] = useState(false);
+  const [removeSpams, setRemoveSpams] = useState(false);
 
   const getAddress = async () => {
     try {
@@ -43,39 +49,73 @@ function App() {
     }
   }
 
+  const orderListTypeTokens = (typeTokensRaw) => {
+    const orderList = typeTokensRaw.sort((a, b) => {
+      if (a.name.length < b.name.length) {
+        return -1;
+      } else if (a.name.length > b.name.length) {
+        return 1;
+      }else{
+        return 0;
+      } 
+    })
+
+    return orderList;
+  }
+
   async function getTokens() {
+    if(isCallAlchemy === true) return;
+    
     const config = {
       apiKey: import.meta.env.VITE_ALCHEMY_API_KEY,
       network: Network.ETH_MAINNET,
     };
 
     const alchemy = new Alchemy(config);
-    const tokensERC20 = alchemy.core.getTokenBalances("0xshah.eth");
-    const nfts = alchemy.nft.getNftsForOwner("0xshah.eth", {});
+    const tokensERC20 = alchemy.core.getTokenBalances(userAddress);
+    const nfts = alchemy.nft.getNftsForOwner(userAddress, {});
 
     const userTokensTemp = []
     const typesTokenTemp = []
+
+    const tokenProcessed = [false, false];
 
     Promise.all([tokensERC20, nfts]).then(allTokensAndNfts => {
       if(allTokensAndNfts[1].ownedNfts.length > 0){
         const tokensNFT = allTokensAndNfts[1].ownedNfts;
         for (let i = 0; i < tokensNFT.length; i++) {
-          const {contract, tokenId, tokenType, spamInfo, balance, tokenUri} = tokensNFT[i];
+            const {contract, tokenId, media, tokenType, spamInfo, balance} = tokensNFT[i];
+            
+            let img = '';
+            if(media.length > 0 && media[0].gateway !== ""){
+              img = media[0].gateway;
+            }
+
+            let description = '';
+            if(contract?.openSea?.description){
+              if(contract?.openSea?.description.length > 200) {
+                description = `${contract?.openSea?.description.substring(0, 200)}...`
+              }else{
+                description = contract?.openSea?.description
+              }
+            }
 
             userTokensTemp.push({
               name: contract.name, 
-              title: `${contract.name} #${tokenId}`,
-              description: contract?.openSea?.description,
+              title: `${contract.name} ${tokenId !== ''&& tokenId.toString().length > 6 ? '' : `#${tokenId}`}`,
+              description: description,
               tokenId: tokenId,
               contractAddress: contract.address,
               balance: balance,
               isSpam: spamInfo?.isSpam,
               type: tokenType,
-              imgSrc: [tokenUri?.gateway ||  tokenUri?.raw, contract?.openSea?.imageUrl]
+              imgSrc: [img, tokenImg ]
             })
 
-            typesTokenTemp.push({name: tokenType, callback: () => {console.log(tokenType)}});
+            typesTokenTemp.push({name: tokenType, callback: () => {setTypeSelected(tokenType)}});
         }
+
+        if(tokenProcessed[0] && tokenProcessed[1]) setIsCallAlchemy(false)
       }
       
       if(allTokensAndNfts[0].tokenBalances.length > 0){
@@ -97,23 +137,57 @@ function App() {
 
             userTokensTemp.push({
               name: tokenDetail.name, 
-              symbol: tokenDetail.symbol, 
+              symbol: tokenDetail.symbol !== null ? tokenDetail.symbol : ' ', 
               decimals: tokenDetail.decimals,  
               contractAddress: tokenContract.contractAddress,
-              balance: tokenContract.tokenBalance,
+              balance: ethers.formatUnits(parseInt(tokenContract.tokenBalance, tokenDetail.decimals).toString()),
+              imgSrc: [tokenDetail.logo, tokenImg],
               type: "ERC20"
             })
 
-            typesTokenTemp.push({name: "ERC20", callback: () => {console.log("ERC20")}});
+            typesTokenTemp.push({name: "ERC20", callback: () => {setTypeSelected("ERC20")}});
           }        
 
-          const unique = [...new Map(typesTokenTemp.map((m) => [m.name, m])).values()];
-          setTypeTokens(unique)
+          const unique = orderListTypeTokens([...new Map(typesTokenTemp.map((m) => [m.name, m])).values()])
+          setTypeTokens(unique);
+          
+          setTypeSelected(unique.length > 0 ? unique[0].name : '')
+          if(tokenProcessed[0] && tokenProcessed[1]) setIsCallAlchemy(false)
         })
       }
 
       setUserTokens(userTokensTemp)
+      
     })
+  }
+
+  const handleOnKeyDown = (e) => {
+    if(e.key === "Enter"){
+      const isAddressValid = ethers.isAddress(searchAddress);
+      if(searchAddress.includes('0x') === true && isAddressValid === false && searchAddress.includes('.eth') === false) {
+        return toast({
+          title: 'Error',
+          description: "Address Invalid",
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        })
+      }
+
+      if(searchAddress === ''){
+        getAddress();
+      }else{
+        setUserAddress(searchAddress);
+      }
+    }
+  }
+
+  const handleOnChange = (e) => {
+    setSearchAddress(e.target.value)
+  }
+
+  const handleRemoveSpams = () => {
+    setRemoveSpams(!removeSpams)
   }
 
   useEffect(() => {
@@ -128,14 +202,13 @@ function App() {
     if(userAddress !== '') getTokens();
   },[userAddress])
 
-
-
   return (
     <>
       <Container maxW='5xl' centerContent>
         <Header value={"Token Indexer"}/>
-        <Search />
-        <TabOptions tokens={typeTokens} selected={typeSelected}/>
+        <Search value={searchAddress} onkeydown={handleOnKeyDown} onchange={handleOnChange} />
+        <TabOptions tokens={typeTokens} selected={typeSelected} isChecked={removeSpams} onchangeChecked={handleRemoveSpams}/>
+        <Tokens tokens={userTokens} selected={typeSelected} removeSpams={removeSpams}/>
       </Container>
     </>
   );
