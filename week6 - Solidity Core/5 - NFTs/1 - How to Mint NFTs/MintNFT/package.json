@@ -1,0 +1,27 @@
+{
+  "name": "airdrop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ipfs:upload": "node ./ipfs/upload.js",
+    "deploy": "npx hardhat run scripts/deploy.js --network goerli",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.0",
+    "dotenv": "^16.0.3",
+    "hardhat": "^2.12.5",
+    "ipfs-core": "^0.17.0",
+    "ipfs-http-client": "^59.0.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0"
+  },
+  "engines": {
+     "node": "^16"
+  }
+}
