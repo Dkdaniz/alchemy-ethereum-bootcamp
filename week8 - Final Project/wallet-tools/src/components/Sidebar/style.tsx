@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+interface ButtonProps {
+  color: string;
+}
+
 export const Container = styled.div`
   display: flex;
   direction: column;
@@ -9,28 +13,38 @@ export const Container = styled.div`
   height: 100vh;
 `;
 
-export const Button = styled.div`
+export const Button = styled.div<ButtonProps>`
   display: flex;
   background: transparent;
   margin-top: 35px;
-  margin-left: 12px;
 
   p {
     margin-left: 8px;
   }
 
-  &:hover {
-    background: '#0038FF';
-  }
+  color: ${(props) => props.color};
 `;
 
-export const ConnectButton = styled.div`
-  background: transparent;
-  margin-left: 12px;
+export const Section = styled.div`
+  display: 'flex';
+  flex-direction: 'column';
+  margin-top: 45px;
+  margin-left: 45px;
+`;
 
-  color: #ffffff;
+export const List = styled.ul`
+  list-style-type: none;
+`;
 
-  img {
-    margin-top: 35px;
+export const ItemList = styled.li`
+  cursor: pointer;
+`;
+
+export const MetamaskButton = styled.div`
+  cursor: pointer;
+
+  p {
+    margin-left: 10px;
+    color: #fff;
   }
 `;
