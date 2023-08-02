@@ -1,68 +1,129 @@
-import { Box } from '@chakra-ui/react';
+import { useState } from 'react';
 
-import IconHome from '../../assets/home.svg';
-import IconReceive from '../../assets/receive.svg';
-import IconSend from '../../assets/send.svg';
-import IconHistory from '../../assets/history.svg';
-import IconSave from '../../assets/save.svg';
-import IconMetamask from '../../assets/metamask.svg';
+import {
+  FiClock,
+  FiHome,
+  FiArrowUpLeft,
+  FiArrowDownRight,
+} from 'react-icons/fi';
 
-import { Container, Button, Icon, ConnectButton } from './style';
+import { LuGlobe2, LuTicket, LuBookmarkMinus } from 'react-icons/lu';
+
+import { Container, Button, ConnectButton } from './style';
+
+const enum Option {
+  Home,
+  Receive,
+  Send,
+  History,
+  Save,
+  Explorer,
+  Disperse,
+}
 
 function Sidebar() {
+  const [option, setOption] = useState<Option>(Option.Home);
+
   return (
     <>
       <Container>
-        <Box>
+        <div>
           <h1 style={{ fontSize: 24, marginLeft: 45, marginTop: 45 }}>
             Wallet Tools
           </h1>
-          <Box display='flex' flexDirection='column'>
-            <Box
-              display='flex'
-              flexDirection='column'
-              marginLeft={45}
-              marginTop={55}
+          <div
+            style={{
+              marginLeft: 45,
+              marginTop: 55,
+            }}
+          >
+            <h2 style={{ fontSize: 14, color: '#9196A8' }}>Wallets</h2>
+            <ul
+              style={{
+                listStyleType: 'none',
+              }}
             >
-              <h2 style={{ fontSize: 14, color: '#9196A8' }}>Wallet</h2>
-              <Box display='flex' flexDirection='row'>
-                <Icon src={IconHome} />
-                <Button>Overview</Button>
-              </Box>
-              <Box display='flex' flexDirection='row'>
-                <Icon src={IconReceive} />
-                <Button>Receive</Button>
-              </Box>
-              <Box display='flex' flexDirection='row'>
-                <Icon src={IconSend} />
-                <Button>Save</Button>
-              </Box>
-              <Box display='flex' flexDirection='row'>
-                <Icon src={IconHistory} />
-                <Button>History</Button>
-              </Box>
-              <Box display='flex' flexDirection='row'>
-                <Icon src={IconSave} />
-                <Button>Save</Button>
-              </Box>
-            </Box>
-            <Box
-              display='flex'
-              flexDirection='column'
-              marginLeft={45}
-              marginTop={55}
+              <li>
+                <Button
+                  onClick={() => setOption(Option.Home)}
+                  color={option === Option.Home ? 'blue' : 'black'}
+                >
+                  <FiHome size={24} />
+                  <p>Overview</p>
+                </Button>
+              </li>
+              <li>
+                <Button>
+                  <FiArrowUpLeft size={24} />
+                  <p>Receive</p>
+                </Button>
+              </li>
+              <li>
+                <Button
+                  onClick={() => setOption(Option.Send)}
+                  color={option === Option.Send ? 'blue' : 'black'}
+                >
+                  <FiArrowDownRight size={24} />
+                  <p>Send</p>
+                </Button>
+              </li>
+              <li>
+                <Button
+                  onClick={() => setOption(Option.History)}
+                  color={option === Option.History ? 'blue' : 'black'}
+                >
+                  <FiClock size={24} />
+                  <p>History</p>
+                </Button>
+              </li>
+              <li>
+                <Button
+                  onClick={() => setOption(Option.Save)}
+                  color={option === Option.Save ? 'blue' : 'black'}
+                >
+                  <LuBookmarkMinus size={24} />
+                  <p>Save</p>
+                </Button>
+              </li>
+            </ul>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              marginLeft: 45,
+              marginTop: 45,
+            }}
+          >
+            <h2 style={{ fontSize: 14, color: '#9196A8' }}>Apps</h2>
+            <ul
+              style={{
+                listStyleType: 'none',
+              }}
             >
-              <h2 style={{ fontSize: 14, color: '#9196A8' }}>Apps</h2>
-              <Box display='flex' flexDirection='row'>
-                <Icon src={IconHome} />
-                <Button>Explorer</Button>
-              </Box>
-              <Box display='flex' flexDirection='row'>
-                <Icon src={IconReceive} />
-                <Button>Disperse App</Button>
-              </Box>
-            </Box>
-            <Box
+              <li>
+                <Button
+                  onClick={() => setOption(Option.Explorer)}
+                  color={option === Option.Explorer ? 'blue' : 'black'}
+                >
+                  <LuGlobe2 size={24} />
+                  <p>Explorer</p>
+                </Button>
+              </li>
+              <li>
+                <Button
+                  onClick={() => setOption(Option.Disperse)}
+                  color={option === Option.Disperse ? 'blue' : 'black'}
+                >
+                  <LuTicket size={24} />
+                  <p>Disperse App</p>
+                </Button>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            {/* <Box
               display='flex'
               flexDirection='row'
               position='absolute'
@@ -76,11 +137,11 @@ function Sidebar() {
               padding={5}
               width={180}
             >
-              <img src={IconMetamask} />
-              <ConnectButton>Connect</ConnectButton>
-            </Box>
-          </Box>
-        </Box>
+              <MetamaskIcon marginTop={0} fill={'white'} />
+              <ConnectStack>Connect</ConnectButton>
+            </Box> */}
+          </div>
+        </div>
       </Container>
     </>
   );

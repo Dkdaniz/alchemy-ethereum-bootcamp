@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.body`
+export const Container = styled.div`
   display: flex;
   direction: column;
   justify-content: start;
@@ -8,17 +8,23 @@ export const Container = styled.body`
   background: #ffffff;
   height: 100vh;
 `;
-export const Button = styled.body`
+
+export const Button = styled.div`
+  display: flex;
   background: transparent;
   margin-top: 35px;
   margin-left: 12px;
+
+  p {
+    margin-left: 8px;
+  }
+
+  &:hover {
+    background: '#0038FF';
+  }
 `;
 
-export const Icon = styled.img`
-  margin-top: 35px;
-`;
-
-export const ConnectButton = styled.body`
+export const ConnectButton = styled.div`
   background: transparent;
   margin-left: 12px;
 
