@@ -5,12 +5,17 @@ interface ButtonProps {
 }
 
 export const Container = styled.div`
+  background: #ffffff;
   display: flex;
   direction: column;
   justify-content: start;
   width: 254px;
-  background: #ffffff;
+  min-height: 254px;
+
+  margin-right: 45px;
+
   height: 100vh;
+  width: 254px;
 `;
 
 export const Button = styled.div<ButtonProps>`

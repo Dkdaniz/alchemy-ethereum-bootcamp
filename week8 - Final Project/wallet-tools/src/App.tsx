@@ -1,9 +1,14 @@
-import Sidebar from './components/Sidebar';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Receive from './pages/Receive';
 
 function App() {
   return (
     <>
-      <Sidebar />
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Receive />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useMetamaskStore } from '../../store/metamask';
 
 import {
   FiClock,
@@ -128,7 +130,39 @@ function MetamaskIcon() {
 }
 
 function Sidebar() {
-  const [option, setOption] = useState<Option>(Option.Home);
+  const { requestAccounts } = useMetamaskStore();
+  const location = useLocation();
+
+  const [option, setOption] = useState<Option>(Option.Receive);
+
+  useEffect(() => {
+    const routeName = location.pathname;
+    switch (routeName) {
+      case '/':
+        setOption(Option.Home);
+        break;
+      case '/receive':
+        setOption(Option.Receive);
+        break;
+      case '/send':
+        setOption(Option.Send);
+        break;
+      case '/history':
+        setOption(Option.History);
+        break;
+      case '/save':
+        setOption(Option.Save);
+        break;
+      case '/explorer':
+        setOption(Option.Explorer);
+        break;
+      case '/disperse':
+        setOption(Option.Disperse);
+        break;
+      default:
+        break;
+    }
+  }, []);
 
   return (
     <>
@@ -227,6 +261,7 @@ function Sidebar() {
               padding: 5,
               width: 150,
             }}
+            onClick={() => requestAccounts()}
           >
             <MetamaskIcon />
             <p>Connect</p>
