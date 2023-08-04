@@ -1,39 +1,60 @@
-import { useState, useCallback, useEffect } from 'react';
-import { toDataURL } from 'qrcode';
+import { QRCode, message } from 'antd';
+
 import { useMetamaskStore } from '../../store/metamask';
+import { FiCopy } from 'react-icons/fi';
 
 import Sidebar from '../../components/Sidebar';
 
-import { Container, Section, QRCode } from './style';
+import { Container, Section, Headline, CopyPast, Line } from './style';
 
 function Receive() {
   const { account } = useMetamaskStore();
-  const [qrCode, setQrCode] = useState<string>('');
+  const [messageApi, contextHolder] = message.useMessage();
 
-  useEffect(() => {
-    const opts = {
-      errorCorrectionLevel: 'H',
-      type: 'image/jpeg',
-      color: {
-        dark: '#0177FB',
+  const confirmMessage = () => {
+    console.log('ssasasa');
+    messageApi.open({
+      type: 'success',
+      content: 'Your address has been copied',
+      style: {
+        marginLeft: '80vw',
+        marginRight: 10,
       },
-    };
-
-    if (account !== '') {
-      toDataURL(account, opts).then((code) => {
-        setQrCode(code);
-      });
-    }
-  }, [account]);
+    });
+  };
 
   return (
     <>
+      {contextHolder}
       <Container>
         <Sidebar />
         <Section>
-          <h1>Scan QR Code</h1>
-          <p>Scan this wallet to make the payment</p>
-          {qrCode && <QRCode src={qrCode} />}
+          <Headline>
+            <h1>Scan QR Code</h1>
+            <p>Scan this wallet to make the payment</p>
+          </Headline>
+          <QRCode
+            value={account || ' '}
+            style={{
+              marginTop: 70,
+              border: '4px solid #0177FB ',
+              borderRadius: 20,
+            }}
+            size={300}
+          />
+          <div style={{ marginTop: 70, maxWidth: '100%' }}>
+            <Line>
+              <div />
+              <p>or copy the wallet manually</p>
+              <div />
+            </Line>
+            <CopyPast>
+              <input readOnly={true} type='text' value={account} />
+              <button onClick={() => confirmMessage()}>
+                <FiCopy size={20} />
+              </button>
+            </CopyPast>
+          </div>
         </Section>
       </Container>
     </>

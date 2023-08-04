@@ -162,6 +162,8 @@ function Sidebar() {
       default:
         break;
     }
+
+    requestAccounts();
   }, []);
 
   return (
