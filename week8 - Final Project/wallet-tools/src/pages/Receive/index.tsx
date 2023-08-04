@@ -39,6 +39,7 @@ function Receive() {
               marginTop: 70,
               border: '4px solid #0177FB ',
               borderRadius: 20,
+              maxWidth: '100%',
             }}
             size={300}
           />
