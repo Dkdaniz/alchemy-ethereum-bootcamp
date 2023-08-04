@@ -12,7 +12,7 @@ function Receive() {
   const [messageApi, contextHolder] = message.useMessage();
 
   const confirmMessage = () => {
-    console.log('ssasasa');
+    navigator.clipboard.writeText(account);
     messageApi.open({
       type: 'success',
       content: 'Your address has been copied',
