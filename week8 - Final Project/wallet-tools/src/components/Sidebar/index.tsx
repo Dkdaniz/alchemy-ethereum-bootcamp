@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useMetamaskStore } from '../../store/metamask';
 
@@ -130,6 +130,7 @@ function MetamaskIcon() {
 }
 
 function Sidebar() {
+  const navigate = useNavigate();
   const { requestAccounts } = useMetamaskStore();
   const location = useLocation();
 
@@ -137,6 +138,9 @@ function Sidebar() {
 
   useEffect(() => {
     const routeName = location.pathname;
+
+    console.log(routeName);
+
     switch (routeName) {
       case '/':
         setOption(Option.Home);
@@ -162,9 +166,7 @@ function Sidebar() {
       default:
         break;
     }
-
-    requestAccounts();
-  }, []);
+  }, [location.pathname]);
 
   return (
     <>
@@ -178,7 +180,7 @@ function Sidebar() {
             <List>
               <ItemList>
                 <Button
-                  onClick={() => setOption(Option.Home)}
+                  onClick={() => navigate('/')}
                   color={option === Option.Home ? '#0038FF' : '#323336'}
                 >
                   <FiHome size={24} />
@@ -187,7 +189,7 @@ function Sidebar() {
               </ItemList>
               <ItemList>
                 <Button
-                  onClick={() => setOption(Option.Receive)}
+                  onClick={() => navigate('/receive')}
                   color={option === Option.Receive ? '#0038FF' : '#323336'}
                 >
                   <FiArrowDownRight size={24} />
@@ -214,7 +216,7 @@ function Sidebar() {
               </ItemList>
               <ItemList>
                 <Button
-                  onClick={() => setOption(Option.Save)}
+                  onClick={() => navigate('/save')}
                   color={option === Option.Save ? '#0038FF' : '#323336'}
                 >
                   <LuBookmarkMinus size={24} />

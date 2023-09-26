@@ -12,7 +12,7 @@ export const Container = styled.div`
   width: 254px;
   min-height: 254px;
 
-  margin-right: 45px;
+  margin-right: 24px;
 
   height: 100vh;
   width: 254px;

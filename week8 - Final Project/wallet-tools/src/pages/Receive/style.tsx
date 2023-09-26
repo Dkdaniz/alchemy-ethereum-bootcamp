@@ -10,7 +10,7 @@ export const Section = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: calc(100% - 254px - 80px);
+  width: calc(100% - 254px - 44px);
 
   background-color: #fff;
 
@@ -18,10 +18,10 @@ export const Section = styled.div`
 
   padding: 32px;
 
-  margin-bottom: 24px;
-  margin-top: 24px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 
-  border-radius: 32px;
+  border-radius: 12px;
 `;
 
 export const Headline = styled.div`
