@@ -50,7 +50,7 @@ export const LineHorizontal = styled.div`
 
 export const Body = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 
   height: 100%;
 `;
@@ -59,10 +59,12 @@ export const Register = styled.div`
   display: flex;
   flex-direction: column;
 
+  width: 100%;
+  max-width: 750px;
   height: 100%;
 
+  padding-right: 50px;
   margin: 0px 0px 0px 90px;
-  max-width: 750px;
 
   border-right: 3px solid #ececec;
 
@@ -117,7 +119,7 @@ export const InputGroup = styled.div`
   }
 `;
 
-export const Icon = styled.div`
+export const IconInput = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -165,5 +167,73 @@ export const ButtonGroup = styled.div`
     color: #ffffff;
     font-weight: 500;
     font-size: 24px;
+  }
+`;
+
+export const Recipient = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  margin: 0px 90px 0px 90px;
+
+  h2 {
+    margin-top: 50px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+`;
+
+export const UserBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-direction: column;
+
+  background-color: #f7f5fe;
+
+  border-radius: 17px;
+  border: 1px solid #323336;
+
+  margin-top: 26px;
+`;
+
+export const User = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  height: 73px;
+`;
+
+export const Account = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  p {
+    &:nth-child(2) {
+      margin-top: 5px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+  }
+`;
+
+export const ButtonUser = styled.div`
+  display: flex;
+
+  img {
+    width: 24px;
+    margin-right: 24px;
+  }
+`;
+
+export const IconUser = styled.div`
+  display: flex;
+  margin-left: 24px;
+
+  img {
+    margin-right: 24px;
+    width: 28px;
   }
 `;

@@ -3,6 +3,8 @@ import Sidebar from '../../components/Sidebar';
 import EthereumIcon from '../../assets/ethereum.svg';
 import WalletIcon from '../../assets/wallet.svg';
 import NoteIcon from '../../assets/note.svg';
+import UserIcon from '../../assets/user.svg';
+import DeleteIcon from '../../assets/delete.svg';
 
 import {
   Container,
@@ -14,11 +16,29 @@ import {
   Body,
   Register,
   InputGroup,
-  Icon,
+  IconInput,
   ButtonGroup,
   InputBlock,
   Recipient,
+  UserBlock,
+  User,
+  Account,
+  ButtonUser,
+  IconUser,
 } from './style';
+
+const users = [
+  { name: 'Daniel', account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f' },
+  { name: 'Daiane', account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f' },
+  { name: 'Pedro', account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f' },
+  { name: 'Aron', account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f' },
+  { name: 'Ezequiel', account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f' },
+  { name: 'Daniel', account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f' },
+  { name: 'Daiane', account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f' },
+  { name: 'Pedro', account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f' },
+  { name: 'Aron', account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f' },
+  { name: 'Ezequiel', account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f' },
+];
 
 export default function Save() {
   return (
@@ -36,13 +56,13 @@ export default function Save() {
           </Header>
           <Body>
             <Register>
-              <h2>Register new wallet</h2>
+              <h2>Register</h2>
               <InputBlock>
                 <InputGroup key='input-name'>
-                  <Icon>
-                    <img src={EthereumIcon} alt='Your SVG' />
+                  <IconInput>
+                    <img src={EthereumIcon} alt='Ethereum' />
                     <p>Name</p>
-                  </Icon>
+                  </IconInput>
 
                   <LineVertical>
                     <div />
@@ -50,10 +70,10 @@ export default function Save() {
                   <input type='text' value={'Cleiton'} />
                 </InputGroup>
                 <InputGroup key='input-wallet'>
-                  <Icon>
-                    <img src={WalletIcon} alt='Your SVG' />
+                  <IconInput>
+                    <img src={WalletIcon} alt='Wallet' />
                     <p>Wallet</p>
-                  </Icon>
+                  </IconInput>
                   <LineVertical>
                     <div />
                   </LineVertical>
@@ -63,10 +83,10 @@ export default function Save() {
                   />
                 </InputGroup>
                 <InputGroup key='input-note'>
-                  <Icon>
-                    <img src={NoteIcon} alt='Your SVG' />
+                  <IconInput>
+                    <img src={NoteIcon} alt='Note' />
                     <p>Notes</p>
-                  </Icon>
+                  </IconInput>
 
                   <LineVertical>
                     <div />
@@ -80,9 +100,45 @@ export default function Save() {
                 </div>
               </ButtonGroup>
             </Register>
-            {/* <Recipient>
-              <h2>Recipients</h2>
-            </Recipient> */}
+            <Recipient>
+              <h2>Wallets</h2>
+              <ul
+                style={{
+                  overflowY: 'auto',
+                  height: '75vh',
+                }}
+              >
+                {users.map((user) => (
+                  <li style={{ listStyleType: 'none' }}>
+                    <UserBlock>
+                      <User>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <IconUser>
+                            <img src={UserIcon} alt='User' />
+                          </IconUser>
+                          <Account>
+                            <p>{user.name}</p>
+                            <p>{user.account}</p>
+                          </Account>
+                        </div>
+
+                        <ButtonUser>
+                          <button>
+                            <img src={DeleteIcon} alt='Delete' />
+                          </button>
+                        </ButtonUser>
+                      </User>
+                    </UserBlock>
+                  </li>
+                ))}
+              </ul>
+            </Recipient>
           </Body>
         </Section>
       </Container>
