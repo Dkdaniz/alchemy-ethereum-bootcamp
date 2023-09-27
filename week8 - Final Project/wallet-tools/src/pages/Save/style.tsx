@@ -29,19 +29,19 @@ export const Title = styled.div`
   justify-content: start;
   margin: 32px 32px 32px 54px;
 
-  p {
-    font-size: 18px;
+  h1 {
+    font-size: 20px;
     font-weight: 500;
   }
 `;
 
-export const Line = styled.div`
+export const LineHorizontal = styled.div`
   display: flex;
   flex-direction: row;
 
   div {
-    width: 100vh;
-    border-top: 2px solid #ececec;
+    width: 100%;
+    border-top: 3px solid #ececec;
 
     margin-right: 18px;
     margin-left: 18px;
@@ -51,18 +51,119 @@ export const Line = styled.div`
 export const Body = styled.div`
   display: flex;
   flex-direction: column;
+
+  height: 100%;
 `;
 
 export const Register = styled.div`
-  margin: 46px 0px 0px 90px;
+  display: flex;
+  flex-direction: column;
 
-  p {
-    font-size: 14px;
+  height: 100%;
+
+  margin: 0px 0px 0px 90px;
+  max-width: 750px;
+
+  border-right: 3px solid #ececec;
+
+  h2 {
+    margin-top: 50px;
+    font-size: 18px;
     font-weight: 500;
   }
 `;
 
-export const Input = styled.input`
-  stroke-width: 2px;
-  stroke: #eae9ea;
+export const LineVertical = styled.div`
+  width: 100px;
+
+  transform: rotate(90deg);
+
+  div {
+    width: 50px;
+    border-top: 2px solid #ececec;
+
+    margin-right: 18px;
+    margin-left: 18px;
+  }
+`;
+
+export const InputBlock = styled.div`
+  margin-top: 30px;
+`;
+
+export const InputGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  max-width: 680px;
+
+  margin-top: 26px;
+  margin-right: 20px;
+
+  border-style: solid;
+  border-width: 3px;
+  border-color: #eae9ea;
+
+  border-radius: 12px;
+
+  input {
+    width: 100%;
+    outline: 0;
+  }
+
+  input:focus {
+    outline: 0;
+  }
+`;
+
+export const Icon = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  max-width: 120px;
+
+  margin-right: 20px;
+
+  img {
+    width: 45px;
+    margin: 20px 40px 20px 25px;
+  }
+
+  p {
+    margin-right: 20px;
+  }
+`;
+
+export const ButtonGroup = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+
+    justify-items: center;
+
+    margin-top: 76px;
+
+    height: 50px;
+
+    width: 300px;
+    background-color: #0177fb;
+    justify-content: center;
+
+    &:hover {
+      background-color: #2989f6;
+    }
+  }
+
+  button {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 24px;
+  }
 `;
