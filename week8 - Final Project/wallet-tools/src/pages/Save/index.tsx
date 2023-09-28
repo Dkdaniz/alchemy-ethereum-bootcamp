@@ -5,6 +5,7 @@ import WalletIcon from '../../assets/wallet.svg';
 import NoteIcon from '../../assets/note.svg';
 import UserIcon from '../../assets/user.svg';
 import DeleteIcon from '../../assets/delete.svg';
+import SearchIcon from '../../assets/search.svg';
 
 import {
   Container,
@@ -26,6 +27,7 @@ import {
   ButtonUser,
   IconUser,
   ListUsers,
+  Search,
 } from './style';
 
 const users = [
@@ -103,6 +105,10 @@ export default function Save() {
             </Register>
             <Recipient>
               <h2>Wallets</h2>
+              <Search>
+                <input type='text' placeholder='Search' />
+                <img src={SearchIcon} alt='Search' />
+              </Search>
               <ListUsers>
                 {users.map((user) => (
                   <li style={{ listStyleType: 'none' }}>

@@ -241,7 +241,7 @@ export const IconUser = styled.div`
 
 export const ListUsers = styled.ul`
   overflow-y: auto;
-  height: 73vh;
+  height: 63vh;
   margin-top: 35px;
 
   &::-webkit-scrollbar {
@@ -250,5 +250,35 @@ export const ListUsers = styled.ul`
 
   &::-webkit-scrollbar-track {
     width: 0px;
+  }
+`;
+
+export const Search = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  border: 2px solid #ececec;
+  border-radius: 10px;
+
+  margin-top: 50px;
+
+  padding: 12px;
+
+  input {
+    padding: 12px;
+
+    width: 100%;
+    height: 30px;
+  }
+
+  input:focus {
+    outline: 0;
+  }
+
+  img {
+    margin-right: 12px;
+
+    width: 28px;
   }
 `;
