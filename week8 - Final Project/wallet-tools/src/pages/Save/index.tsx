@@ -25,6 +25,7 @@ import {
   Account,
   ButtonUser,
   IconUser,
+  ListUsers,
 } from './style';
 
 const users = [
@@ -102,12 +103,7 @@ export default function Save() {
             </Register>
             <Recipient>
               <h2>Wallets</h2>
-              <ul
-                style={{
-                  overflowY: 'auto',
-                  height: '75vh',
-                }}
-              >
+              <ListUsers>
                 {users.map((user) => (
                   <li style={{ listStyleType: 'none' }}>
                     <UserBlock>
@@ -137,7 +133,7 @@ export default function Save() {
                     </UserBlock>
                   </li>
                 ))}
-              </ul>
+              </ListUsers>
             </Recipient>
           </Body>
         </Section>

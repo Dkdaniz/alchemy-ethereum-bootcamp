@@ -63,7 +63,6 @@ export const Register = styled.div`
   max-width: 750px;
   height: 100%;
 
-  padding-right: 50px;
   margin: 0px 0px 0px 90px;
 
   border-right: 3px solid #ececec;
@@ -101,7 +100,7 @@ export const InputGroup = styled.div`
   max-width: 680px;
 
   margin-top: 26px;
-  margin-right: 20px;
+  margin-right: 50px;
 
   border-style: solid;
   border-width: 3px;
@@ -112,6 +111,8 @@ export const InputGroup = styled.div`
   input {
     width: 100%;
     outline: 0;
+
+    padding: 0 10px 0 0;
   }
 
   input:focus {
@@ -176,7 +177,7 @@ export const Recipient = styled.div`
 
   width: 100%;
 
-  margin: 0px 90px 0px 90px;
+  margin: 0 50px 0 50px;
 
   h2 {
     margin-top: 50px;
@@ -235,5 +236,19 @@ export const IconUser = styled.div`
   img {
     margin-right: 24px;
     width: 28px;
+  }
+`;
+
+export const ListUsers = styled.ul`
+  overflow-y: auto;
+  height: 73vh;
+  margin-top: 35px;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  &::-webkit-scrollbar-track {
+    width: 0px;
   }
 `;
