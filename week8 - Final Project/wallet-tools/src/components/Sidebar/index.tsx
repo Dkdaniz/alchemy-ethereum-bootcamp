@@ -139,8 +139,6 @@ function Sidebar() {
   useEffect(() => {
     const routeName = location.pathname;
 
-    console.log(routeName);
-
     switch (routeName) {
       case '/':
         setOption(Option.Home);
@@ -239,7 +237,7 @@ function Sidebar() {
               </ItemList>
               <ItemList>
                 <Button
-                  onClick={() => setOption(Option.Disperse)}
+                  onClick={() => navigate('/disperse')}
                   color={option === Option.Disperse ? '#0038FF' : '#323336'}
                 >
                   <LuTicket size={24} />

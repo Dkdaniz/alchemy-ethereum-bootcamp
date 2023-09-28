@@ -75,16 +75,12 @@ export const Register = styled.div`
 `;
 
 export const LineVertical = styled.div`
-  width: 100px;
+  width: 70px;
 
   transform: rotate(90deg);
 
   div {
-    width: 50px;
     border-top: 2px solid #ececec;
-
-    margin-right: 18px;
-    margin-left: 18px;
   }
 `;
 
@@ -113,6 +109,8 @@ export const InputGroup = styled.div`
     outline: 0;
 
     padding: 0 10px 0 0;
+
+    font-size: 14px;
   }
 
   input:focus {
@@ -136,6 +134,7 @@ export const IconInput = styled.div`
 
   p {
     margin-right: 20px;
+    font-size: 14px;
   }
 `;
 
