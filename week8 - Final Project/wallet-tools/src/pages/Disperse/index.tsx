@@ -76,8 +76,8 @@ const users = [
 
 export default function Disperse() {
   const [selectedOption, setSelectedOption] = useState({
-    value: 'token',
-    label: 'Token',
+    value: 'ethereum',
+    label: 'Ethereum',
   });
 
   return (
@@ -135,7 +135,7 @@ export default function Disperse() {
               </InputBlock>
               <Line>
                 <div />
-                <p>Insert all address and amounts</p>
+                <p>Insert address and amount</p>
                 <div />
               </Line>
               <InputBlock>
