@@ -205,7 +205,7 @@ function Sidebar() {
               </ItemList>
               <ItemList>
                 <Button
-                  onClick={() => setOption(Option.History)}
+                  onClick={() => navigate('/history')}
                   color={option === Option.History ? '#0038FF' : '#323336'}
                 >
                   <FiClock size={24} />

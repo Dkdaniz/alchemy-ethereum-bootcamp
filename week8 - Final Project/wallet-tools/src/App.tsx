@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Receive from './pages/Receive';
 import Save from './pages/Save';
+import History from './pages/History';
 import Disperse from './pages/Disperse';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
           <Route path='/' element={<Receive />} />
           <Route path='/receive' element={<Receive />} />
           <Route path='/save' element={<Save />} />
+          <Route path='/history' element={<History />} />
           <Route path='/disperse' element={<Disperse />} />
         </Routes>
       </BrowserRouter>
