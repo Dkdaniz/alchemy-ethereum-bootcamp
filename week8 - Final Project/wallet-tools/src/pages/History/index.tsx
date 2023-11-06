@@ -23,6 +23,9 @@ import {
   Body,
   Transaction,
   InputBlock,
+  TransactionInfo,
+  Icon,
+  TitleDetails,
 } from './style';
 
 const options = [
@@ -116,59 +119,56 @@ export default function History() {
           <Body>
             <Transaction></Transaction>
             <div>
-              <div key={'Title'}>
-                <p>Details</p>
-              </div>
-              <div key={'Icon'}>
-                <div
-                  style={{
-                    display: 'absolute',
-                    background: '#DDE1EB',
-                    borderRadius: '40px',
-                    width: '76px',
-                    height: '74px',
-                  }}
-                >
-                  <img src={TxPendingBlue} alt='icon' width={52}></img>
-                </div>
+              <TitleDetails>
+                <h2>Details</h2>
+              </TitleDetails>
+              <div
+                style={{
+                  display: 'display',
+                  flexDirection: 'row',
+                }}
+              >
+                <Icon>
+                  <img src={TxPendingBlue} width={40} alt='icon' />
+                </Icon>
                 <p>Pending Transaction</p>
               </div>
-              <div key={'TransactionInfo'}>
+              <TransactionInfo>
                 <div>
-                  <p>TxHash</p>
+                  <b>TxHash</b>
                   <p>
                     0xf2df62205e75e1cca907187bea4a230533c56b0bbcca1f357ba5ffc0447b680a
                   </p>
                 </div>
                 <div>
-                  <p>Date</p>
+                  <b>Date</b>
                   <p>26 Apr 2023</p>
                 </div>
                 <div>
-                  <p>From</p>
+                  <b>From</b>
                   <p>0x8462829701ddd06392a516d1841c42297d567915</p>
                 </div>
                 <div>
-                  <p>To</p>
+                  <b>To</b>
                   <p>0xd6f157d03525598aeb0ecca25f2e54fa97c83741</p>
                 </div>
                 <div>
-                  <p>Confirmations</p>
+                  <b>Confirmations</b>
                   <p>0</p>
                 </div>
                 <div>
-                  <p>Value</p>
+                  <b>Value</b>
                   <p>0.005 ETH</p>
                 </div>
                 <div>
-                  <p>Fee</p>
+                  <b>Fee</b>
                   <p>0.001 ETH</p>
                 </div>
                 <div>
-                  <p>Total Cost</p>
+                  <b>Total Cost</b>
                   <p>0.006 ETH</p>
                 </div>
-              </div>
+              </TransactionInfo>
             </div>
           </Body>
         </Section>

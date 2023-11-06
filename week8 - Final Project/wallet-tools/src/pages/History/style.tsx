@@ -55,6 +55,24 @@ export const Body = styled.div`
   height: 100%;
 `;
 
+export const TransactionInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  div {
+    margin-top: 10px;
+
+    b {
+      font-size: 14px;
+    }
+
+    p {
+      font-size: 12px;
+      flex-wrap: 'wrap';
+    }
+  }
+`;
+
 export const Transaction = styled.div`
   display: flex;
   flex-direction: column;
@@ -63,7 +81,7 @@ export const Transaction = styled.div`
   max-width: 750px;
   height: 100%;
 
-  margin: 0px 0px 0px 90px;
+  margin: 0px 0px 0px 150px;
 
   border-right: 3px solid #ececec;
 
@@ -90,53 +108,22 @@ export const InputBlock = styled.div`
   margin-top: 10px;
 `;
 
-export const InputGroup = styled.div`
+export const Icon = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  justify-content: center;
+  background: #dde1eb;
 
-  max-width: 680px;
-
-  margin-top: 26px;
-  margin-right: 50px;
-
-  border-style: solid;
-  border-width: 3px;
-  border-color: #eae9ea;
-
-  border-radius: 12px;
-
-  input {
-    width: 100%;
-    outline: 0;
-
-    padding: 0 10px 0 0;
-
-    font-size: 14px;
-  }
-
-  input:focus {
-    outline: 0;
-  }
+  border-radius: 40px;
+  width: 76px;
+  height: 74px;
 `;
 
-export const IconInput = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+export const TitleDetails = styled.div`
+  justify-content: start;
+  margin: 32px 32px 32px 32px;
 
-  max-width: 120px;
-
-  margin-right: 20px;
-
-  img {
-    width: 45px;
-    margin: 20px 40px 20px 25px;
-  }
-
-  p {
-    white-space: nowrap;
-    margin-right: 20px;
-    font-size: 14px;
+  h2 {
+    font-size: 16px;
+    font-weight: 500;
   }
 `;
