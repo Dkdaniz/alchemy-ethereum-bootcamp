@@ -21,12 +21,126 @@ import {
   LineHorizontal,
   Header,
   Body,
-  Transaction,
+  Transactions,
   InputBlock,
   TransactionInfo,
   Icon,
   TitleDetails,
+  IconDetails,
+  Details,
+  TopicInfo,
+  PendingTransactions,
+  CompletedTransactions,
+  ListTransactions,
+  Transaction,
 } from './style';
+
+interface TransactionType {
+  blockNum: string;
+  uniqueId: string;
+  hash: string;
+  from: string;
+  to: string;
+  value: string;
+  erc721TokenId: string;
+  erc1155Metadata: object;
+  tokenId: string;
+  asset: string;
+  category: string;
+  rawContract: {
+    value: string;
+    address: string;
+    decimal: string;
+  };
+}
+
+//mock
+const transactions = [
+  {
+    blockNum: '0xd2113f',
+    uniqueId:
+      '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d:log:165',
+    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
+    from: '0x0000000000000000000000000000000000000000',
+    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
+    value: null,
+    erc721TokenId:
+      '0x0000000000000000000000000000000000000000000000000000000000001acb',
+    erc1155Metadata: null,
+    tokenId:
+      '0x0000000000000000000000000000000000000000000000000000000000001acb',
+    asset: 'DUSK',
+    category: 'erc721',
+    rawContract: {
+      value: null,
+      address: '0x0beed7099af7514ccedf642cfea435731176fb02',
+      decimal: null,
+    },
+  },
+  {
+    blockNum: '0xd2113f',
+    uniqueId:
+      '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d:log:166',
+    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
+    from: '0x0000000000000000000000000000000000000000',
+    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
+    value: null,
+    erc721TokenId:
+      '0x0000000000000000000000000000000000000000000000000000000000001acc',
+    erc1155Metadata: null,
+    tokenId:
+      '0x0000000000000000000000000000000000000000000000000000000000001acc',
+    asset: 'DUSK',
+    category: 'erc721',
+    rawContract: {
+      value: null,
+      address: '0x0beed7099af7514ccedf642cfea435731176fb02',
+      decimal: null,
+    },
+  },
+  {
+    blockNum: '0xe4284a',
+    uniqueId:
+      '0x04573492a1ecb47102a2a70af190fa47f605a71f54ea62d94a1da1e225b7e157:log:345',
+    hash: '0x04573492a1ecb47102a2a70af190fa47f605a71f54ea62d94a1da1e225b7e157',
+    from: '0x0000000000000000000000000000000000000000',
+    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
+    value: null,
+    erc721TokenId:
+      '0x0000000000000000000000000000000000000000000000000000000000000bc0',
+    erc1155Metadata: null,
+    tokenId:
+      '0x0000000000000000000000000000000000000000000000000000000000000bc0',
+    asset: 'NC',
+    category: 'erc721',
+    rawContract: {
+      value: null,
+      address: '0xe9fca552b9eb110c2d170962af740725f71f5644',
+      decimal: null,
+    },
+  },
+  {
+    blockNum: '0xe4284a',
+    uniqueId:
+      '0x04573492a1ecb47102a2a70af190fa47f605a71f54ea62d94a1da1e225b7e157:log:346',
+    hash: '0x04573492a1ecb47102a2a70af190fa47f605a71f54ea62d94a1da1e225b7e157',
+    from: '0x0000000000000000000000000000000000000000',
+    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
+    value: null,
+    erc721TokenId:
+      '0x0000000000000000000000000000000000000000000000000000000000000bc1',
+    erc1155Metadata: null,
+    tokenId:
+      '0x0000000000000000000000000000000000000000000000000000000000000bc1',
+    asset: 'NC',
+    category: 'erc721',
+    rawContract: {
+      value: null,
+      address: '0xe9fca552b9eb110c2d170962af740725f71f5644',
+      decimal: null,
+    },
+  },
+];
 
 const options = [
   { value: 'all', label: 'All Transactions' },
@@ -36,44 +150,13 @@ const options = [
   { value: 'error', label: 'Error' },
 ];
 
-const users = [
-  {
-    account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f',
-    balance: 180.0,
-    symbol: 'USDT',
-  },
-  {
-    account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f',
-    balance: 99.45,
-    symbol: 'USDT',
-  },
-  {
-    account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f',
-    balance: 15.0,
-    symbol: 'USDT',
-  },
-  {
-    account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f',
-    balance: 147.5,
-    symbol: 'USDT',
-  },
-  {
-    account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f',
-    balance: 38.54,
-    symbol: 'USDT',
-  },
-  {
-    account: '0xfe8eaba05b2fd1b750471870274ea91bcfd9ff3f',
-    balance: 11.45,
-    symbol: 'USDT',
-  },
-];
-
 export default function History() {
   const [selectedOption, setSelectedOption] = useState({
     value: 'all',
     label: 'All Transactions',
   });
+
+  const [transactionSelected, setTransactionSelected] = useState<>({});
 
   return (
     <>
@@ -117,59 +200,168 @@ export default function History() {
             </LineHorizontal>
           </Header>
           <Body>
-            <Transaction></Transaction>
-            <div>
+            <Transactions>
+              <PendingTransactions>
+                <h2>Pending Execution</h2>
+                <ListTransactions>
+                  <Transaction selected={false}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        margin: '0px 0px 0px 20px',
+                      }}
+                    >
+                      <img width={40} src={TxPendingBlue} alt='' />
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          margin: '0px 0px 0px 20px',
+                        }}
+                      >
+                        <p
+                          style={{
+                            fontSize: '14px',
+                            color: '#0177FB',
+                          }}
+                        >
+                          Receive Ether
+                        </p>
+                        <p
+                          style={{
+                            fontSize: '10px',
+                            color: '#0177FB',
+                          }}
+                        >
+                          In Progress
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        marginRight: '20px',
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontSize: '12px',
+                          fontWeight: '700',
+                          color: '#0177FB',
+                        }}
+                      >
+                        + 0.005 ETH
+                      </p>
+                    </div>
+                  </Transaction>
+                </ListTransactions>
+              </PendingTransactions>
+              <CompletedTransactions>
+                <h2>Completed</h2>
+                <ListTransactions>
+                  {transactions.map((transaction) => (
+                    <Transaction
+                      selected={
+                        transactionSelected.uniqueId === transaction.uniqueId
+                      }
+                      onClick={() => setTransactionSelected(transaction)}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          margin: '0px 0px 0px 20px',
+                        }}
+                      >
+                        <img width={40} src={TxPendingBlue} alt='' />
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            margin: '0px 0px 0px 20px',
+                          }}
+                        >
+                          <p
+                            style={{
+                              fontSize: '14px',
+                              color: '#0177FB',
+                            }}
+                          >
+                            Receive Ether
+                          </p>
+                          <p
+                            style={{
+                              fontSize: '10px',
+                              color: '#0177FB',
+                            }}
+                          >
+                            In Progress
+                          </p>
+                        </div>
+                      </div>
+                      <p
+                        style={{
+                          fontSize: '12px',
+                          fontWeight: '700',
+                          color: '#0177FB',
+                          marginRight: '20px',
+                        }}
+                      >
+                        + 0.005 ETH
+                      </p>
+                    </Transaction>
+                  ))}
+                </ListTransactions>
+              </CompletedTransactions>
+            </Transactions>
+            <Details>
               <TitleDetails>
                 <h2>Details</h2>
               </TitleDetails>
-              <div
-                style={{
-                  display: 'display',
-                  flexDirection: 'row',
-                }}
-              >
+              <IconDetails>
                 <Icon>
                   <img src={TxPendingBlue} width={40} alt='icon' />
                 </Icon>
                 <p>Pending Transaction</p>
-              </div>
+              </IconDetails>
               <TransactionInfo>
-                <div>
+                <TopicInfo>
                   <b>TxHash</b>
-                  <p>
+                  <br />
+                  <a href='https://www.w3schools.com' target='_blank'>
                     0xf2df62205e75e1cca907187bea4a230533c56b0bbcca1f357ba5ffc0447b680a
-                  </p>
-                </div>
-                <div>
+                  </a>
+                </TopicInfo>
+                <TopicInfo>
                   <b>Date</b>
                   <p>26 Apr 2023</p>
-                </div>
-                <div>
+                </TopicInfo>
+                <TopicInfo>
                   <b>From</b>
                   <p>0x8462829701ddd06392a516d1841c42297d567915</p>
-                </div>
-                <div>
+                </TopicInfo>
+                <TopicInfo>
                   <b>To</b>
                   <p>0xd6f157d03525598aeb0ecca25f2e54fa97c83741</p>
-                </div>
-                <div>
+                </TopicInfo>
+                <TopicInfo>
                   <b>Confirmations</b>
                   <p>0</p>
-                </div>
-                <div>
+                </TopicInfo>
+                <TopicInfo>
                   <b>Value</b>
                   <p>0.005 ETH</p>
-                </div>
-                <div>
+                </TopicInfo>
+                <TopicInfo>
                   <b>Fee</b>
                   <p>0.001 ETH</p>
-                </div>
-                <div>
+                </TopicInfo>
+                <TopicInfo>
                   <b>Total Cost</b>
                   <p>0.006 ETH</p>
-                </div>
+                </TopicInfo>
               </TransactionInfo>
-            </div>
+            </Details>
           </Body>
         </Section>
       </Container>

@@ -1,4 +1,8 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+interface TransactionProps {
+  selected: boolean;
+}
 
 export const Container = styled.div`
   display: flex;
@@ -59,37 +63,20 @@ export const TransactionInfo = styled.div`
   display: flex;
   flex-direction: column;
 
-  div {
-    margin-top: 10px;
-
-    b {
-      font-size: 14px;
-    }
-
-    p {
-      font-size: 12px;
-      flex-wrap: 'wrap';
-    }
-  }
+  margin-left: 20px;
 `;
 
-export const Transaction = styled.div`
+export const Transactions = styled.div`
   display: flex;
   flex-direction: column;
 
   width: 100%;
-  max-width: 750px;
+  max-width: 1200px;
   height: 100%;
 
-  margin: 0px 0px 0px 150px;
+  margin: 0px 0px 0px 70px;
 
   border-right: 3px solid #ececec;
-
-  h2 {
-    margin-top: 50px;
-    font-size: 18px;
-    font-weight: 500;
-  }
 `;
 
 export const LineVertical = styled.div`
@@ -116,14 +103,104 @@ export const Icon = styled.div`
   border-radius: 40px;
   width: 76px;
   height: 74px;
+
+  margin-left: 40px;
+  margin-bottom: 20px;
 `;
 
 export const TitleDetails = styled.div`
   justify-content: start;
-  margin: 32px 32px 32px 32px;
+  margin: 0px 32px 32px 0px;
 
   h2 {
-    font-size: 16px;
+    margin-top: 50px;
+    font-size: 18px;
     font-weight: 500;
+  }
+`;
+
+export const IconDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  margin: 0px 40px 20px 100px;
+
+  p {
+    font-size: 14px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+  }
+`;
+
+export const Details = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  align-content: revert;
+  width: 350px;
+  margin-left: 20px;
+  margin-right: 20px;
+`;
+
+export const TopicInfo = styled.div`
+  margin-top: 24px;
+
+  b {
+    font-size: 14px;
+    color: #a6a6a6;
+  }
+
+  p {
+    font-size: 12px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+  }
+
+  a {
+    font-size: 12px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+    color: #4740f5;
+  }
+`;
+
+export const PendingTransactions = styled.div`
+  margin-right: '20px';
+
+  h2 {
+    margin-top: 50px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+`;
+
+export const ListTransactions = styled.div``;
+
+export const CompletedTransactions = styled.div`
+  margin-right: '20px';
+
+  h2 {
+    margin-top: 30px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+`;
+
+export const Transaction = styled.div<TransactionProps>`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  border-radius: 17px;
+  height: 70px;
+
+  margin-top: 24px;
+  margin-right: 24px;
+
+  background: ${(props) => (props.selected === true ? '#F7F5FE' : 'none')};
+
+  :hover {
+    cursor: pointer;
   }
 `;
