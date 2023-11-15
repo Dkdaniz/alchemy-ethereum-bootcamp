@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Select from 'react-select';
-import type { Option, ActionMeta } from 'react-select';
 
 import Sidebar from '../../components/Sidebar';
 
@@ -33,12 +32,12 @@ import {
   ListUsers,
   Search,
   Line,
-  InputSelect,
+  Input,
 } from './style';
 
 const options = [
   { value: 'ethereum', label: 'Ethereum' },
-  { value: 'token', label: 'Token' },
+  { value: 'custom', label: 'Custom Token' },
 ];
 
 const users = [
@@ -115,7 +114,7 @@ export default function Disperse() {
                   />
                 </div>
 
-                {selectedOption.value === 'token' ? (
+                {selectedOption.value === 'custom' ? (
                   <InputGroup key='input-wallet'>
                     <IconInput>
                       <img src={WalletIcon} alt='Wallet' />
@@ -161,7 +160,10 @@ export default function Disperse() {
                   <LineVertical>
                     <div />
                   </LineVertical>
-                  <input type='text' value={`${125.51} ${'USDT'}`} />
+                  <Input>
+                    <input type='text' value={`${125.51}`} />
+                    <input type='text' value={'USDT'} />
+                  </Input>
                 </InputGroup>
               </InputBlock>
               <ButtonGroup>

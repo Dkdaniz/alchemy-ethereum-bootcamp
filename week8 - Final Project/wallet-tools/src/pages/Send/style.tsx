@@ -1,0 +1,175 @@
+import styled from 'styled-components';
+
+export const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+`;
+
+export const Section = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  width: calc(100% - 254px - 44px);
+
+  background-color: #fff;
+
+  padding: 32px;
+
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  border-radius: 12px;
+`;
+
+export const Headline = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-top: 30px;
+  margin-bottom: 50px;
+  margin-right: 50px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+  }
+`;
+
+export const Body = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  min-width: 400px;
+`;
+
+export const InputBlock = styled.div``;
+
+export const InputGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  margin-top: 26px;
+  margin-right: 50px;
+
+  border-style: solid;
+  border-width: 3px;
+  border-color: #eae9ea;
+
+  border-radius: 12px;
+
+  input {
+    width: 100%;
+    outline: 0;
+
+    padding: 0 10px 0 0;
+
+    font-size: 14px;
+  }
+
+  input:focus {
+    outline: 0;
+  }
+`;
+
+export const IconInput = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  max-width: 120px;
+
+  img {
+    width: 80px;
+    margin: 20px 40px 20px 25px;
+  }
+
+  p {
+    white-space: nowrap;
+    margin-right: 20px;
+    font-size: 14px;
+  }
+`;
+
+export const LineVertical = styled.div`
+  width: 70px;
+
+  transform: rotate(90deg);
+
+  margin-left: 80px;
+
+  div {
+    border-top: 2px solid #ececec;
+  }
+`;
+
+export const Line = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  margin: 50px 100px 30px 50px;
+
+  p {
+    margin: 0 20px 0 20px;
+    white-space: nowrap;
+
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  div {
+    width: 100%;
+    border-top: 2px solid #ececec;
+  }
+`;
+
+export const ButtonGroup = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+
+    justify-items: center;
+
+    margin-top: 50px;
+    margin-right: 50px;
+
+    height: 50px;
+
+    width: 300px;
+    background-color: #0177fb;
+    justify-content: center;
+
+    &:hover {
+      background-color: #2989f6;
+    }
+  }
+
+  button {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 24px;
+  }
+`;
+
+export const Input = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  width: 100%;
+
+  * + input {
+    text-align: right;
+    padding-right: 20px;
+  }
+`;

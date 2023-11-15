@@ -196,7 +196,7 @@ function Sidebar() {
               </ItemList>
               <ItemList>
                 <Button
-                  onClick={() => setOption(Option.Send)}
+                  onClick={() => navigate('/send')}
                   color={option === Option.Send ? '#0038FF' : '#323336'}
                 >
                   <FiArrowUpLeft size={24} />

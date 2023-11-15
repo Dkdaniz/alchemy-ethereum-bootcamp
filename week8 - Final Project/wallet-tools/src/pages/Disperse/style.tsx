@@ -307,3 +307,16 @@ export const Line = styled.div`
 export const InputSelect = styled.div`
   display: flex;
 `;
+
+export const Input = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  width: 100%;
+
+  * + input {
+    text-align: right;
+    padding-right: 20px;
+  }
+`;
