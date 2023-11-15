@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 interface TransactionProps {
   selected: boolean;
@@ -71,8 +71,9 @@ export const Transactions = styled.div`
   flex-direction: column;
 
   width: 100%;
-  max-width: 1200px;
   height: 100%;
+
+  min-width: 200px;
 
   margin: 0px 0px 0px 70px;
 
@@ -104,13 +105,13 @@ export const Icon = styled.div`
   width: 76px;
   height: 74px;
 
-  margin-left: 40px;
+  margin-left: 50px;
   margin-bottom: 20px;
 `;
 
 export const TitleDetails = styled.div`
   justify-content: start;
-  margin: 0px 32px 32px 0px;
+  margin: 0px 32px 10px 0px;
 
   h2 {
     margin-top: 50px;
@@ -123,7 +124,7 @@ export const IconDetails = styled.div`
   display: flex;
   flex-direction: column;
   align-content: center;
-  margin: 0px 40px 20px 100px;
+  margin: 0px 40px 10px 140px;
 
   p {
     font-size: 14px;
@@ -137,7 +138,8 @@ export const Details = styled.div`
   flex-direction: column;
 
   align-content: revert;
-  width: 350px;
+  width: 400px;
+  max-width: 400px;
   margin-left: 20px;
   margin-right: 20px;
 `;
@@ -165,7 +167,7 @@ export const TopicInfo = styled.div`
 `;
 
 export const PendingTransactions = styled.div`
-  margin-right: '20px';
+  margin-right: 20px;
 
   h2 {
     margin-top: 50px;
@@ -174,10 +176,35 @@ export const PendingTransactions = styled.div`
   }
 `;
 
-export const ListTransactions = styled.div``;
+export const ListTransactionsComplete = styled.ul`
+  margin-top: 10px;
+  overflow-y: auto;
+  height: 61vh;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  &::-webkit-scrollbar-track {
+    width: 0px;
+  }
+`;
+
+export const ListTransactionsPending = styled.ul`
+  overflow-y: auto;
+  max-height: 200px;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  &::-webkit-scrollbar-track {
+    width: 0px;
+  }
+`;
 
 export const CompletedTransactions = styled.div`
-  margin-right: '20px';
+  margin-right: 20px;
 
   h2 {
     margin-top: 30px;
@@ -196,7 +223,6 @@ export const Transaction = styled.div<TransactionProps>`
   height: 70px;
 
   margin-top: 24px;
-  margin-right: 24px;
 
   background: ${(props) => (props.selected === true ? '#F7F5FE' : 'none')};
 

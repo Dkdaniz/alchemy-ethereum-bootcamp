@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import moment from 'moment';
 import Select from 'react-select';
 
 import TxPendingBlue from '../../assets/tx_pending_blue.svg';
-import TxPendingWhite from '../../assets/tx_pending_white.svg';
 import TxError from '../../assets/tx_error.svg';
 import TxConfirm from '../../assets/tx_confirm.svg';
 import ReceiveBlue from '../../assets/receive_blue.svg';
@@ -31,114 +31,141 @@ import {
   TopicInfo,
   PendingTransactions,
   CompletedTransactions,
-  ListTransactions,
+  ListTransactionsComplete,
+  ListTransactionsPending,
   Transaction,
 } from './style';
 
 interface TransactionType {
-  blockNum: string;
-  uniqueId: string;
+  id: string;
   hash: string;
   from: string;
   to: string;
   value: string;
-  erc721TokenId: string;
-  erc1155Metadata: object;
-  tokenId: string;
+  fee: string;
+  totalCostEth: string;
+  totalCostUsd: string;
   asset: string;
-  category: string;
-  rawContract: {
-    value: string;
-    address: string;
-    decimal: string;
-  };
+  confirmations: string;
+  timestamp: string;
+  type: string;
+  status: string;
+  message: string;
 }
 
 //mock
 const transactions = [
   {
-    blockNum: '0xd2113f',
-    uniqueId:
-      '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d:log:165',
+    id: '0',
     hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
     from: '0x0000000000000000000000000000000000000000',
     to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: null,
-    erc721TokenId:
-      '0x0000000000000000000000000000000000000000000000000000000000001acb',
-    erc1155Metadata: null,
-    tokenId:
-      '0x0000000000000000000000000000000000000000000000000000000000001acb',
-    asset: 'DUSK',
-    category: 'erc721',
-    rawContract: {
-      value: null,
-      address: '0x0beed7099af7514ccedf642cfea435731176fb02',
-      decimal: null,
-    },
+    value: '1050.50',
+    fee: '0.001',
+    totalCostEth: '0.001',
+    totalCostUsd: '100.00',
+    asset: 'USDT',
+    confirmations: '0',
+    timestamp: '1700001599',
+    type: 'Send',
+    status: 'completed',
+    message: '',
   },
   {
-    blockNum: '0xd2113f',
-    uniqueId:
-      '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d:log:166',
+    id: '1',
     hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
     from: '0x0000000000000000000000000000000000000000',
     to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: null,
-    erc721TokenId:
-      '0x0000000000000000000000000000000000000000000000000000000000001acc',
-    erc1155Metadata: null,
-    tokenId:
-      '0x0000000000000000000000000000000000000000000000000000000000001acc',
-    asset: 'DUSK',
-    category: 'erc721',
-    rawContract: {
-      value: null,
-      address: '0x0beed7099af7514ccedf642cfea435731176fb02',
-      decimal: null,
-    },
+    value: '1.55',
+    fee: '0.001',
+    totalCostEth: '0.001',
+    totalCostUsd: '100.00',
+    asset: 'ETH',
+    confirmations: '0',
+    timestamp: '1700001699',
+    type: 'Send',
+    status: 'error',
+    message: 'replacement fee too low',
   },
   {
-    blockNum: '0xe4284a',
-    uniqueId:
-      '0x04573492a1ecb47102a2a70af190fa47f605a71f54ea62d94a1da1e225b7e157:log:345',
-    hash: '0x04573492a1ecb47102a2a70af190fa47f605a71f54ea62d94a1da1e225b7e157',
+    id: '2',
+    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
     from: '0x0000000000000000000000000000000000000000',
     to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: null,
-    erc721TokenId:
-      '0x0000000000000000000000000000000000000000000000000000000000000bc0',
-    erc1155Metadata: null,
-    tokenId:
-      '0x0000000000000000000000000000000000000000000000000000000000000bc0',
-    asset: 'NC',
-    category: 'erc721',
-    rawContract: {
-      value: null,
-      address: '0xe9fca552b9eb110c2d170962af740725f71f5644',
-      decimal: null,
-    },
+    value: '13.875',
+    fee: '0.001',
+    totalCostEth: '0.001',
+    totalCostUsd: '100.00',
+    asset: 'CAKE',
+    confirmations: '0',
+    timestamp: '1700001799',
+    type: 'Send',
+    status: 'completed',
+    message: '',
   },
   {
-    blockNum: '0xe4284a',
-    uniqueId:
-      '0x04573492a1ecb47102a2a70af190fa47f605a71f54ea62d94a1da1e225b7e157:log:346',
-    hash: '0x04573492a1ecb47102a2a70af190fa47f605a71f54ea62d94a1da1e225b7e157',
+    id: '3',
+    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
     from: '0x0000000000000000000000000000000000000000',
     to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: null,
-    erc721TokenId:
-      '0x0000000000000000000000000000000000000000000000000000000000000bc1',
-    erc1155Metadata: null,
-    tokenId:
-      '0x0000000000000000000000000000000000000000000000000000000000000bc1',
-    asset: 'NC',
-    category: 'erc721',
-    rawContract: {
-      value: null,
-      address: '0xe9fca552b9eb110c2d170962af740725f71f5644',
-      decimal: null,
-    },
+    value: '50.00',
+    fee: '0.001',
+    totalCostEth: '0.001',
+    totalCostUsd: '100.00',
+    asset: 'USDT',
+    confirmations: '0',
+    timestamp: '1700001899',
+    type: 'Receive',
+    status: 'completed',
+    message: '',
+  },
+  {
+    id: '4',
+    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
+    from: '0x0000000000000000000000000000000000000000',
+    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
+    value: '85.00',
+    fee: '0.001',
+    totalCostEth: '0.001',
+    totalCostUsd: '100.00',
+    asset: 'USDT',
+    confirmations: '0',
+    timestamp: '1700001999',
+    type: 'Receive',
+    status: 'completed',
+    message: '',
+  },
+  {
+    id: '5',
+    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
+    from: '0x0000000000000000000000000000000000000000',
+    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
+    value: '13.875',
+    fee: '0.001',
+    totalCostEth: '0.001',
+    totalCostUsd: '100.00',
+    asset: 'ETH',
+    confirmations: '0',
+    timestamp: '1700002000',
+    type: 'Send',
+    status: 'completed',
+    message: '',
+  },
+  {
+    id: '6',
+    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
+    from: '0x0000000000000000000000000000000000000000',
+    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
+    value: '85.00',
+    fee: '0.001',
+    totalCostEth: '0.001',
+    totalCostUsd: '100.00',
+    asset: 'USDT',
+    confirmations: '0',
+    timestamp: '1699902100',
+    type: 'Receive',
+    status: 'completed',
+    message: '',
   },
 ];
 
@@ -156,7 +183,115 @@ export default function History() {
     label: 'All Transactions',
   });
 
-  const [transactionSelected, setTransactionSelected] = useState<>({});
+  const [transactionSelected, setTransactionSelected] =
+    useState<TransactionType>({
+      id: 'initial',
+      hash: '-',
+      from: '-',
+      to: '-',
+      value: '0.00',
+      fee: '0.00',
+      totalCostEth: '0.00',
+      totalCostUsd: '0.00',
+      asset: '-',
+      confirmations: '-',
+      timestamp: '-',
+      type: '-',
+      status: '-',
+      message: '',
+    });
+
+  const sumOrSub = (transactionType: string): string => {
+    switch (transactionType) {
+      case 'Send':
+        return '+';
+      case 'Receive':
+        return '-';
+      default:
+        return ' ';
+    }
+  };
+
+  const setColorTextTransaction = (id: string, status: string): string => {
+    if (status.toLowerCase() === 'error') return '#ED6860';
+    if (transactionSelected.id === id) {
+      return '#0177FB';
+    } else {
+      return '#323336';
+    }
+  };
+
+  const convertTimestamp = (timestamp: string): string => {
+    const date = moment.unix(parseInt(timestamp));
+    const dateTransaction = date.startOf('hour').fromNow();
+
+    if (dateTransaction === 'Invalid date') return '-';
+
+    if (
+      dateTransaction.includes('minutes') ||
+      dateTransaction.includes('minute') ||
+      dateTransaction.includes('hours') ||
+      dateTransaction.includes('hour')
+    ) {
+      return dateTransaction;
+    } else {
+      return date.format('lll');
+    }
+  };
+
+  const setIconStatusTransaction = (
+    id: string,
+    type: string,
+    status: string
+  ): string => {
+    if (status.toLowerCase() === 'error') {
+      switch (type) {
+        case 'Receive':
+          if (id === transactionSelected.id) {
+            return ReceiveRed;
+          } else {
+            return ReceiveWhite;
+          }
+        case 'Send':
+          if (id === transactionSelected.id) {
+            return SendRed;
+          } else {
+            return SendWhite;
+          }
+        default:
+          return ' ';
+      }
+    } else {
+      switch (type) {
+        case 'Send':
+          if (id === transactionSelected.id) {
+            return SendBlue;
+          } else {
+            return SendWhite;
+          }
+        case 'Receive':
+          if (id === transactionSelected.id) {
+            return ReceiveBlue;
+          } else {
+            return ReceiveWhite;
+          }
+        default:
+          return ' ';
+      }
+    }
+  };
+
+  const setIconStatusDetails = (type: string, status: string): string => {
+    if (status.toLowerCase() === 'error') {
+      return TxError;
+    } else {
+      return TxConfirm;
+    }
+  };
+
+  useEffect(() => {
+    console.log(transactionSelected);
+  }, [transactionSelected]);
 
   return (
     <>
@@ -203,69 +338,9 @@ export default function History() {
             <Transactions>
               <PendingTransactions>
                 <h2>Pending Execution</h2>
-                <ListTransactions>
-                  <Transaction selected={false}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        margin: '0px 0px 0px 20px',
-                      }}
-                    >
-                      <img width={40} src={TxPendingBlue} alt='' />
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          margin: '0px 0px 0px 20px',
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: '14px',
-                            color: '#0177FB',
-                          }}
-                        >
-                          Receive Ether
-                        </p>
-                        <p
-                          style={{
-                            fontSize: '10px',
-                            color: '#0177FB',
-                          }}
-                        >
-                          In Progress
-                        </p>
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        marginRight: '20px',
-                      }}
-                    >
-                      <p
-                        style={{
-                          fontSize: '12px',
-                          fontWeight: '700',
-                          color: '#0177FB',
-                        }}
-                      >
-                        + 0.005 ETH
-                      </p>
-                    </div>
-                  </Transaction>
-                </ListTransactions>
-              </PendingTransactions>
-              <CompletedTransactions>
-                <h2>Completed</h2>
-                <ListTransactions>
-                  {transactions.map((transaction) => (
-                    <Transaction
-                      selected={
-                        transactionSelected.uniqueId === transaction.uniqueId
-                      }
-                      onClick={() => setTransactionSelected(transaction)}
-                    >
+                <ListTransactionsPending>
+                  <li>
+                    <Transaction selected={false}>
                       <div
                         style={{
                           display: 'flex',
@@ -299,69 +374,174 @@ export default function History() {
                           </p>
                         </div>
                       </div>
+                      <div
+                        style={{
+                          marginRight: '20px',
+                        }}
+                      >
+                        <p
+                          style={{
+                            fontSize: '12px',
+                            fontWeight: '700',
+                            color: '#0177FB',
+                          }}
+                        >
+                          + 0.005 ETH
+                        </p>
+                      </div>
+                    </Transaction>
+                  </li>
+                </ListTransactionsPending>
+              </PendingTransactions>
+              <CompletedTransactions>
+                <h2>Completed</h2>
+                <ListTransactionsComplete>
+                  {transactions.map((transaction) => (
+                    <Transaction
+                      selected={transactionSelected.id === transaction.id}
+                      onClick={() => setTransactionSelected(transaction)}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          margin: '0px 0px 0px 20px',
+                        }}
+                      >
+                        <img
+                          width={40}
+                          src={setIconStatusTransaction(
+                            transaction.id,
+                            transaction.type,
+                            transaction.status
+                          )}
+                          alt='coin'
+                        />
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            margin: '0px 0px 0px 20px',
+                          }}
+                        >
+                          <p
+                            style={{
+                              fontSize: '14px',
+                              color: setColorTextTransaction(
+                                transaction.id,
+                                transaction.status
+                              ),
+                            }}
+                          >
+                            {`${transaction.type} ${transaction.asset}`}
+                          </p>
+                          <p
+                            style={{
+                              fontSize: '10px',
+                              color: setColorTextTransaction(
+                                transaction.id,
+                                transaction.status
+                              ),
+                            }}
+                          >
+                            {transaction.status === 'completed'
+                              ? convertTimestamp(transaction.timestamp)
+                              : `Transaction error: ${transaction.message}`}
+                          </p>
+                        </div>
+                      </div>
                       <p
                         style={{
                           fontSize: '12px',
                           fontWeight: '700',
-                          color: '#0177FB',
+                          color: setColorTextTransaction(
+                            transaction.id,
+                            transaction.status
+                          ),
                           marginRight: '20px',
                         }}
                       >
-                        + 0.005 ETH
+                        {`${sumOrSub(transaction.type)} ${transaction.value} ${
+                          transaction.asset
+                        }`}
                       </p>
                     </Transaction>
                   ))}
-                </ListTransactions>
+                </ListTransactionsComplete>
               </CompletedTransactions>
             </Transactions>
-            <Details>
-              <TitleDetails>
-                <h2>Details</h2>
-              </TitleDetails>
-              <IconDetails>
-                <Icon>
-                  <img src={TxPendingBlue} width={40} alt='icon' />
-                </Icon>
-                <p>Pending Transaction</p>
-              </IconDetails>
-              <TransactionInfo>
-                <TopicInfo>
-                  <b>TxHash</b>
-                  <br />
-                  <a href='https://www.w3schools.com' target='_blank'>
-                    0xf2df62205e75e1cca907187bea4a230533c56b0bbcca1f357ba5ffc0447b680a
-                  </a>
-                </TopicInfo>
-                <TopicInfo>
-                  <b>Date</b>
-                  <p>26 Apr 2023</p>
-                </TopicInfo>
-                <TopicInfo>
-                  <b>From</b>
-                  <p>0x8462829701ddd06392a516d1841c42297d567915</p>
-                </TopicInfo>
-                <TopicInfo>
-                  <b>To</b>
-                  <p>0xd6f157d03525598aeb0ecca25f2e54fa97c83741</p>
-                </TopicInfo>
-                <TopicInfo>
-                  <b>Confirmations</b>
-                  <p>0</p>
-                </TopicInfo>
-                <TopicInfo>
-                  <b>Value</b>
-                  <p>0.005 ETH</p>
-                </TopicInfo>
-                <TopicInfo>
-                  <b>Fee</b>
-                  <p>0.001 ETH</p>
-                </TopicInfo>
-                <TopicInfo>
-                  <b>Total Cost</b>
-                  <p>0.006 ETH</p>
-                </TopicInfo>
-              </TransactionInfo>
-            </Details>
+            {transactionSelected.id !== 'initial' ? (
+              <Details>
+                <TitleDetails>
+                  <h2>Details</h2>
+                </TitleDetails>
+                <IconDetails>
+                  <Icon>
+                    <img
+                      src={setIconStatusDetails(
+                        transactionSelected.type,
+                        transactionSelected.status
+                      )}
+                      width={40}
+                      alt='icon'
+                    />
+                  </Icon>
+                  <p>{`${
+                    transactionSelected.status === 'error'
+                      ? 'Transaction with error'
+                      : 'Transaction completed'
+                  }`}</p>
+                </IconDetails>
+                <TransactionInfo>
+                  <TopicInfo>
+                    <b>TxHash</b>
+                    <br />
+                    <a
+                      href={`https://etherscan.io/tx/${transactionSelected.hash}`}
+                      target='_blank'
+                    >
+                      {transactionSelected.hash}
+                    </a>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <b>Date</b>
+                    <p>{convertTimestamp(transactionSelected.timestamp)}</p>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <b>From</b>
+                    <p>{transactionSelected.from}</p>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <b>To</b>
+                    <p>{transactionSelected.to}</p>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <b>Confirmations</b>
+                    <p>{transactionSelected.confirmations}</p>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <b>Value</b>
+                    <p>{`${
+                      transactionSelected.value
+                    } ${transactionSelected.asset.toUpperCase()}`}</p>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <b>Fee</b>
+                    <p>{`${transactionSelected.fee} ETH`}</p>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <b>Total Cost in Ether</b>
+                    <p>{`${transactionSelected.totalCostEth} ETH`}</p>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <b>Total Cost in Dollar</b>
+                    <p>{`$ ${transactionSelected.totalCostUsd}`}</p>
+                  </TopicInfo>
+                </TransactionInfo>
+              </Details>
+            ) : (
+              ''
+            )}
           </Body>
         </Section>
       </Container>
