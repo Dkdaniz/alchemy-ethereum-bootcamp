@@ -20,7 +20,7 @@ import {
   Input,
 } from './style';
 
-function Receive() {
+function Send() {
   const [selectedAssetOption, setSelectedAssetOption] = useState({
     value: 'ethereum',
     label: 'Ethereum',
@@ -169,4 +169,4 @@ function Receive() {
   );
 }
 
-export default Receive;
+export default Send;
