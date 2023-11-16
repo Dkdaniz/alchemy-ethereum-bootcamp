@@ -52,7 +52,7 @@ function Send() {
 
           <Body>
             <InputBlock>
-              <div style={{ marginRight: '50px' }}>
+              <div>
                 <Select
                   options={walletAssets}
                   defaultValue={selectedAssetOption}
@@ -93,7 +93,7 @@ function Send() {
               <div />
             </Line>
             <InputBlock>
-              <div style={{ marginRight: '50px' }}>
+              <div>
                 <Select
                   options={walletSave}
                   defaultValue={selectedWalletOption}
@@ -159,7 +159,7 @@ function Send() {
             </InputBlock>
             <ButtonGroup>
               <div>
-                <button>Add Recipient</button>
+                <button>Send</button>
               </div>
             </ButtonGroup>
           </Body>

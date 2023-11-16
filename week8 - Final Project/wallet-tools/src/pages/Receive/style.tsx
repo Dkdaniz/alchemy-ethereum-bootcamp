@@ -31,6 +31,8 @@ export const Headline = styled.div`
 
   h1 {
     margin-top: 150px;
+    font-weight: 700;
+    font-size: 24px;
   }
 
   p {

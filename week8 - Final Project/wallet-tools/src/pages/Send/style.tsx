@@ -39,11 +39,14 @@ export const Headline = styled.div`
   }
 `;
 
+//mudar para Contant
 export const Body = styled.div`
   display: flex;
   flex-direction: column;
 
-  min-width: 400px;
+  max-width: 800px;
+
+  width: 100%;
 `;
 
 export const InputBlock = styled.div``;
@@ -54,7 +57,6 @@ export const InputGroup = styled.div`
   align-items: center;
 
   margin-top: 26px;
-  margin-right: 50px;
 
   border-style: solid;
   border-width: 3px;
