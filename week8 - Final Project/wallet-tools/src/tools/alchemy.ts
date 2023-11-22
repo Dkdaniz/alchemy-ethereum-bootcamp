@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import {
     Network, 
     Alchemy, 
@@ -50,7 +52,7 @@ const getTransactions = async (
         const timestamp = Math.floor(timestampObj.getTime() / 1000);
 
         return {
-            id: tx.uniqueId ? tx.uniqueId : '',
+            id: tx.uniqueId ? `${tx.uniqueId}:${uuidv4()}` : '',
             hash: tx.hash ? tx.hash : '',
             from: tx.from ? tx.from : '',
             to: tx.to ? tx.to : '',

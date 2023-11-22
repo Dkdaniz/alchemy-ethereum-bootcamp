@@ -63,6 +63,34 @@ interface TransactionType {
   message: string;
 }
 
+interface TransactionEventPending {
+  accessList: [];
+  blockHash: string | null;
+  blockNumber: string | null;
+  chainId: string;
+  from: string;
+  gas: string;
+  gasPrice: string;
+  hash: string;
+  input: string;
+  maxFeePerGas: string;
+  maxPriorityFeePerGas: string;
+  nonce: string;
+  r: string;
+  s: string;
+  to: string;
+  transactionIndex: string | null;
+  type: string;
+  v: string;
+  value: string;
+  yParity: string;
+}
+
+interface TransactionEventMinted {
+  removed: boolean;
+  transaction: TransactionEventPending;
+}
+
 interface TransactionsByFilterProps {
   transactionInfo: TransactionType;
 }
@@ -113,7 +141,29 @@ export default function History() {
         method: AlchemySubscription.PENDING_TRANSACTIONS,
         toAddress: account,
       },
-      (tx) => console.log(tx)
+      (tx: TransactionEventPending) => {
+        const txData = {
+          id: tx.hash,
+          hash: tx.hash,
+          from: tx.from,
+          to: tx.to,
+          value: parseFloat(
+            ethers.parseEther(BigInt(tx.value).toString()).toString()
+          ),
+          fee: calcFee(tx?.gasPrice, tx?.gas),
+          totalCostUsd: '0.00',
+          asset: tx.input !== '0x' ? 'Token' : 'ETH',
+          confirmations: 'Pending',
+          timestamp: Date.now(),
+          type: tx.from === account ? 'Send' : 'Receive',
+          status: 'Pending',
+          message: ' ',
+        };
+
+        console.log(txData);
+
+        setPendingTransaction([...pendingTransaction, txData]);
+      }
     );
 
     alchemy.ws.on(
@@ -127,16 +177,23 @@ export default function History() {
         includeRemoved: true,
         hashesOnly: false,
       },
-      (tx) => console.log(tx)
+      (tx: TransactionEventMinted) => {
+        const transactionMinted = pendingTransaction.filter(
+          (pendingTx: TransactionType) => pendingTx.hash !== tx.transaction.hash
+        );
+
+        setPendingTransaction(transactionMinted);
+        updateHistoryTransactions();
+      }
     );
   };
 
   const sumOrSub = (transactionType: string): string => {
     switch (transactionType) {
       case 'Send':
-        return '+';
-      case 'Receive':
         return '-';
+      case 'Receive':
+        return '+';
       default:
         return ' ';
     }
@@ -247,6 +304,104 @@ export default function History() {
     return totalUsd.toString();
   };
 
+  const updateHistoryTransactions = async () => {
+    Promise.all([
+      getTransactions(account, 'Send'),
+      getTransactions(account, 'Receive'),
+    ]).then((txs: any) => {
+      const sendTransactions = txs[0];
+      const receiveTransactions = txs[1];
+
+      const allTransactions: TransactionType[] = [
+        ...sendTransactions,
+        ...receiveTransactions,
+      ];
+
+      const transactionsHistory = allTransactions.sort(function (a, b) {
+        if (a.timestamp > b.timestamp) {
+          return 1;
+        }
+        if (a.timestamp < b.timestamp) {
+          return -1;
+        }
+
+        return 0;
+      });
+
+      const assets = [
+        ...new Set(transactionsHistory.map((tx: TransactionType) => tx.asset)),
+      ];
+
+      Promise.all([
+        getInfoTransactions(transactionsHistory),
+        getPriceCoins(assets),
+        getBlockActual(),
+      ]).then((info) => {
+        const informationTxs = info[0];
+        const prices = info[1];
+        const actualBlock = info[2];
+
+        const fullInfoTxs: TransactionType[] = [];
+
+        for (let i = 0; i < transactionsHistory.length; i++) {
+          const tx = transactionsHistory[i];
+
+          const indexTxInfo = informationTxs.findIndex(
+            (txInfo: any) => txInfo?.transactionHash === tx.hash
+          );
+
+          if (indexTxInfo >= 0) {
+            const txInfo = informationTxs[indexTxInfo];
+            tx.status = txInfo?.status === 0 ? 'error' : 'completed';
+            if (tx.status === 'error') {
+              tx.message = 'Check the block explorer for more details.';
+            }
+
+            tx.fee = calcFee(txInfo?.effectiveGasPrice, txInfo?.gasUsed);
+
+            const indexPriceEther = prices.findIndex(
+              (price) => price.coin === 'ETH'
+            );
+
+            let tokenPrice = 0;
+
+            if (tx.asset !== 'ETH') {
+              const indexPriceToken = prices.findIndex(
+                (price) => price.coin === tx.asset
+              );
+
+              indexPriceToken >= 0
+                ? (tokenPrice = prices[indexPriceToken].price)
+                : 0.0;
+            }
+
+            const priceEther = prices[indexPriceEther].price;
+
+            tx.totalCostUsd = totalCostTx(
+              tx.value,
+              parseFloat(tx.fee),
+              priceEther,
+              tokenPrice
+            );
+
+            const blockNumberTransaction: number = parseInt(
+              txInfo?.blockNumber,
+              10
+            );
+            const confirmations = actualBlock - blockNumberTransaction;
+
+            tx.confirmations = confirmations.toString();
+
+            fullInfoTxs.push(tx);
+          }
+        }
+
+        setTransactions(fullInfoTxs);
+        wsTransactionsEvent();
+      });
+    });
+  };
+
   useEffect(() => {
     switch (selectedOption.value) {
       case 'receive':
@@ -278,103 +433,7 @@ export default function History() {
     if (account === '') {
       requestAccounts();
     } else {
-      Promise.all([
-        getTransactions(account, 'Send'),
-        getTransactions(account, 'Receive'),
-      ]).then((txs: any) => {
-        const sendTransactions = txs[0];
-        const receiveTransactions = txs[1];
-
-        const allTransactions: TransactionType[] = [
-          ...sendTransactions,
-          ...receiveTransactions,
-        ];
-
-        const transactionsHistory = allTransactions.sort(function (a, b) {
-          if (a.timestamp > b.timestamp) {
-            return 1;
-          }
-          if (a.timestamp < b.timestamp) {
-            return -1;
-          }
-
-          return 0;
-        });
-
-        const assets = [
-          ...new Set(
-            transactionsHistory.map((tx: TransactionType) => tx.asset)
-          ),
-        ];
-
-        Promise.all([
-          getInfoTransactions(transactionsHistory),
-          getPriceCoins(assets),
-          getBlockActual(),
-        ]).then((info) => {
-          const informationTxs = info[0];
-          const prices = info[1];
-          const actualBlock = info[2];
-
-          const fullInfoTxs: TransactionType[] = [];
-
-          for (let i = 0; i < transactionsHistory.length; i++) {
-            const tx = transactionsHistory[i];
-
-            const indexTxInfo = informationTxs.findIndex(
-              (txInfo: any) => txInfo?.transactionHash === tx.hash
-            );
-
-            if (indexTxInfo >= 0) {
-              const txInfo = informationTxs[indexTxInfo];
-              tx.status = txInfo?.status === 0 ? 'error' : 'completed';
-              if (tx.status === 'error') {
-                tx.message = 'Check the block explorer for more details.';
-              }
-
-              tx.fee = calcFee(txInfo?.effectiveGasPrice, txInfo?.gasUsed);
-
-              const indexPriceEther = prices.findIndex(
-                (price) => price.coin === 'ETH'
-              );
-
-              let tokenPrice = 0;
-
-              if (tx.asset !== 'ETH') {
-                const indexPriceToken = prices.findIndex(
-                  (price) => price.coin === tx.asset
-                );
-
-                indexPriceToken >= 0
-                  ? (tokenPrice = prices[indexPriceToken].price)
-                  : 0.0;
-              }
-
-              const priceEther = prices[indexPriceEther].price;
-
-              tx.totalCostUsd = totalCostTx(
-                tx.value,
-                parseFloat(tx.fee),
-                priceEther,
-                tokenPrice
-              );
-
-              const blockNumberTransaction: number = parseInt(
-                txInfo?.blockNumber,
-                10
-              );
-              const confirmations = actualBlock - blockNumberTransaction;
-
-              tx.confirmations = confirmations.toString();
-
-              fullInfoTxs.push(tx);
-            }
-          }
-
-          setTransactions(fullInfoTxs);
-          wsTransactionsEvent();
-        });
-      });
+      updateHistoryTransactions();
     }
   }, [account]);
 
@@ -500,9 +559,11 @@ export default function History() {
                 <h2>Pending Execution</h2>
                 <ListTransactionsPending>
                   {pendingTransaction.map((transaction: TransactionType) => (
-                    <li>
+                    <li key={transaction.id}>
                       <Transaction
+                        key={transaction.id}
                         selected={transaction.id === transactionSelected.id}
+                        onClick={() => setTransactionSelected(transaction)}
                       >
                         <div
                           style={{
@@ -562,10 +623,16 @@ export default function History() {
                 <ListTransactionsComplete>
                   {selectedOption.value !== 'all'
                     ? transactionFilter.map((transaction: TransactionType) => (
-                        <TransactionsByFilter transactionInfo={transaction} />
+                        <TransactionsByFilter
+                          key={transaction.id}
+                          transactionInfo={transaction}
+                        />
                       ))
                     : transactions.map((transaction: TransactionType) => (
-                        <TransactionsByFilter transactionInfo={transaction} />
+                        <TransactionsByFilter
+                          key={transaction.id}
+                          transactionInfo={transaction}
+                        />
                       ))}
                 </ListTransactionsComplete>
               </CompletedTransactions>
