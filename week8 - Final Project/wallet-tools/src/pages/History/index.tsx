@@ -345,7 +345,9 @@ export default function History() {
                   (price) => price.coin === tx.asset
                 );
 
-                tokenPrice = prices[indexPriceToken].price;
+                indexPriceToken >= 0
+                  ? (tokenPrice = prices[indexPriceToken].price)
+                  : 0.0;
               }
 
               const priceEther = prices[indexPriceEther].price;
@@ -497,58 +499,62 @@ export default function History() {
               <PendingTransactions>
                 <h2>Pending Execution</h2>
                 <ListTransactionsPending>
-                  <li>
-                    <Transaction selected={false}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          margin: '0px 0px 0px 20px',
-                        }}
+                  {pendingTransaction.map((transaction: TransactionType) => (
+                    <li>
+                      <Transaction
+                        selected={transaction.id === transactionSelected.id}
                       >
-                        <img width={40} src={TxPendingBlue} alt='' />
                         <div
                           style={{
                             display: 'flex',
-                            flexDirection: 'column',
+                            flexDirection: 'row',
                             margin: '0px 0px 0px 20px',
                           }}
                         >
-                          <p
+                          <img width={40} src={TxPendingBlue} alt='' />
+                          <div
                             style={{
-                              fontSize: '14px',
-                              color: '#0177FB',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              margin: '0px 0px 0px 20px',
                             }}
                           >
-                            Receive Ether
-                          </p>
-                          <p
-                            style={{
-                              fontSize: '10px',
-                              color: '#0177FB',
-                            }}
-                          >
-                            In Progress
-                          </p>
+                            <p
+                              style={{
+                                fontSize: '14px',
+                                color: '#0177FB',
+                              }}
+                            >
+                              Receive Ether
+                            </p>
+                            <p
+                              style={{
+                                fontSize: '10px',
+                                color: '#0177FB',
+                              }}
+                            >
+                              In Progress
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        style={{
-                          marginRight: '20px',
-                        }}
-                      >
-                        <p
+                        <div
                           style={{
-                            fontSize: '12px',
-                            fontWeight: '700',
-                            color: '#0177FB',
+                            marginRight: '20px',
                           }}
                         >
-                          + 0.005 ETH
-                        </p>
-                      </div>
-                    </Transaction>
-                  </li>
+                          <p
+                            style={{
+                              fontSize: '12px',
+                              fontWeight: '700',
+                              color: '#0177FB',
+                            }}
+                          >
+                            {transaction.value}
+                          </p>
+                        </div>
+                      </Transaction>
+                    </li>
+                  ))}
                 </ListTransactionsPending>
               </PendingTransactions>
               <CompletedTransactions>

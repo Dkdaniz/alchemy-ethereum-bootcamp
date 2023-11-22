@@ -21,9 +21,6 @@ const getPriceCoins = async (symbols: string[]): Promise<prices[]> => {
         }
     }
 
-    console.log(coingekoDataCoins)
-    console.log(symbols)
-
     const symbolsCoingeko = coingekoDataCoins.map(((coin: any) => coin.name))
 
     const coinsParam = symbolsCoingeko.join().toLowerCase()
@@ -44,7 +41,7 @@ const getPriceCoins = async (symbols: string[]): Promise<prices[]> => {
             }
         }
     }
-
+    
     return [...new Map(prices.map((m) => [m.coin, m])).values()];
 }
 
