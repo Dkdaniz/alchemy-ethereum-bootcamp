@@ -111,7 +111,7 @@ export const Icon = styled.div`
 
 export const TitleDetails = styled.div`
   justify-content: start;
-  margin: 0px 32px 10px 0px;
+  margin: 0px 32px 35px 0px;
 
   h2 {
     margin-top: 50px;

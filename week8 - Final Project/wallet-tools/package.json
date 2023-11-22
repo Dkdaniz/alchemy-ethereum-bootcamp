@@ -19,6 +19,7 @@
     "@types/qrcode": "^1.5.1",
     "alchemy-sdk": "^3.0.0",
     "antd": "^5.8.2",
+    "axios": "^1.6.2",
     "ethers": "^6.8.1",
     "framer-motion": "^10.12.16",
     "moment": "^2.29.4",

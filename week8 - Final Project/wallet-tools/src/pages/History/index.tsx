@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import moment from 'moment';
+import { ethers } from 'ethers';
 import Select from 'react-select';
-import alchemy from '../../tools/alchemy';
+import { AlchemySubscription } from 'alchemy-sdk';
+
 import {
-  SortingOrder,
-  AssetTransfersCategory,
-  AssetTransfersWithMetadataParams,
-} from 'alchemy-sdk';
+  alchemy,
+  getTransactions,
+  getInfoTransactions,
+  getBlockActual,
+} from '../../tools/alchemy';
+import { getPriceCoins } from '../../tools/coingecko';
 
 import { useMetamaskStore } from '../../store/metamask';
 
@@ -19,7 +23,6 @@ import ReceiveRed from '../../assets/receive_red.svg';
 import SendBlue from '../../assets/send_blue.svg';
 import SendWhite from '../../assets/send_white.svg';
 import SendRed from '../../assets/send_red.svg';
-
 import Sidebar from '../../components/Sidebar';
 
 import {
@@ -45,147 +48,41 @@ import {
 } from './style';
 
 interface TransactionType {
-  id: string | null;
-  hash: string | null;
-  from: string | null;
-  to: string | null;
-  value: number | null;
-  fee: string | null;
-  totalCostEth: string | null;
-  totalCostUsd: string | null;
-  asset: string | null;
-  confirmations: string | null;
-  timestamp: number | null;
-  type: string | null;
-  status: string | null;
-  message: string | null;
+  id: string;
+  hash: string;
+  from: string;
+  to: string;
+  value: number;
+  fee: string;
+  totalCostUsd: string;
+  asset: string;
+  confirmations: string;
+  timestamp: number;
+  type: string;
+  status: string;
+  message: string;
 }
 
-//mock
-const transactions = [
-  {
-    id: '0',
-    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
-    from: '0x0000000000000000000000000000000000000000',
-    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: '1050.50',
-    fee: '0.001',
-    totalCostEth: '0.001',
-    totalCostUsd: '100.00',
-    asset: 'USDT',
-    confirmations: '0',
-    timestamp: '1700001599',
-    type: 'Send',
-    status: 'completed',
-    message: '',
-  },
-  {
-    id: '1',
-    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
-    from: '0x0000000000000000000000000000000000000000',
-    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: '1.55',
-    fee: '0.001',
-    totalCostEth: '0.001',
-    totalCostUsd: '100.00',
-    asset: 'ETH',
-    confirmations: '0',
-    timestamp: '1700001699',
-    type: 'Send',
-    status: 'error',
-    message: 'replacement fee too low',
-  },
-  {
-    id: '2',
-    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
-    from: '0x0000000000000000000000000000000000000000',
-    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: '13.875',
-    fee: '0.001',
-    totalCostEth: '0.001',
-    totalCostUsd: '100.00',
-    asset: 'CAKE',
-    confirmations: '0',
-    timestamp: '1700001799',
-    type: 'Send',
-    status: 'completed',
-    message: '',
-  },
-  {
-    id: '3',
-    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
-    from: '0x0000000000000000000000000000000000000000',
-    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: '50.00',
-    fee: '0.001',
-    totalCostEth: '0.001',
-    totalCostUsd: '100.00',
-    asset: 'USDT',
-    confirmations: '0',
-    timestamp: '1700001899',
-    type: 'Receive',
-    status: 'completed',
-    message: '',
-  },
-  {
-    id: '4',
-    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
-    from: '0x0000000000000000000000000000000000000000',
-    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: '85.00',
-    fee: '0.001',
-    totalCostEth: '0.001',
-    totalCostUsd: '100.00',
-    asset: 'USDT',
-    confirmations: '0',
-    timestamp: '1700001999',
-    type: 'Receive',
-    status: 'completed',
-    message: '',
-  },
-  {
-    id: '5',
-    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
-    from: '0x0000000000000000000000000000000000000000',
-    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: '13.875',
-    fee: '0.001',
-    totalCostEth: '0.001',
-    totalCostUsd: '100.00',
-    asset: 'ETH',
-    confirmations: '0',
-    timestamp: '1700002000',
-    type: 'Send',
-    status: 'completed',
-    message: '',
-  },
-  {
-    id: '6',
-    hash: '0xb8ad1138a22a0dcc5eddca1db9aa0c731891fe60041ed6f4d9ceb737c9f1b06d',
-    from: '0x0000000000000000000000000000000000000000',
-    to: '0x1e6e8695fab3eb382534915ea8d7cc1d1994b152',
-    value: '85.00',
-    fee: '0.001',
-    totalCostEth: '0.001',
-    totalCostUsd: '100.00',
-    asset: 'USDT',
-    confirmations: '0',
-    timestamp: '1699902100',
-    type: 'Receive',
-    status: 'completed',
-    message: '',
-  },
-];
+interface TransactionsByFilterProps {
+  transactionInfo: TransactionType;
+}
 
 const options = [
   { value: 'all', label: 'All Transactions' },
-  { value: 'pending', label: 'Pending' },
   { value: 'receive', label: 'Receive' },
   { value: 'send', label: 'Send' },
   { value: 'error', label: 'Error' },
 ];
 
 export default function History() {
+  const [transactions, setTransactions] = useState<TransactionType[]>([]);
+  const [transactionFilter, setTransactionFilter] = useState<TransactionType[]>(
+    []
+  );
+  const [pendingTransaction, setPendingTransaction] = useState<
+    TransactionType[]
+  >([]);
+
   const { account, requestAccounts } = useMetamaskStore();
 
   const [selectedOption, setSelectedOption] = useState({
@@ -199,17 +96,40 @@ export default function History() {
       hash: '-',
       from: '-',
       to: '-',
-      value: '0.00',
+      value: 0.0,
       fee: '0.00',
-      totalCostEth: '0.00',
       totalCostUsd: '0.00',
       asset: '-',
       confirmations: '-',
-      timestamp: '-',
+      timestamp: 0,
       type: '-',
       status: '-',
       message: '',
     });
+
+  const wsTransactionsEvent = () => {
+    alchemy.ws.on(
+      {
+        method: AlchemySubscription.PENDING_TRANSACTIONS,
+        toAddress: account,
+      },
+      (tx) => console.log(tx)
+    );
+
+    alchemy.ws.on(
+      {
+        method: AlchemySubscription.MINED_TRANSACTIONS,
+        addresses: [
+          {
+            from: account,
+          },
+        ],
+        includeRemoved: true,
+        hashesOnly: false,
+      },
+      (tx) => console.log(tx)
+    );
+  };
 
   const sumOrSub = (transactionType: string): string => {
     switch (transactionType) {
@@ -231,8 +151,8 @@ export default function History() {
     }
   };
 
-  const convertTimestamp = (timestamp: string): string => {
-    const date = moment.unix(parseInt(timestamp));
+  const convertTimestamp = (timestamp: number): string => {
+    const date = moment.unix(timestamp);
     const dateTransaction = date.startOf('hour').fromNow();
 
     if (dateTransaction === 'Invalid date') return '-';
@@ -299,45 +219,60 @@ export default function History() {
     }
   };
 
-  const getTransactions = async (
-    address: string,
-    type: string
-  ): Promise<TransactionType[]> => {
-    const body: AssetTransfersWithMetadataParams = {
-      category: [AssetTransfersCategory.EXTERNAL, AssetTransfersCategory.ERC20],
-      order: SortingOrder.DESCENDING,
-      maxCount: 1000,
-      excludeZeroValue: false,
-      withMetadata: true,
-    };
+  const calcFee = (
+    gasPriceHex: string | null,
+    gasUsedHex: string | null
+  ): string => {
+    if (gasPriceHex === null || gasUsedHex === null) return '0';
 
-    type === 'Send' ? (body.fromAddress = address) : (body.toAddress = address);
+    const gasPrice = ethers.parseUnits(BigInt(gasPriceHex).toString(), 'wei');
+    const gasUsed = ethers.parseUnits(BigInt(gasUsedHex).toString(), 'wei');
 
-    const data = await alchemy.core.getAssetTransfers(body);
+    const total = parseFloat(ethers.formatEther(gasPrice * gasUsed)).toFixed(8);
 
-    const transactions = data.transfers.map((tx) => {
-      return {
-        id: tx.uniqueId,
-        hash: tx.hash,
-        from: tx.from,
-        to: tx.to,
-        value: tx.value,
-        fee: '0.001',
-        totalCostEth: '0.001',
-        totalCostUsd: '100.00',
-        asset: tx.asset,
-        confirmations: '0',
-        timestamp: Date.parse(tx.metadata.blockTimestamp),
-        type: 'Send',
-        status: 'completed',
-        message: ' ',
-      };
-    });
-
-    return transactions;
+    return total.toString();
   };
 
-  useEffect(() => {}, [transactionSelected]);
+  const totalCostTx = (
+    qty: number,
+    fee: number,
+    etherPrice: number,
+    tokenPrice: number
+  ): string => {
+    const feeUsd = fee * etherPrice;
+    const qtyUsd = tokenPrice > 0 ? qty * tokenPrice : qty * etherPrice;
+
+    const totalUsd = (feeUsd + qtyUsd).toFixed(2);
+
+    return totalUsd.toString();
+  };
+
+  useEffect(() => {
+    switch (selectedOption.value) {
+      case 'receive':
+        setTransactionFilter([
+          ...transactions.filter(
+            (tx) => tx.type === 'Receive' && tx.status !== 'error'
+          ),
+        ]);
+        break;
+      case 'send':
+        setTransactionFilter([
+          ...transactions.filter(
+            (tx) => tx.type === 'Send' && tx.status !== 'error'
+          ),
+        ]);
+        break;
+      case 'error':
+        setTransactionFilter([
+          ...transactions.filter((tx) => tx.status === 'error'),
+        ]);
+        break;
+      default:
+        setTransactionFilter([]);
+        break;
+    }
+  }, [selectedOption]);
 
   useEffect(() => {
     if (account === '') {
@@ -346,14 +281,175 @@ export default function History() {
       Promise.all([
         getTransactions(account, 'Send'),
         getTransactions(account, 'Receive'),
-      ]).then((values: any) => {
-        const sendTransactions = values[0];
-        const receiveTransactions = values[1];
+      ]).then((txs: any) => {
+        const sendTransactions = txs[0];
+        const receiveTransactions = txs[1];
 
-        console.log(values);
+        const allTransactions: TransactionType[] = [
+          ...sendTransactions,
+          ...receiveTransactions,
+        ];
+
+        const transactionsHistory = allTransactions.sort(function (a, b) {
+          if (a.timestamp > b.timestamp) {
+            return 1;
+          }
+          if (a.timestamp < b.timestamp) {
+            return -1;
+          }
+
+          return 0;
+        });
+
+        const assets = [
+          ...new Set(
+            transactionsHistory.map((tx: TransactionType) => tx.asset)
+          ),
+        ];
+
+        Promise.all([
+          getInfoTransactions(transactionsHistory),
+          getPriceCoins(assets),
+          getBlockActual(),
+        ]).then((info) => {
+          const informationTxs = info[0];
+          const prices = info[1];
+          const actualBlock = info[2];
+
+          const fullInfoTxs: TransactionType[] = [];
+
+          for (let i = 0; i < transactionsHistory.length; i++) {
+            const tx = transactionsHistory[i];
+
+            const indexTxInfo = informationTxs.findIndex(
+              (txInfo: any) => txInfo?.transactionHash === tx.hash
+            );
+
+            if (indexTxInfo >= 0) {
+              const txInfo = informationTxs[indexTxInfo];
+              tx.status = txInfo?.status === 0 ? 'error' : 'completed';
+              if (tx.status === 'error') {
+                tx.message = 'Check the block explorer for more details.';
+              }
+
+              tx.fee = calcFee(txInfo?.effectiveGasPrice, txInfo?.gasUsed);
+
+              const indexPriceEther = prices.findIndex(
+                (price) => price.coin === 'ETH'
+              );
+
+              let tokenPrice = 0;
+
+              if (tx.asset !== 'ETH') {
+                const indexPriceToken = prices.findIndex(
+                  (price) => price.coin === tx.asset
+                );
+
+                tokenPrice = prices[indexPriceToken].price;
+              }
+
+              const priceEther = prices[indexPriceEther].price;
+
+              tx.totalCostUsd = totalCostTx(
+                tx.value,
+                parseFloat(tx.fee),
+                priceEther,
+                tokenPrice
+              );
+
+              const blockNumberTransaction: number = parseInt(
+                txInfo?.blockNumber,
+                10
+              );
+              const confirmations = actualBlock - blockNumberTransaction;
+
+              tx.confirmations = confirmations.toString();
+
+              fullInfoTxs.push(tx);
+            }
+          }
+
+          setTransactions(fullInfoTxs);
+          wsTransactionsEvent();
+        });
       });
     }
   }, [account]);
+
+  const TransactionsByFilter = (props: TransactionsByFilterProps) => {
+    return (
+      <Transaction
+        key={props.transactionInfo.id}
+        selected={transactionSelected.id === props.transactionInfo.id}
+        onClick={() => setTransactionSelected(props.transactionInfo)}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            margin: '0px 0px 0px 20px',
+          }}
+        >
+          <img
+            width={40}
+            src={setIconStatusTransaction(
+              props.transactionInfo.id,
+              props.transactionInfo.type,
+              props.transactionInfo.status
+            )}
+            alt='coin'
+          />
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              margin: '0px 0px 0px 20px',
+            }}
+          >
+            <p
+              style={{
+                fontSize: '14px',
+                color: setColorTextTransaction(
+                  props.transactionInfo.id,
+                  props.transactionInfo.status
+                ),
+              }}
+            >
+              {`${props.transactionInfo.type} ${props.transactionInfo.asset}`}
+            </p>
+            <p
+              style={{
+                fontSize: '10px',
+                color: setColorTextTransaction(
+                  props.transactionInfo.id,
+                  props.transactionInfo.status
+                ),
+              }}
+            >
+              {props.transactionInfo.status === 'completed'
+                ? convertTimestamp(props.transactionInfo.timestamp)
+                : `Transaction error: ${props.transactionInfo.message}`}
+            </p>
+          </div>
+        </div>
+        <p
+          style={{
+            fontSize: '12px',
+            fontWeight: '700',
+            color: setColorTextTransaction(
+              props.transactionInfo.id,
+              props.transactionInfo.status
+            ),
+            marginRight: '20px',
+          }}
+        >
+          {`${sumOrSub(props.transactionInfo.type)} ${
+            props.transactionInfo.value
+          } ${props.transactionInfo.asset}`}
+        </p>
+      </Transaction>
+    );
+  };
 
   return (
     <>
@@ -458,77 +554,13 @@ export default function History() {
               <CompletedTransactions>
                 <h2>Completed</h2>
                 <ListTransactionsComplete>
-                  {transactions.map((transaction) => (
-                    <Transaction
-                      selected={transactionSelected.id === transaction.id}
-                      onClick={() => setTransactionSelected(transaction)}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          margin: '0px 0px 0px 20px',
-                        }}
-                      >
-                        <img
-                          width={40}
-                          src={setIconStatusTransaction(
-                            transaction.id,
-                            transaction.type,
-                            transaction.status
-                          )}
-                          alt='coin'
-                        />
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            margin: '0px 0px 0px 20px',
-                          }}
-                        >
-                          <p
-                            style={{
-                              fontSize: '14px',
-                              color: setColorTextTransaction(
-                                transaction.id,
-                                transaction.status
-                              ),
-                            }}
-                          >
-                            {`${transaction.type} ${transaction.asset}`}
-                          </p>
-                          <p
-                            style={{
-                              fontSize: '10px',
-                              color: setColorTextTransaction(
-                                transaction.id,
-                                transaction.status
-                              ),
-                            }}
-                          >
-                            {transaction.status === 'completed'
-                              ? convertTimestamp(transaction.timestamp)
-                              : `Transaction error: ${transaction.message}`}
-                          </p>
-                        </div>
-                      </div>
-                      <p
-                        style={{
-                          fontSize: '12px',
-                          fontWeight: '700',
-                          color: setColorTextTransaction(
-                            transaction.id,
-                            transaction.status
-                          ),
-                          marginRight: '20px',
-                        }}
-                      >
-                        {`${sumOrSub(transaction.type)} ${transaction.value} ${
-                          transaction.asset
-                        }`}
-                      </p>
-                    </Transaction>
-                  ))}
+                  {selectedOption.value !== 'all'
+                    ? transactionFilter.map((transaction: TransactionType) => (
+                        <TransactionsByFilter transactionInfo={transaction} />
+                      ))
+                    : transactions.map((transaction: TransactionType) => (
+                        <TransactionsByFilter transactionInfo={transaction} />
+                      ))}
                 </ListTransactionsComplete>
               </CompletedTransactions>
             </Transactions>
@@ -592,11 +624,7 @@ export default function History() {
                     <p>{`${transactionSelected.fee} ETH`}</p>
                   </TopicInfo>
                   <TopicInfo>
-                    <b>Total Cost in Ether</b>
-                    <p>{`${transactionSelected.totalCostEth} ETH`}</p>
-                  </TopicInfo>
-                  <TopicInfo>
-                    <b>Total Cost in Dollar</b>
+                    <b>Total Cost in Dollar (fee + value)</b>
                     <p>{`$ ${transactionSelected.totalCostUsd}`}</p>
                   </TopicInfo>
                 </TransactionInfo>

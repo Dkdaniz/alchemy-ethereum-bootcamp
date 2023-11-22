@@ -146,8 +146,11 @@ export default function Save() {
     const filterWallets = wallets.filter(
       (wallet: IWallet) =>
         wallet.address.includes(value) ||
+        wallet.address.toLocaleLowerCase().includes(value) ||
         wallet.name.includes(value) ||
-        wallet.notes.includes(value)
+        wallet.name.toLocaleLowerCase().includes(value) ||
+        wallet.notes.includes(value) ||
+        wallet.notes.toLocaleLowerCase().includes(value)
     );
 
     setSearchWalletFilter(filterWallets);

@@ -32,6 +32,7 @@ function Send() {
   const [savedWallets, setSavedWallets] = useState([
     { value: 'custom', label: 'Custom Wallet' },
   ]);
+
   const [selectedAssetOption, setSelectedAssetOption] = useState({
     value: 'ethereum',
     label: 'Ethereum',
