@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import Select from 'react-select';
+import alchemy from '../../tools/alchemy';
+import {
+  SortingOrder,
+  AssetTransfersCategory,
+  AssetTransfersWithMetadataParams,
+} from 'alchemy-sdk';
+
+import { useMetamaskStore } from '../../store/metamask';
 
 import TxPendingBlue from '../../assets/tx_pending_blue.svg';
 import TxError from '../../assets/tx_error.svg';
@@ -37,20 +45,20 @@ import {
 } from './style';
 
 interface TransactionType {
-  id: string;
-  hash: string;
-  from: string;
-  to: string;
-  value: string;
-  fee: string;
-  totalCostEth: string;
-  totalCostUsd: string;
-  asset: string;
-  confirmations: string;
-  timestamp: string;
-  type: string;
-  status: string;
-  message: string;
+  id: string | null;
+  hash: string | null;
+  from: string | null;
+  to: string | null;
+  value: number | null;
+  fee: string | null;
+  totalCostEth: string | null;
+  totalCostUsd: string | null;
+  asset: string | null;
+  confirmations: string | null;
+  timestamp: number | null;
+  type: string | null;
+  status: string | null;
+  message: string | null;
 }
 
 //mock
@@ -178,6 +186,8 @@ const options = [
 ];
 
 export default function History() {
+  const { account, requestAccounts } = useMetamaskStore();
+
   const [selectedOption, setSelectedOption] = useState({
     value: 'all',
     label: 'All Transactions',
@@ -289,9 +299,61 @@ export default function History() {
     }
   };
 
+  const getTransactions = async (
+    address: string,
+    type: string
+  ): Promise<TransactionType[]> => {
+    const body: AssetTransfersWithMetadataParams = {
+      category: [AssetTransfersCategory.EXTERNAL, AssetTransfersCategory.ERC20],
+      order: SortingOrder.DESCENDING,
+      maxCount: 1000,
+      excludeZeroValue: false,
+      withMetadata: true,
+    };
+
+    type === 'Send' ? (body.fromAddress = address) : (body.toAddress = address);
+
+    const data = await alchemy.core.getAssetTransfers(body);
+
+    const transactions = data.transfers.map((tx) => {
+      return {
+        id: tx.uniqueId,
+        hash: tx.hash,
+        from: tx.from,
+        to: tx.to,
+        value: tx.value,
+        fee: '0.001',
+        totalCostEth: '0.001',
+        totalCostUsd: '100.00',
+        asset: tx.asset,
+        confirmations: '0',
+        timestamp: Date.parse(tx.metadata.blockTimestamp),
+        type: 'Send',
+        status: 'completed',
+        message: ' ',
+      };
+    });
+
+    return transactions;
+  };
+
+  useEffect(() => {}, [transactionSelected]);
+
   useEffect(() => {
-    console.log(transactionSelected);
-  }, [transactionSelected]);
+    if (account === '') {
+      requestAccounts();
+    } else {
+      Promise.all([
+        getTransactions(account, 'Send'),
+        getTransactions(account, 'Receive'),
+      ]).then((values: any) => {
+        const sendTransactions = values[0];
+        const receiveTransactions = values[1];
+
+        console.log(values);
+      });
+    }
+  }, [account]);
 
   return (
     <>

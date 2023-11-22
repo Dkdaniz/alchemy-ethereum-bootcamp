@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
 import Sidebar from '../../components/Sidebar';
+
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 import WalletIcon from '../../assets/wallet.svg';
 import EthereumIcon from '../../assets/ethereum.svg';
@@ -20,7 +22,16 @@ import {
   Input,
 } from './style';
 
+interface Wallet {
+  name: string;
+  address: string;
+}
+
 function Send() {
+  const [wallets] = useLocalStorage('@WalletTools:wallets', []);
+  const [savedWallets, setSavedWallets] = useState([
+    { value: 'custom', label: 'Custom Wallet' },
+  ]);
   const [selectedAssetOption, setSelectedAssetOption] = useState({
     value: 'ethereum',
     label: 'Ethereum',
@@ -36,10 +47,18 @@ function Send() {
     { value: 'custom', label: 'Custom Token' },
   ];
 
-  const walletSave = [
-    { value: 'custom', label: 'Custom Wallet' },
-    { value: 'joao', label: 'Joao' },
-  ];
+  useEffect(() => {
+    const walletOptions = wallets.map((wallet: Wallet) => {
+      return {
+        label: wallet.name,
+        value: wallet.address,
+      };
+    });
+    setSavedWallets([
+      { value: 'custom', label: 'Custom Wallet' },
+      ...walletOptions,
+    ]);
+  }, [wallets]);
 
   return (
     <>
@@ -95,7 +114,7 @@ function Send() {
             <InputBlock>
               <div>
                 <Select
-                  options={walletSave}
+                  options={savedWallets}
                   defaultValue={selectedWalletOption}
                   onChange={setSelectedWalletOption}
                   styles={{

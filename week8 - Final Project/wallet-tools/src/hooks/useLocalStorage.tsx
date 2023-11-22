@@ -3,9 +3,6 @@ import { useState } from 'react';
 
 const useLocalStorage = (key: any, initialValue: any) => {
   const [storedValue, setStoredValue] = useState(() => {
-    if (typeof window === 'undefined') {
-      return initialValue;
-    }
     try {
       // Get from local storage by key
       const item = window.localStorage.getItem(key);

@@ -20,8 +20,6 @@ export const useMetamaskStore = create<MetamaskState>((set) => ({
             set({ account: response[0] })
         }
     }
-
-
 }))
 
 
