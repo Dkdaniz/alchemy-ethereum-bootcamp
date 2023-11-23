@@ -175,3 +175,36 @@ export const Input = styled.div`
     padding-right: 20px;
   }
 `;
+
+export const ButtonModal = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+
+    justify-items: center;
+
+    margin-top: 30px;
+    margin-bottom: 30px;
+
+    height: 50px;
+
+    width: 300px;
+    background-color: #0177fb;
+    justify-content: center;
+
+    &:hover {
+      background-color: #2989f6;
+    }
+  }
+
+  button {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 24px;
+  }
+`;
