@@ -136,10 +136,12 @@ export default function History() {
     });
 
   const wsTransactionsEvent = () => {
+    console.log('wsTransactionsEvent');
+
     alchemy.ws.on(
       {
         method: AlchemySubscription.PENDING_TRANSACTIONS,
-        toAddress: account,
+        fromAddress: account,
       },
       (tx: TransactionEventPending) => {
         const txData = {
@@ -159,6 +161,8 @@ export default function History() {
           status: 'Pending',
           message: ' ',
         };
+
+        console.log(BigInt(tx.value).toString());
 
         console.log(txData);
 

@@ -25,8 +25,8 @@ interface TransactionType {
 }
 
 const settings = {
-    apiKey: 'gIRvWi49CwLeo7qY-os3HbTTeei7PDJU', // Replace with your Alchemy API Key.
-    network: Network.ETH_SEPOLIA, // Replace with your network.
+    apiKey: '2lPXXKd4FSLDU6liwHV-iLcja6VD96cB', // Replace with your Alchemy API Key.
+    network: Network.ETH_MAINNET, // Replace with your network.
 };
 
 const alchemy = new Alchemy(settings);
