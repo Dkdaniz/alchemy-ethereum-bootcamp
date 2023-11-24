@@ -69,7 +69,8 @@ const getTransactions = async (
         const timestampObj = new Date(tx.metadata.blockTimestamp);
         const timestamp = Math.floor(timestampObj.getTime() / 1000);
 
-        const value = tx.category === 'external' ? tx.value : ethers.formatEther(BigInt(tx.rawContract.value ? tx.rawContract.value : '0x0').toString())
+        const txValue = tx.value ? tx.value : 0.0;
+        const value = tx.category === 'external' ? txValue : parseFloat(ethers.formatEther(BigInt(tx.rawContract.value ? tx.rawContract.value : '0x0')))
 
         return {
             id: tx.uniqueId ? `${tx.uniqueId}:${uuidv4()}` : '',
