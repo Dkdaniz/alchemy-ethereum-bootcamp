@@ -304,7 +304,7 @@ export default function Save() {
 
                 {search === '' &&
                   wallets.map((wallet: IWallet) => (
-                    <WalletComponent wallet={wallet} />
+                    <WalletComponent key={wallet.address} wallet={wallet} />
                   ))}
               </ListUsers>
             </Recipient>

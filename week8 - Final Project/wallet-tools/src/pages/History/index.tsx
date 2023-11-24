@@ -10,6 +10,7 @@ import {
   getInfoTransactions,
   getBlockActual,
 } from '../../tools/alchemy';
+
 import { getPriceCoins } from '../../tools/coingecko';
 
 import { useMetamaskStore } from '../../store/metamask';
@@ -24,6 +25,8 @@ import SendBlue from '../../assets/send_blue.svg';
 import SendWhite from '../../assets/send_white.svg';
 import SendRed from '../../assets/send_red.svg';
 import Sidebar from '../../components/Sidebar';
+
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 import {
   Container,
@@ -103,13 +106,15 @@ const options = [
 ];
 
 export default function History() {
+  const [pending, setPending] = useLocalStorage(
+    '@WalletTools:transaction:pending',
+    []
+  );
+
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const [transactionFilter, setTransactionFilter] = useState<TransactionType[]>(
     []
   );
-  const [pendingTransaction, setPendingTransaction] = useState<
-    TransactionType[]
-  >([]);
 
   const { account, requestAccounts } = useMetamaskStore();
 
@@ -136,8 +141,6 @@ export default function History() {
     });
 
   const wsTransactionsEvent = () => {
-    console.log('wsTransactionsEvent');
-
     alchemy.ws.on(
       {
         method: AlchemySubscription.PENDING_TRANSACTIONS,
@@ -162,11 +165,7 @@ export default function History() {
           message: ' ',
         };
 
-        console.log(BigInt(tx.value).toString());
-
-        console.log(txData);
-
-        setPendingTransaction([...pendingTransaction, txData]);
+        setPending([...pending, txData]);
       }
     );
 
@@ -182,11 +181,12 @@ export default function History() {
         hashesOnly: false,
       },
       (tx: TransactionEventMinted) => {
-        const transactionMinted = pendingTransaction.filter(
-          (pendingTx: TransactionType) => pendingTx.hash !== tx.transaction.hash
+        const removeMinedTransaction = pending.filter(
+          (transaction: TransactionType) =>
+            transaction.hash !== tx.transaction.blockHash
         );
 
-        setPendingTransaction(transactionMinted);
+        setPending([...removeMinedTransaction]);
         updateHistoryTransactions();
       }
     );
@@ -541,7 +541,6 @@ export default function History() {
                     styles={{
                       control: (baseStyles, state) => ({
                         ...baseStyles,
-
                         height: '50px',
                         border: '2px solid #eae9ea',
                         borderRadius: '12px',
@@ -562,7 +561,7 @@ export default function History() {
               <PendingTransactions>
                 <h2>Pending Execution</h2>
                 <ListTransactionsPending>
-                  {pendingTransaction.map((transaction: TransactionType) => (
+                  {pending.map((transaction: TransactionType) => (
                     <li key={transaction.id}>
                       <Transaction
                         key={transaction.id}

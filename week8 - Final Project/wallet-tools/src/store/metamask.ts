@@ -1,13 +1,10 @@
 import { create } from 'zustand'
-
-// interface RequestArguments {
-//     method: string;
-//     params?: unknown[] | object;
-// }
+import { ethers, TransactionResponse } from 'ethers';
 
 interface MetamaskState {
     account: string,
     requestAccounts: () => Promise<void>
+    sendEther: (from: string, to: string, value: string, gasPrice: string) => Promise<TransactionResponse>
 }
 
 export const useMetamaskStore = create<MetamaskState>((set) => ({
@@ -19,6 +16,19 @@ export const useMetamaskStore = create<MetamaskState>((set) => ({
         if (response && Array.isArray(response)) {
             set({ account: response[0] })
         }
+    },
+
+    sendEther: async (from: string, to: string, value: string, gasPrice: string): Promise<TransactionResponse> => {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner(from)
+
+        const transaction = await signer.sendTransaction({
+            to,
+            gasPrice: ethers.parseUnits(gasPrice, 'gwei'),
+            value: ethers.parseEther(value)
+        })
+
+        return transaction
     }
 }))
 

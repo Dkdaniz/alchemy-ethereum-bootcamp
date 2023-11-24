@@ -208,3 +208,73 @@ export const ButtonModal = styled.div`
     font-size: 24px;
   }
 `;
+
+export const IconDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 18px;
+
+  p {
+    font-size: 14px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+  }
+
+  a {
+    font-size: 12px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+    color: #4740f5;
+
+    margin-top: 55px;
+    margin-bottom: 50px;
+  }
+`;
+
+export const Icon = styled.div`
+  display: flex;
+  justify-content: center;
+  background: #dde1eb;
+
+  border-radius: 40px;
+  width: 76px;
+  height: 74px;
+
+  margin-bottom: 20px;
+`;
+
+export const TopicInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-between;
+
+  b {
+    font-size: 14px;
+    color: #a6a6a6;
+  }
+
+  a {
+    margin-top: 12px;
+
+    font-size: 12px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+
+    color: #4740f5;
+  }
+
+  p {
+    margin-top: 12px;
+
+    font-size: 12px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+  }
+
+  p:first-child {
+    font-size: 14px;
+    color: #a6a6a6;
+  }
+`;
