@@ -214,7 +214,7 @@ export default function History() {
 
   const convertTimestamp = (timestamp: number): string => {
     const date = moment.unix(timestamp);
-    const dateTransaction = date.startOf('hour').fromNow();
+    const dateTransaction = date.startOf('seconds').fromNow();
 
     if (dateTransaction === 'Invalid date') return '-';
 
