@@ -7,6 +7,16 @@ interface TokenTransactionResponse {
     tokenValue: string;
 }
 
+interface OptionsSendEther {
+    to: string,
+    value: bigint,
+    gasPrice?: bigint,
+}
+
+interface OptionsSendToken{
+    gasPrice?: bigint,
+}
+
 interface MetamaskState {
     account: string,
     requestAccounts: () => Promise<void>
@@ -30,12 +40,15 @@ export const useMetamaskStore = create<MetamaskState>((set) => ({
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner(from)
 
+        const options: OptionsSendEther = {
+            to: recipient,
+            value: ethers.parseEther(value)
+        }
+
+        if (gasPrice !== '') options.gasPrice === ethers.parseUnits(gasPrice, 'gwei')
+
         try {
-            const transaction = await signer.sendTransaction({
-                to: recipient,
-                gasPrice: ethers.parseUnits(gasPrice, 'gwei'),
-                value: ethers.parseEther(value)
-            })
+            const transaction = await signer.sendTransaction(options)
 
             return transaction
         } catch (error) {
@@ -50,7 +63,11 @@ export const useMetamaskStore = create<MetamaskState>((set) => ({
 
         const erc20 = new ethers.Contract(contractAddress, erc20Abi, signer);
         try {
-            const transaction = await erc20.transfer(recipient, ethers.parseEther(value), { gasPrice: ethers.parseUnits(gasPrice, 'gwei') })
+            const option: OptionsSendToken = {}
+
+            if (gasPrice !== '') option.gasPrice === ethers.parseUnits(gasPrice, 'gwei')
+
+            const transaction = await erc20.transfer(recipient, ethers.parseEther(value), option)
 
             return { transaction: transaction, tokenValue: value }
         } catch (error) {
