@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import erc20Abi from '../tools/erc20';
 
 import {
     Network, 
@@ -7,6 +8,7 @@ import {
     AssetTransfersCategory,
     AssetTransfersWithMetadataParams,
     TransactionReceipt } from 'alchemy-sdk';
+import { ethers } from 'ethers';
 
 interface TransactionType {
     id: string;
@@ -31,6 +33,22 @@ const settings = {
 
 const alchemy = new Alchemy(settings);
 
+const getSymbol = async (contractAddress: string):Promise<string> => {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+
+    const erc20 = new ethers.Contract(contractAddress, erc20Abi, provider);
+
+    let symbol: string;
+
+    try {
+        symbol = await erc20.symbol.staticCall();
+    } catch (error) {
+        symbol = 'Token'
+    }
+
+    return symbol
+}
+
 const getTransactions = async (
     address: string,
     type: string
@@ -51,16 +69,18 @@ const getTransactions = async (
         const timestampObj = new Date(tx.metadata.blockTimestamp);
         const timestamp = Math.floor(timestampObj.getTime() / 1000);
 
+        const value = tx.category === 'external' ? tx.value : ethers.formatEther(BigInt(tx.rawContract.value ? tx.rawContract.value : '0x0').toString())
+
         return {
             id: tx.uniqueId ? `${tx.uniqueId}:${uuidv4()}` : '',
             hash: tx.hash ? tx.hash : '',
             from: tx.from ? tx.from : '',
             to: tx.to ? tx.to : '',
-            value: tx.value ? tx.value : 0.0,
+            value: value,
             fee: '0.001',
             totalCostEth: '0.001',
             totalCostUsd: '100.00',
-            asset: tx.asset ? tx.asset : '',
+            asset: tx.asset ? tx.asset : 'TOKEN',
             confirmations: '0',
             timestamp: timestamp,
             type: type,

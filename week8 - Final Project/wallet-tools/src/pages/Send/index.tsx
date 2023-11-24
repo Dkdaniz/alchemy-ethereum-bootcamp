@@ -5,6 +5,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import moment from 'moment';
+
 import { ethers, isAddress } from 'ethers';
 
 import { useEffect, useState, ChangeEvent } from 'react';
@@ -53,6 +55,7 @@ interface TransactionType {
   from: string;
   to: string;
   value: number;
+  tokenValue: number;
   fee: string;
   totalCostUsd: string;
   asset: string;
@@ -99,6 +102,7 @@ function Send() {
     []
   );
 
+  const [asset, setAsset] = useState<string>('');
   const [recipient, setRecipient] = useState<string>('');
   const [contractAddress, setContractAddress] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
@@ -110,6 +114,7 @@ function Send() {
       from: '',
       to: '',
       value: 0.0,
+      tokenValue: 0.0,
       fee: '',
       totalCostUsd: '',
       asset: '',
@@ -136,7 +141,8 @@ function Send() {
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { account, requestAccounts, sendEther } = useMetamaskStore();
+  const { account, requestAccounts, sendEther, sendToken, callTokenSymbol } =
+    useMetamaskStore();
 
   const walletAssets = [
     { value: 'ethereum', label: 'Ethereum' },
@@ -177,12 +183,12 @@ function Send() {
   };
 
   const totalCost = (amount: string, fee: string): number => {
-    if(contractAddress !== ''){
-      return parseFloat(amount) + parseFloat(fee) 
-    }else{
-       return parseFloat(fee);
+    if (contractAddress !== '') {
+      return parseFloat(amount) + parseFloat(fee);
+    } else {
+      return parseFloat(fee);
     }
-  }
+  };
 
   const wsTransactionsEvent = () => {
     alchemy.ws.on(
@@ -215,34 +221,95 @@ function Send() {
     if (parseFloat(amount) === 0) return toast.error('Amount is invalid');
     if (parseFloat(gasPrice) === 0) return toast.error('Amount is invalid');
 
-    if (contractAddress === '') {
-      const transaction = await sendEther(account, recipient, amount, gasPrice);
+    if (contractAddress === '' && selectedAssetOption.value === 'ethereum') {
+      try {
+        const transaction = await sendEther(
+          account,
+          recipient,
+          amount,
+          gasPrice
+        );
 
-      const txData = {
-        id: transaction.hash,
-        hash: transaction.hash,
-        from: transaction.from,
-        to: transaction.to,
-        value: parseFloat(
-          ethers.parseEther(BigInt(transaction.value).toString()).toString()
-        ),
-        fee: calcFee(
-          BigInt(transaction?.gasPrice).toString(),
-          BigInt(transaction?.gasLimit).toString()
-        ),
-        totalCostUsd: '0.00',
-        asset: transaction.data !== '0x' ? 'Token' : 'ETH',
-        confirmations: 'Pending',
-        timestamp: Date.now(),
-        type: transaction.from === account ? 'Send' : 'Receive',
-        status: 'Pending',
-        message: ' ',
-      };
+        const txData = {
+          id: transaction.hash,
+          hash: transaction.hash ? transaction.hash : '',
+          from: transaction.from ? transaction.from : '',
+          to: transaction.to ? transaction.to : '',
+          value: parseFloat(
+            ethers.parseEther(BigInt(transaction.value).toString()).toString()
+          ),
+          tokenValue: 0.0,
+          fee: calcFee(
+            BigInt(transaction?.gasPrice).toString(),
+            BigInt(transaction?.gasLimit).toString()
+          ),
+          totalCostUsd: '0.00',
+          asset: 'ETH',
+          confirmations: 'Pending',
+          timestamp: Date.now(),
+          type: transaction.from === account ? 'Send' : 'Receive',
+          status: 'Pending',
+          message: ' ',
+        };
 
-      setPending([...pending, txData]);
+        setPending([...pending, txData]);
+        setPendingTransaction(txData);
+      } catch (err: any) {
+        toast.error(err.message);
+      }
     } else {
       if (isAddress(contractAddress) === false)
         return toast.error('This contract address is invalid');
+
+      try {
+        const { transaction, tokenValue } = await sendToken(
+          account,
+          recipient,
+          contractAddress,
+          amount,
+          gasPrice
+        );
+
+        const txData = {
+          id: transaction.hash,
+          hash: transaction.hash ? transaction.hash : '',
+          from: transaction.from ? transaction.from : '',
+          to: transaction.to ? transaction.to : '',
+          value: parseFloat(
+            ethers.parseEther(BigInt(transaction.value).toString()).toString()
+          ),
+          tokenValue: tokenValue,
+          fee: calcFee(
+            BigInt(transaction?.gasPrice).toString(),
+            BigInt(transaction?.gasLimit).toString()
+          ),
+          totalCostUsd: '0.00',
+          asset: asset,
+          confirmations: 'Pending',
+          timestamp: Date.now(),
+          type: transaction.from === account ? 'Send' : 'Receive',
+          status: 'Pending',
+          message: ' ',
+        };
+
+        setPending([...pending, txData]);
+        setPendingTransaction(txData);
+      } catch (err: any) {
+        toast.error(err.message);
+      }
+    }
+  };
+
+  const getSymbolToken = async () => {
+    setAsset('loading...');
+
+    const symbol = await callTokenSymbol(contractAddress);
+
+    if (symbol === 'Token') {
+      setContractAddress('');
+      return toast.error('Contract is not ERC20 standard');
+    } else {
+      setAsset(symbol.toUpperCase());
     }
   };
 
@@ -268,15 +335,20 @@ function Send() {
   }, [selectedWalletOption]);
 
   useEffect(() => {
+    console.log(selectedAssetOption);
     if (selectedAssetOption.value === 'ethereum') {
       setContractAddress('');
-    } else {
-      setContractAddress(selectedAssetOption.value);
+      setAsset('ETH');
     }
   }, [selectedAssetOption]);
 
   useEffect(() => {
-   
+    if (contractAddress !== '' && isAddress(account) === true) {
+      getSymbolToken();
+    }
+  }, [contractAddress]);
+
+  useEffect(() => {
     if (pendingTransaction.hash !== '') {
       onOpen();
     }
@@ -398,7 +470,7 @@ function Send() {
                     onChange={handleChange}
                     value={amount}
                   />
-                  <input readOnly={true} type='text' value={'ETH'} />
+                  <input readOnly={true} type='text' value={asset} />
                 </Input>
               </InputGroup>
               <InputGroup key='input-wallet'>
@@ -462,7 +534,7 @@ function Send() {
               </Icon>
               <p>Pending Transaction</p>
               <a
-                href={`https://etherscan.io/tx/${pendingTransaction.hash}`}
+                href={`https://sepolia.etherscan.io/tx/${pendingTransaction.hash}`}
                 target='_blank'
               >
                 {`${pendingTransaction.hash.substring(
@@ -477,7 +549,7 @@ function Send() {
               <TopicInfo>
                 <p>Hash</p>
                 <a
-                  href={`https://etherscan.io/tx/${`0xd9d62b2036b2607a259885378462a885c812558b7819b0f90119cd46bf84837d`}`}
+                  href={`https://sepolia.etherscan.io/tx/${pendingTransaction.hash}`}
                   target='_blank'
                 >
                   {`${pendingTransaction.hash.substring(
@@ -492,7 +564,7 @@ function Send() {
             <div style={{ marginTop: '33px' }}>
               <TopicInfo>
                 <p>Date</p>
-                <p>13 Apr 2023</p>
+                <p>{moment().format('ll')}</p>
               </TopicInfo>
               <TopicInfo>
                 <p>From</p>
@@ -516,24 +588,22 @@ function Send() {
             <div style={{ marginTop: '40px' }}>
               <TopicInfo>
                 <p>Amount</p>
-                <p>
-                  {pendingTransaction.value}  ${contractAddress !== '' ? 'Token' : 'ETH'}`}
-                </p>
+                <p>{`${
+                  asset === 'ETH'
+                    ? pendingTransaction.value.toString()
+                    : pendingTransaction.tokenValue.toString()
+                } ${asset}`}</p>
               </TopicInfo>
               <TopicInfo>
                 <p>Fee</p>
-                <p>
-                  {`${parseFloat(
-                    pendingTransaction.fee
-                  )} ETH`}
-                </p>
+                <p>{`${parseFloat(pendingTransaction.fee)} ETH`}</p>
               </TopicInfo>
             </div>
             <div style={{ marginTop: '70px' }}>
               <TopicInfo>
                 <p>Total Cost</p>
                 <p>{`${totalCost(
-                  pendingTransaction.value,
+                  pendingTransaction.value.toString(),
                   pendingTransaction.fee
                 )} ETH`}</p>
               </TopicInfo>

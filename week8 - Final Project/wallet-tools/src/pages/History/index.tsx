@@ -183,7 +183,7 @@ export default function History() {
       (tx: TransactionEventMinted) => {
         const removeMinedTransaction = pending.filter(
           (transaction: TransactionType) =>
-            transaction.hash !== tx.transaction.blockHash
+            transaction.hash !== tx.transaction.hash
         );
 
         setPending([...removeMinedTransaction]);
@@ -321,11 +321,28 @@ export default function History() {
         ...receiveTransactions,
       ];
 
+      for (let i = 0; i < pending.length; i++) {
+        const transaction: TransactionType = pending[i];
+
+        const txIsPending = allTransactions.filter(
+          (tx: TransactionType) => transaction.hash === tx.hash
+        );
+
+        if (txIsPending.length > 0) {
+          const removeMinedTransaction = pending.filter(
+            (transaction: TransactionType) =>
+              transaction.hash !== txIsPending[0].hash
+          );
+
+          setPending([...removeMinedTransaction]);
+        }
+      }
+
       const transactionsHistory = allTransactions.sort(function (a, b) {
-        if (a.timestamp > b.timestamp) {
+        if (a.timestamp < b.timestamp) {
           return 1;
         }
-        if (a.timestamp < b.timestamp) {
+        if (a.timestamp > b.timestamp) {
           return -1;
         }
 
@@ -667,7 +684,7 @@ export default function History() {
                     <b>TxHash</b>
                     <br />
                     <a
-                      href={`https://etherscan.io/tx/${transactionSelected.hash}`}
+                      href={`https://sepolia.etherscan.io/tx/${transactionSelected.hash}`}
                       target='_blank'
                     >
                       {transactionSelected.hash}
