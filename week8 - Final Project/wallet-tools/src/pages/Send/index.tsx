@@ -6,6 +6,7 @@ import {
 } from '@chakra-ui/react';
 
 import moment from 'moment';
+import { toast } from 'react-toastify';
 
 import { ethers, isAddress } from 'ethers';
 
@@ -93,7 +94,6 @@ import {
   Icon,
   TopicInfo,
 } from './style';
-import { toast } from 'react-toastify';
 
 function Send() {
   const [wallets] = useLocalStorage('@WalletTools:wallets', []);
@@ -219,7 +219,6 @@ function Send() {
     if (isAddress(account) === false)
       return toast.error('This wallet is invalid');
     if (parseFloat(amount) === 0) return toast.error('Amount is invalid');
-    if (parseFloat(gasPrice) === 0) return toast.error('Amount is invalid');
 
     if (contractAddress === '' && selectedAssetOption.value === 'ethereum') {
       try {
@@ -335,7 +334,6 @@ function Send() {
   }, [selectedWalletOption]);
 
   useEffect(() => {
-    console.log(selectedAssetOption);
     if (selectedAssetOption.value === 'ethereum') {
       setContractAddress('');
       setAsset('ETH');
