@@ -95,8 +95,6 @@ export const InputGroup = styled.div`
   flex-direction: row;
   align-items: center;
 
-  max-width: 680px;
-
   margin-top: 26px;
   margin-right: 50px;
 
@@ -158,6 +156,35 @@ export const ButtonGroup = styled.div`
     height: 50px;
 
     width: 300px;
+    background-color: #0177fb;
+    justify-content: center;
+
+    &:hover {
+      background-color: #2989f6;
+    }
+  }
+
+  button {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 24px;
+  }
+`;
+
+export const ButtonSendGroup = styled.div`
+  display: flex;
+  margin-top: 50px;
+  margin-left: 20px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+
+    width: 120px;
+
+    height: 60px;
+
     background-color: #0177fb;
     justify-content: center;
 
@@ -258,6 +285,8 @@ export const Search = styled.div`
   flex-direction: row;
   justify-content: space-between;
 
+  width: 100%;
+
   border: 2px solid #ececec;
   border-radius: 10px;
 
@@ -288,7 +317,7 @@ export const Line = styled.div`
   flex-direction: row;
   align-items: center;
 
-  margin: 60px 100px 5px 50px;
+  margin: 60px 100px 30px 50px;
 
   p {
     margin: 0 20px 0 20px;
@@ -318,5 +347,108 @@ export const Input = styled.div`
   * + input {
     text-align: right;
     padding-right: 20px;
+  }
+`;
+
+export const TopicInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-between;
+
+  b {
+    font-size: 14px;
+    color: #a6a6a6;
+  }
+
+  a {
+    margin-top: 12px;
+
+    font-size: 12px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+
+    color: #4740f5;
+  }
+
+  p {
+    margin-top: 12px;
+
+    font-size: 12px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+  }
+
+  p:first-child {
+    font-size: 14px;
+    color: #a6a6a6;
+  }
+`;
+
+export const Icon = styled.div`
+  display: flex;
+  justify-content: center;
+  background: #dde1eb;
+
+  border-radius: 40px;
+  width: 76px;
+  height: 74px;
+
+  margin-bottom: 20px;
+`;
+
+export const IconDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 18px;
+
+  p {
+    font-size: 14px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+  }
+
+  a {
+    font-size: 12px;
+    flex-wrap: 'wrap';
+    font-weight: 700;
+    color: #4740f5;
+
+    margin-top: 55px;
+    margin-bottom: 50px;
+  }
+`;
+
+export const ButtonModal = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+
+    justify-items: center;
+
+    margin-top: 30px;
+    margin-bottom: 30px;
+
+    height: 50px;
+
+    width: 300px;
+    background-color: #0177fb;
+    justify-content: center;
+
+    &:hover {
+      background-color: #2989f6;
+    }
+  }
+
+  button {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 24px;
   }
 `;

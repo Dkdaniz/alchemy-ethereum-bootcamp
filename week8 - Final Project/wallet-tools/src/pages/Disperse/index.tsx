@@ -1,9 +1,22 @@
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent, useRef } from 'react';
 import moment from 'moment';
 import Select from 'react-select';
 import { ethers, isAddress } from 'ethers';
 import { toast } from 'react-toastify';
 import { AlchemySubscription } from 'alchemy-sdk';
+
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  useDisclosure,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+} from '@chakra-ui/react';
 
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { useMetamaskStore } from '../../store/metamask';
@@ -16,6 +29,9 @@ import WalletIcon from '../../assets/wallet.svg';
 import UserIcon from '../../assets/user.svg';
 import DeleteIcon from '../../assets/delete.svg';
 import SearchIcon from '../../assets/search.svg';
+import EditIcon from '../../assets/edit.svg';
+import BillingIcon from '../../assets/billing.svg';
+import PendingIcon from '../../assets/tx_pending_white.svg';
 
 import {
   Container,
@@ -40,17 +56,32 @@ import {
   Search,
   Line,
   Input,
+  TopicInfo,
+  Icon,
+  IconDetails,
+  ButtonModal,
+  ButtonSendGroup,
 } from './style';
+import { Button } from 'antd';
 
 const options = [
   { value: 'ethereum', label: 'Ethereum' },
   { value: 'custom', label: 'Custom Token' },
 ];
 
-interface transactionType {
+interface Wallet {
+  name: string;
+  address: string;
+}
+
+interface TransactionDisperseType {
   recipient: string;
-  amount: number;
+  amount: string;
   asset: string;
+}
+
+interface ListTransactionsDisperseTypes {
+  transaction: TransactionDisperseType;
 }
 
 interface TransactionEventPending {
@@ -81,8 +112,8 @@ interface TransactionType {
   hash: string;
   from: string;
   to: string;
-  value: number;
-  tokenValue: number;
+  value: string;
+  tokenValue: string;
   fee: string;
   totalCostUsd: string;
   asset: string;
@@ -98,31 +129,80 @@ interface TransactionEventMinted {
   transaction: TransactionEventPending;
 }
 
-const DISPERSE_CONTRACT = '0xD152f549545093347A162Dce210e7293f1452150';
-
 export default function Disperse() {
+  const [wallets] = useLocalStorage('@WalletTools:wallets', []);
   const [pending, setPending] = useLocalStorage(
     '@WalletTools:transaction:pending',
     []
   );
 
-  const [transactions, setTransactions] = useState<transactionType[]>([]);
+  const [pendingTransaction, setPendingTransaction] = useState<TransactionType>(
+    {
+      id: '',
+      hash: '',
+      from: '',
+      to: '',
+      value: '0.0',
+      tokenValue: '0.0',
+      fee: '',
+      totalCostUsd: '',
+      asset: '',
+      confirmations: '',
+      timestamp: 0.0,
+      type: '',
+      status: '',
+      message: '',
+    }
+  );
 
+  const [transactionsDisperse, setTransactionsDisperse] = useState<
+    TransactionDisperseType[]
+  >([]);
+
+  const [searchTransactionsFilter, setSearchTransactionsFilter] = useState<
+    TransactionDisperseType[]
+  >([]);
+
+  const [typeNotification, setTypeNotification] = useState<string>('');
+
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
   const [gasPrice, setGasPrice] = useState<string>('');
   const [asset, setAsset] = useState<string>('');
   const [recipient, setRecipient] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
   const [contractAddress, setContractAddress] = useState<string>('');
 
-  const { account, requestAccounts, callTokenSymbol } = useMetamaskStore();
+  const cancelRef = useRef(null);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    account,
+    requestAccounts,
+    callTokenSymbol,
+    disperseSendEther,
+    disperseSendToken,
+  } = useMetamaskStore();
+
+  const [savedWallets, setSavedWallets] = useState([
+    { value: 'custom', label: 'Custom Wallet' },
+  ]);
 
   const [selectedAssetOption, setSelectedAssetOption] = useState({
     value: 'ethereum',
     label: 'Ethereum',
   });
 
+  const [selectedWalletOption, setSelectedWalletOption] = useState({
+    value: 'custom',
+    label: 'Custom Wallet',
+  });
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
+      case 'search':
+        setSearch(e.target.value);
+        break;
       case 'recipient':
         setRecipient(e.target.value);
         break;
@@ -138,6 +218,16 @@ export default function Disperse() {
       default:
         break;
     }
+  };
+
+  const handleShowWallet = (transaction: TransactionDisperseType) => {
+    const { recipient, amount, asset } = transaction;
+
+    setRecipient(recipient);
+    setAmount(amount);
+    setAsset(asset);
+
+    setIsUpdate(true);
   };
 
   const calcFee = (
@@ -163,8 +253,102 @@ export default function Disperse() {
   };
 
   const send = async () => {
-    if (parseFloat(amount) === 0) return toast.error('Amount is invalid');
-    if (parseFloat(gasPrice) === 0) return toast.error('Amount is invalid');
+    if (transactionsDisperse.length === 0)
+      return toast.error('Disperse needs at least one recipient');
+
+    const recipients = [];
+    const values = [];
+
+    for (let i = 0; i < transactionsDisperse.length; i++) {
+      const tx = transactionsDisperse[i];
+
+      if (isAddress(tx.recipient) === true && parseFloat(tx.amount) > 0) {
+        recipients.push(tx.recipient);
+        values.push(tx.amount);
+      }
+    }
+
+    if (contractAddress === '' && selectedAssetOption.value === 'ethereum') {
+      try {
+        const transaction = await disperseSendEther(
+          account,
+          recipients,
+          values,
+          gasPrice
+        );
+
+        const txData = {
+          id: transaction.hash,
+          hash: transaction.hash ? transaction.hash : '',
+          from: transaction.from ? transaction.from : '',
+          to: transaction.to ? transaction.to : '',
+          value: ethers
+            .formatEther(BigInt(transaction.value).toString())
+            .toString(),
+          tokenValue: '0.0',
+          fee: calcFee(
+            BigInt(transaction?.gasPrice).toString(),
+            BigInt(transaction?.gasLimit).toString()
+          ),
+          totalCostUsd: '0.00',
+          asset: 'ETH',
+          confirmations: 'Pending',
+          timestamp: Date.now(),
+          type: transaction.from === account ? 'Send' : 'Receive',
+          status: 'Pending',
+          message: ' ',
+        };
+
+        setPending([...pending, txData]);
+        setPendingTransaction(txData);
+        setTransactionsDisperse([]);
+        setTypeNotification('');
+      } catch (err: any) {
+        toast.error(err.message);
+      }
+    } else {
+      if (isAddress(contractAddress) === false)
+        return toast.error('This contract address is invalid');
+
+      try {
+        const { transaction, tokenValue } = await disperseSendToken(
+          account,
+          contractAddress,
+          recipients,
+          values,
+          gasPrice
+        );
+
+        const txData = {
+          id: transaction.hash,
+          hash: transaction.hash ? transaction.hash : '',
+          from: transaction.from ? transaction.from : '',
+          to: transaction.to ? transaction.to : '',
+          value: ethers
+            .formatEther(BigInt(transaction.value).toString())
+            .toString(),
+          tokenValue: tokenValue,
+          fee: calcFee(
+            BigInt(transaction?.gasPrice).toString(),
+            BigInt(transaction?.gasLimit).toString()
+          ),
+          totalCostUsd: '0.00',
+          asset: asset,
+          confirmations: 'Pending',
+          timestamp: Date.now(),
+          type: transaction.from === account ? 'Send' : 'Receive',
+          status: 'Pending',
+          message: ' ',
+        };
+
+        setPending([...pending, txData]);
+        setPendingTransaction(txData);
+        setTransactionsDisperse([]);
+        setTypeNotification('');
+      } catch (err: any) {
+        toast.error(err.message);
+      }
+    }
   };
 
   const wsTransactionsEvent = () => {
@@ -204,24 +388,113 @@ export default function Disperse() {
   };
 
   const addRecipients = () => {
-    if (isAddress(recipient) === false)
+    if (isAddress(recipient) === false) {
       return toast.error('This wallet is invalid');
+    }
 
-    if (parseFloat(amount) > 0) return toast.error('this amount is invalid');
+    if (amount === '' || parseFloat(amount) <= 0) {
+      return toast.error('this amount is invalid');
+    }
 
-    setTransactions([
-      ...transactions,
-      {
-        recipient: '',
-        amount: parseFloat(amount),
-        asset: '',
-      },
-    ]);
+    const indexTransactionDisperse = transactionsDisperse.findIndex(
+      (tx: TransactionDisperseType) => tx.recipient === recipient
+    );
+
+    if (indexTransactionDisperse >= 0) {
+      if (selectedWalletOption.value === 'custom') {
+        setRecipient('');
+      }
+
+      return toast.error('This recipient is already registered');
+    }
+
+    const newTransaction: TransactionDisperseType = {
+      recipient: recipient,
+      amount: parseFloat(amount).toString(),
+      asset: asset,
+    };
+
+    setTransactionsDisperse([...transactionsDisperse, newTransaction]);
+    setAmount('');
+
+    if (selectedWalletOption.value === 'custom') {
+      setRecipient('');
+    }
   };
 
-  const deleteRecipients = () => {};
+  const deleteRecipients = (address: string) => {
+    const removeTransactionDisperse = transactionsDisperse.filter(
+      (tx: TransactionDisperseType) => tx.recipient !== address
+    );
 
-  const updateRecipients = () => {};
+    setTransactionsDisperse(removeTransactionDisperse);
+  };
+
+  const updateRecipients = (address: string) => {
+    const newTransactionsDisperse = [...transactionsDisperse];
+    const indexTransactionDisperse = newTransactionsDisperse.findIndex(
+      (tx: TransactionDisperseType) => tx.recipient === address
+    );
+
+    if (indexTransactionDisperse >= 0) {
+      newTransactionsDisperse[indexTransactionDisperse].amount = amount;
+
+      setAmount('');
+
+      if (selectedWalletOption.value === 'custom') {
+        setRecipient('');
+      }
+
+      setTransactionsDisperse(newTransactionsDisperse);
+    }
+
+    setIsUpdate(false);
+  };
+
+  const handleOnchangeSelectionAsset = (option: {
+    value: string;
+    label: string;
+  }) => {
+    if (transactionsDisperse.length === 0) {
+      setSelectedAssetOption(option);
+    } else {
+      setTypeNotification('Alert');
+    }
+  };
+
+  const searchTransactionsDisperse = (value: string) => {
+    if (value === '') {
+      setSearchTransactionsFilter([]);
+    } else {
+      const filterTransaction = transactionsDisperse.filter(
+        (tx: TransactionDisperseType) =>
+          tx.recipient.includes(value) ||
+          tx.recipient.toLocaleLowerCase().includes(value) ||
+          tx.asset.includes(value) ||
+          tx.asset.toLocaleLowerCase().includes(value) ||
+          tx.amount.includes(value) ||
+          tx.amount.toLocaleLowerCase().includes(value)
+      );
+
+      setSearchTransactionsFilter(filterTransaction);
+    }
+  };
+
+  useEffect(() => {
+    if (pendingTransaction.hash !== '') {
+      setTypeNotification('Modal');
+    }
+  }, [pendingTransaction]);
+
+  useEffect(() => {
+    searchTransactionsDisperse(search);
+  }, [search]);
+
+  useEffect(() => {
+    if (typeNotification !== '') {
+      onOpen();
+    }
+  }, [typeNotification]);
 
   useEffect(() => {
     if (selectedAssetOption.value === 'ethereum') {
@@ -237,12 +510,82 @@ export default function Disperse() {
   }, [contractAddress]);
 
   useEffect(() => {
+    const walletOptions = wallets.map((wallet: Wallet) => {
+      return {
+        label: wallet.name,
+        value: wallet.address,
+      };
+    });
+    setSavedWallets([
+      { value: 'custom', label: 'Custom Wallet' },
+      ...walletOptions,
+    ]);
+  }, [wallets]);
+
+  useEffect(() => {
+    if (selectedWalletOption.value === 'custom') {
+      setRecipient('');
+    } else {
+      setRecipient(selectedWalletOption.value);
+    }
+  }, [selectedWalletOption]);
+
+  useEffect(() => {
     if (!account) {
       requestAccounts();
     } else {
       wsTransactionsEvent();
     }
   }, []);
+
+  const ListTransactionsDisperse = (props: ListTransactionsDisperseTypes) => {
+    return (
+      <li key={props.transaction.recipient} style={{ listStyleType: 'none' }}>
+        <UserBlock>
+          <User>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <IconUser>
+                <img src={UserIcon} alt='User' />
+              </IconUser>
+              <Account>
+                <p>{props.transaction.recipient}</p>
+                <p>{`${props.transaction.amount} ${props.transaction.asset}`}</p>
+              </Account>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                padding: '10px 0 10px 0px',
+              }}
+            >
+              <ButtonUser>
+                <button onClick={() => handleShowWallet(props.transaction)}>
+                  <img src={EditIcon} alt='Update' />
+                </button>
+              </ButtonUser>
+
+              <ButtonUser>
+                <button
+                  onClick={() => deleteRecipients(props.transaction.recipient)}
+                >
+                  <img src={DeleteIcon} alt='Delete' />
+                </button>
+              </ButtonUser>
+            </div>
+          </User>
+        </UserBlock>
+      </li>
+    );
+  };
 
   return (
     <>
@@ -265,7 +608,7 @@ export default function Disperse() {
                   <Select
                     options={options}
                     defaultValue={selectedAssetOption}
-                    onChange={setSelectedAssetOption}
+                    onChange={handleOnchangeSelectionAsset}
                     styles={{
                       control: (baseStyles, state) => ({
                         ...baseStyles,
@@ -305,23 +648,45 @@ export default function Disperse() {
                 <div />
               </Line>
               <InputBlock>
-                <InputGroup key='input-name'>
-                  <IconInput>
-                    <img src={WalletIcon} alt='Ethereum' />
-                    <p>Wallet</p>
-                  </IconInput>
-
-                  <LineVertical>
-                    <div />
-                  </LineVertical>
-                  <input
-                    name='recipients'
-                    type='text'
-                    onChange={handleChange}
-                    value={recipient}
+                <div style={{ marginRight: '50px' }}>
+                  <Select
+                    options={savedWallets}
+                    defaultValue={selectedWalletOption}
+                    onChange={setSelectedWalletOption}
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        height: '70px',
+                        border: '3px solid #eae9ea',
+                        borderRadius: '12px',
+                        paddingLeft: '20px',
+                        marginTop: '20px',
+                      }),
+                    }}
                   />
-                </InputGroup>
-                <InputGroup key='input-wallet'>
+                </div>
+
+                {selectedWalletOption.value === 'custom' ? (
+                  <InputGroup key='input-wallet'>
+                    <IconInput>
+                      <img src={WalletIcon} alt='Wallet' />
+                      <p>Wallet</p>
+                    </IconInput>
+                    <LineVertical>
+                      <div />
+                    </LineVertical>
+                    <input
+                      name='recipient'
+                      onChange={handleChange}
+                      type='text'
+                      value={recipient}
+                    />
+                  </InputGroup>
+                ) : (
+                  ''
+                )}
+
+                <InputGroup key='input-amount'>
                   <IconInput>
                     <img src={EthereumIcon} alt='Wallet' />
                     <p>Amount</p>
@@ -342,50 +707,206 @@ export default function Disperse() {
               </InputBlock>
               <ButtonGroup>
                 <div>
-                  <button>Add Recipient</button>
+                  <button
+                    onClick={() =>
+                      isUpdate === false
+                        ? addRecipients()
+                        : updateRecipients(recipient)
+                    }
+                  >
+                    {isUpdate === false ? 'Add Recipient' : 'Update Recipient'}
+                  </button>
                 </div>
               </ButtonGroup>
             </Register>
             <Recipient>
               <h2>Recipients</h2>
-              <Search>
-                <input type='text' placeholder='Search' />
-                <img src={SearchIcon} alt='Search' />
-              </Search>
-              <ListUsers>
-                {transactions.map((transaction: transactionType) => (
-                  <li style={{ listStyleType: 'none' }}>
-                    <UserBlock>
-                      <User>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <IconUser>
-                            <img src={UserIcon} alt='User' />
-                          </IconUser>
-                          <Account>
-                            <p>{transaction.recipient}</p>
-                            <p>{`${transaction.amount} ${transaction.asset}`}</p>
-                          </Account>
-                        </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                }}
+              >
+                <Search>
+                  <input
+                    name='search'
+                    type='text'
+                    onChange={handleChange}
+                    placeholder='Search'
+                  />
+                  <img src={SearchIcon} alt='Search' />
+                </Search>
+                <ButtonSendGroup>
+                  <div>
+                    <button onClick={() => send()}>Send</button>
+                  </div>
+                </ButtonSendGroup>
+              </div>
 
-                        <ButtonUser>
-                          <button>
-                            <img src={DeleteIcon} alt='Delete' />
-                          </button>
-                        </ButtonUser>
-                      </User>
-                    </UserBlock>
-                  </li>
-                ))}
+              <ListUsers>
+                {searchTransactionsFilter.length > 0
+                  ? searchTransactionsFilter.map(
+                      (tx: TransactionDisperseType) => (
+                        <ListTransactionsDisperse
+                          key={tx.recipient}
+                          transaction={tx}
+                        />
+                      )
+                    )
+                  : transactionsDisperse.map((tx: TransactionDisperseType) => (
+                      <ListTransactionsDisperse
+                        key={tx.recipient}
+                        transaction={tx}
+                      />
+                    ))}
               </ListUsers>
             </Recipient>
           </Body>
         </Section>
+        {typeNotification === 'Alert' ? (
+          <AlertDialog
+            isOpen={isOpen}
+            leastDestructiveRef={cancelRef}
+            onClose={onClose}
+            isCentered={true}
+          >
+            <AlertDialogOverlay>
+              <AlertDialogContent>
+                <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+                  Action not permitted
+                </AlertDialogHeader>
+
+                <AlertDialogBody>
+                  You should only send transactions of the same type, to change
+                  delete all recipients or complete the operation.
+                </AlertDialogBody>
+
+                <AlertDialogFooter>
+                  <Button ref={cancelRef} color='red' onClick={onClose}>
+                    Ok
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialogOverlay>
+          </AlertDialog>
+        ) : (
+          <Modal isCentered size={'2xl'} isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyItems: 'center',
+                width: '400px',
+                height: '892px',
+                borderRadius: '32px',
+                background: 'rgba(216,216,219,0.65)',
+                boxShadow: '0px 2px 48px 0px rgba(0, 0, 0, 0.04)',
+                backdropFilter: 'blur(5.4px)',
+                WebkitBackdropFilter: 'blur(1.4px)',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginTop: '40px',
+                  width: '335px',
+                  height: '800px',
+                  background: `url(${BillingIcon})`,
+                  padding: '20px',
+                }}
+              >
+                <IconDetails>
+                  <Icon>
+                    <img src={PendingIcon} width={40} alt='icon' />
+                  </Icon>
+                  <p>Pending Transaction</p>
+                  <a
+                    href={`https://sepolia.etherscan.io/tx/${pendingTransaction.hash}`}
+                    target='_blank'
+                  >
+                    {`${pendingTransaction.hash.substring(
+                      0,
+                      13
+                    )}...${pendingTransaction.hash.slice(
+                      pendingTransaction.hash.length - 13
+                    )}`}
+                  </a>
+                </IconDetails>
+                <div style={{ marginTop: '50px' }}>
+                  <TopicInfo>
+                    <p>Hash</p>
+                    <a
+                      href={`https://sepolia.etherscan.io/tx/${pendingTransaction.hash}`}
+                      target='_blank'
+                    >
+                      {`${pendingTransaction.hash.substring(
+                        0,
+                        13
+                      )}...${pendingTransaction.hash.slice(
+                        pendingTransaction.hash.length - 13
+                      )}`}
+                    </a>
+                  </TopicInfo>
+                </div>
+                <div style={{ marginTop: '33px' }}>
+                  <TopicInfo>
+                    <p>Date</p>
+                    <p>{moment().format('ll')}</p>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <p>From</p>
+                    <p>{`${pendingTransaction.from.substring(
+                      0,
+                      8
+                    )}...${pendingTransaction.from.slice(
+                      pendingTransaction.from.length - 8
+                    )}`}</p>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <p>To</p>
+                    <p>{`${pendingTransaction.to.substring(
+                      0,
+                      8
+                    )}...${pendingTransaction.to.slice(
+                      pendingTransaction.to.length - 8
+                    )}`}</p>
+                  </TopicInfo>
+                </div>
+                <div style={{ marginTop: '40px' }}>
+                  <TopicInfo>
+                    <p>Amount</p>
+                    <p>{`${
+                      asset === 'ETH'
+                        ? pendingTransaction.value.toString()
+                        : pendingTransaction.tokenValue.toString()
+                    } ${asset}`}</p>
+                  </TopicInfo>
+                  <TopicInfo>
+                    <p>Fee</p>
+                    <p>{`${parseFloat(pendingTransaction.fee)} ETH`}</p>
+                  </TopicInfo>
+                </div>
+                <div style={{ marginTop: '70px' }}>
+                  <TopicInfo>
+                    <p>Total Cost</p>
+                    <p>{`${totalCost(
+                      pendingTransaction.value.toString(),
+                      pendingTransaction.fee
+                    )} ETH`}</p>
+                  </TopicInfo>
+                </div>
+              </div>
+              <ButtonModal>
+                <div>
+                  <button onClick={() => onClose()}>Done</button>
+                </div>
+              </ButtonModal>
+            </ModalContent>
+          </Modal>
+        )}
       </Container>
     </>
   );
