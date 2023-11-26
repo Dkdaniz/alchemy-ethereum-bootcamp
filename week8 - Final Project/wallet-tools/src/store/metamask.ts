@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { ethers, TransactionResponse } from 'ethers';
-import erc20Abi from '../tools/erc20';
+import erc20Abi from '../abis/erc20';
+import disperseAbi from '../abis/disperse';
 
 interface TokenTransactionResponse {
     transaction: TransactionResponse;
@@ -9,6 +10,11 @@ interface TokenTransactionResponse {
 
 interface OptionsSendEther {
     to: string,
+    value: bigint,
+    gasPrice?: bigint,
+}
+
+interface OptionsDisperseSendEther {
     value: bigint,
     gasPrice?: bigint,
 }
@@ -23,7 +29,11 @@ interface MetamaskState {
     sendEther: (from: string, recipient: string, value: string, gasPrice: string) => Promise<TransactionResponse>
     sendToken: (from: string, recipient: string, contractAddress: string, value: string, gasPrice: string) => Promise<TokenTransactionResponse>
     callTokenSymbol: (contractAddress: string) => Promise<string>
+    disperseSendEther: (from: string, recipients: string[], values: string[], gasPrice: string) => Promise<TransactionResponse>
+    disperseSendToken: (from: string, tokenContractAddress: string, recipients: string[], values: string[], gasPrice: string) => Promise<TokenTransactionResponse>
 }
+
+const DISPERSE_CONTRACT = '0xD152f549545093347A162Dce210e7293f1452150';
 
 export const useMetamaskStore = create<MetamaskState>((set) => ({
     account: '',
@@ -91,6 +101,77 @@ export const useMetamaskStore = create<MetamaskState>((set) => ({
 
         return symbol
     },
+
+    disperseSendEther: async (from: string, recipients: string[], values: string[], gasPrice: string): Promise<TransactionResponse> => {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner(from)
+
+        const valuesInBigInt = values.map((value) => ethers.parseEther(value))
+        const totalValueTransaction = valuesInBigInt.reduce((acc, curr) => {
+            return acc + curr
+        });
+
+        const erc20 = new ethers.Contract(DISPERSE_CONTRACT, disperseAbi, signer);
+
+        const balance = await provider.getBalance(from);
+
+        if (parseFloat(ethers.formatEther(balance)) < parseFloat(ethers.formatEther(totalValueTransaction))) {
+            throw Error(`Insufficient balance. Your balance: ${parseFloat(ethers.formatEther(balance))}`)
+        }
+
+        try {
+            const option: OptionsDisperseSendEther = {
+                value: totalValueTransaction
+            }
+
+            if (gasPrice !== '') option.gasPrice === ethers.parseUnits(gasPrice, 'gwei')
+
+            const transaction = await erc20.disperseEther(recipients, valuesInBigInt, option)
+
+            return transaction
+        } catch (error) {
+            throw Error('Error in create transaction')
+        }
+    },
+
+    disperseSendToken: async (from: string, tokenContractAddress: string, recipients: string[], values: string[], gasPrice: string): Promise<TokenTransactionResponse> => {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner(from)
+
+        const erc20 = new ethers.Contract(tokenContractAddress, erc20Abi, signer);
+        const disperse = new ethers.Contract(DISPERSE_CONTRACT, disperseAbi, signer);
+        const decimals = await erc20.decimals();
+
+        const valuesInBigInt = values.map((value) => ethers.parseUnits(value, decimals))
+        const totalValueTransaction = valuesInBigInt.reduce((acc, curr) => {
+            return acc + curr
+        });
+
+        const balanceERC20 = await erc20.balanceOf(from);
+
+        if (parseFloat(ethers.formatEther(balanceERC20)) < parseFloat(ethers.formatEther(totalValueTransaction))) {
+            throw Error(`Insufficient balance. Your balance: ${parseFloat(ethers.formatEther(balanceERC20))}`)
+        }
+
+        const allowanceERC20 = await erc20.allowance(from, DISPERSE_CONTRACT);
+
+        if (parseFloat(ethers.formatEther(allowanceERC20)) < parseFloat(ethers.formatEther(totalValueTransaction))) {
+            const transactionApprove = await erc20.approve(DISPERSE_CONTRACT, totalValueTransaction);
+            await transactionApprove.wait(1)
+        }
+
+        try {
+            const option: OptionsSendToken = {}
+
+            if (gasPrice !== '') option.gasPrice === ethers.parseUnits(gasPrice, 'gwei')
+
+            const transaction = await disperse.disperseToken(tokenContractAddress, recipients, valuesInBigInt, option)
+
+            return { transaction: transaction, tokenValue: ethers.formatEther(totalValueTransaction) }
+        } catch (error) {
+            throw Error('Error in create transaction')
+        }
+    }
 }))
 
 
