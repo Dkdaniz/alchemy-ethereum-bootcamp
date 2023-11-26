@@ -235,7 +235,7 @@ function Send() {
           from: transaction.from ? transaction.from : '',
           to: transaction.to ? transaction.to : '',
           value: parseFloat(
-            ethers.parseEther(BigInt(transaction.value).toString()).toString()
+            ethers.formatEther(BigInt(transaction.value).toString()).toString()
           ),
           tokenValue: 0.0,
           fee: calcFee(
@@ -275,9 +275,9 @@ function Send() {
           from: transaction.from ? transaction.from : '',
           to: transaction.to ? transaction.to : '',
           value: parseFloat(
-            ethers.parseEther(BigInt(transaction.value).toString()).toString()
+            ethers.formatEther(BigInt(transaction.value).toString()).toString()
           ),
-          tokenValue: tokenValue,
+          tokenValue: parseFloat(tokenValue),
           fee: calcFee(
             BigInt(transaction?.gasPrice).toString(),
             BigInt(transaction?.gasLimit).toString()
