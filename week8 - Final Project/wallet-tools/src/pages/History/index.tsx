@@ -55,7 +55,7 @@ interface TransactionType {
   hash: string;
   from: string;
   to: string;
-  value: number;
+  value: string;
   fee: string;
   totalCostUsd: string;
   asset: string;
@@ -129,7 +129,7 @@ export default function History() {
       hash: '-',
       from: '-',
       to: '-',
-      value: 0.0,
+      value: '0.0',
       fee: '0.00',
       totalCostUsd: '0.00',
       asset: '-',
@@ -152,9 +152,7 @@ export default function History() {
           hash: tx.hash,
           from: tx.from,
           to: tx.to,
-          value: parseFloat(
-            ethers.parseEther(BigInt(tx.value).toString()).toString()
-          ),
+          value: ethers.formatEther(BigInt(tx.value).toString()),
           fee: calcFee(tx?.gasPrice, tx?.gas),
           totalCostUsd: '0.00',
           asset: tx.input !== '0x' ? 'Token' : 'ETH',
@@ -399,7 +397,7 @@ export default function History() {
             const priceEther = prices[indexPriceEther].price;
 
             tx.totalCostUsd = totalCostTx(
-              tx.value,
+              parseFloat(tx.value),
               parseFloat(tx.fee),
               priceEther,
               tokenPrice
@@ -525,9 +523,9 @@ export default function History() {
             marginRight: '20px',
           }}
         >
-          {`${sumOrSub(props.transactionInfo.type)} ${
-            props.transactionInfo.value
-          } ${props.transactionInfo.asset}`}
+          {`${sumOrSub(props.transactionInfo.type)} 
+            ${props.transactionInfo.value} 
+            ${props.transactionInfo.asset}`}
         </p>
       </Transaction>
     );
