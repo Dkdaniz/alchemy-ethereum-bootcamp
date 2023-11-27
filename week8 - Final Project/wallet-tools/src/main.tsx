@@ -1,3 +1,4 @@
+import '@fontsource/encode-sans-expanded/300.css';
 import '@fontsource/encode-sans-expanded/400.css';
 import '@fontsource/encode-sans-expanded/500.css';
 
