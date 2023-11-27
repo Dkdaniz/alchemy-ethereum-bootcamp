@@ -35,11 +35,27 @@ interface MetamaskState {
 
 const DISPERSE_CONTRACT = '0xD152f549545093347A162Dce210e7293f1452150';
 
+const handleChainChanged = async (chainId: string) => {
+    if (chainId !== '0xaa36a7'){
+        await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0xaa36a7' }],
+        });
+    }
+}
+
+window.ethereum.on('chainChanged', handleChainChanged);
+
 export const useMetamaskStore = create<MetamaskState>((set) => ({
     account: '',
 
     requestAccounts: async () => {
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        await handleChainChanged(chainId);
+
         const response = await window.ethereum.request({ method: 'eth_requestAccounts', params: [] });
+
+        console.log(response);
 
         if (response && Array.isArray(response)) {
             set({ account: response[0] })
