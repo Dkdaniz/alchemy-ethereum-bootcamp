@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { ethers } from 'ethers';
 import Select from 'react-select';
@@ -116,7 +117,8 @@ export default function History() {
     []
   );
 
-  const { account, requestAccounts } = useMetamaskStore();
+  const navigate = useNavigate();
+  const { account } = useMetamaskStore();
 
   const [selectedOption, setSelectedOption] = useState({
     value: 'all',
@@ -450,7 +452,7 @@ export default function History() {
 
   useEffect(() => {
     if (account === '') {
-      requestAccounts();
+      navigate('/');
     } else {
       updateHistoryTransactions();
     }

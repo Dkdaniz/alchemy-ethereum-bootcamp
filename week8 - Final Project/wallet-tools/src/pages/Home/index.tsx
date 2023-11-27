@@ -1,5 +1,6 @@
 import Chart from 'react-apexcharts';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ethers } from 'ethers';
 import moment from 'moment';
 import Select from 'react-select';
@@ -138,8 +139,9 @@ function Home() {
       message: '',
     });
 
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { account, requestAccounts } = useMetamaskStore();
+  const { account } = useMetamaskStore();
 
   const [selectedOption, setSelectedOption] = useState({
     value: 'all',
@@ -499,11 +501,6 @@ function Home() {
     }
   };
 
-  const connectMetamask = async () => {
-    await requestAccounts();
-    updateHistoryTransactions();
-  };
-
   const TransactionsByFilter = (props: TransactionsByFilterProps) => {
     return (
       <Transaction
@@ -682,7 +679,11 @@ function Home() {
   }, [selectedOption]);
 
   useEffect(() => {
-    connectMetamask();
+    if (!account) {
+      navigate('/');
+    } else {
+      updateHistoryTransactions();
+    }
   }, [account]);
 
   useEffect(() => {

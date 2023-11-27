@@ -1,4 +1,5 @@
 import { useState, useEffect, ChangeEvent, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import Select from 'react-select';
 import { ethers, isAddress } from 'ethers';
@@ -175,14 +176,11 @@ export default function Disperse() {
 
   const cancelRef = useRef(null);
 
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    account,
-    requestAccounts,
-    callTokenSymbol,
-    disperseSendEther,
-    disperseSendToken,
-  } = useMetamaskStore();
+
+  const { account, callTokenSymbol, disperseSendEther, disperseSendToken } =
+    useMetamaskStore();
 
   const [savedWallets, setSavedWallets] = useState([
     { value: 'custom', label: 'Custom Wallet' },
@@ -532,11 +530,11 @@ export default function Disperse() {
 
   useEffect(() => {
     if (!account) {
-      requestAccounts();
+      navigate('/');
     } else {
       wsTransactionsEvent();
     }
-  }, []);
+  }, [account]);
 
   const ListTransactionsDisperse = (props: ListTransactionsDisperseTypes) => {
     return (

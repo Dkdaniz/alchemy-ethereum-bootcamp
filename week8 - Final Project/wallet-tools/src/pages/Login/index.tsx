@@ -1,5 +1,5 @@
 import { useMetamaskStore } from '../../store/metamask';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import LoginImg from '../../assets/login.png';
 import ArrowIcon from '../../assets/arrow-left.svg';

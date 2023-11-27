@@ -25,6 +25,7 @@ interface OptionsSendToken{
 
 interface MetamaskState {
     account: string,
+    chainId: string,
     requestAccounts: () => Promise<void>
     sendEther: (from: string, recipient: string, value: string, gasPrice: string) => Promise<TransactionResponse>
     sendToken: (from: string, recipient: string, contractAddress: string, value: string, gasPrice: string) => Promise<TokenTransactionResponse>
@@ -35,8 +36,13 @@ interface MetamaskState {
 
 const DISPERSE_CONTRACT = '0xD152f549545093347A162Dce210e7293f1452150';
 
+
+const isSepoliaNetwork = (chainId: string) => {
+    return chainId === '0xaa36a7'
+}
+
 const handleChainChanged = async (chainId: string) => {
-    if (chainId !== '0xaa36a7'){
+    if (!isSepoliaNetwork(chainId)){
         await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: '0xaa36a7' }],
@@ -44,25 +50,35 @@ const handleChainChanged = async (chainId: string) => {
     }
 }
 
-window.ethereum.on('chainChanged', handleChainChanged);
 
-export const useMetamaskStore = create<MetamaskState>((set) => ({
+export const useMetamaskStore = create<MetamaskState>((set, get) => ({
     account: '',
+    chainId: '',
 
     requestAccounts: async () => {
         const chainId = await window.ethereum.request({ method: 'eth_chainId' });
         await handleChainChanged(chainId);
 
+        window.ethereum.on('accountsChanged', (accounts: Array<string>) => {
+            set({ account: accounts.length > 0 ? accounts[0] : '' })
+        })
+
+        window.ethereum.on('chainChanged', async (chainId: string) => {
+            set({ chainId: chainId })
+            await handleChainChanged(chainId)
+        })
+
         const response = await window.ethereum.request({ method: 'eth_requestAccounts', params: [] });
 
-        console.log(response);
-
         if (response && Array.isArray(response)) {
-            set({ account: response[0] })
+            set({ account: response[0], chainId: chainId })
         }
     },
 
     sendEther: async (from: string, recipient: string, value: string, gasPrice: string): Promise<TransactionResponse> => {
+        const chainId = get().chainId;
+        if (!isSepoliaNetwork(chainId)) throw Error('Error: Invalid network, switch to sepolia testnet');
+        
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner(from)
 
@@ -84,6 +100,9 @@ export const useMetamaskStore = create<MetamaskState>((set) => ({
     },
 
     sendToken: async (from: string, recipient: string, contractAddress: string, value: string, gasPrice: string): Promise<TokenTransactionResponse> => {
+        const chainId = get().chainId;
+        if (!isSepoliaNetwork(chainId)) throw Error('Error: Invalid network, switch to sepolia testnet');
+
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner(from)
 
@@ -103,6 +122,9 @@ export const useMetamaskStore = create<MetamaskState>((set) => ({
 
     //0x757EB835b42a584a6E89D7554991Fa542d2f1654 GLD Sepolia
     callTokenSymbol: async (contractAddress: string): Promise<string> => {
+        const chainId = get().chainId;
+        if (!isSepoliaNetwork(chainId)) throw Error('Error: Invalid network, switch to sepolia testnet');
+
         const provider = new ethers.BrowserProvider(window.ethereum);
 
         const erc20 = new ethers.Contract(contractAddress, erc20Abi, provider);
@@ -119,6 +141,9 @@ export const useMetamaskStore = create<MetamaskState>((set) => ({
     },
 
     disperseSendEther: async (from: string, recipients: string[], values: string[], gasPrice: string): Promise<TransactionResponse> => {
+        const chainId = get().chainId;
+        if (!isSepoliaNetwork(chainId)) throw Error('Error: Invalid network, switch to sepolia testnet');
+
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner(from)
 
@@ -151,6 +176,9 @@ export const useMetamaskStore = create<MetamaskState>((set) => ({
     },
 
     disperseSendToken: async (from: string, tokenContractAddress: string, recipients: string[], values: string[], gasPrice: string): Promise<TokenTransactionResponse> => {
+        const chainId = get().chainId;
+        if (!isSepoliaNetwork(chainId)) throw Error('Error: Invalid network, switch to sepolia testnet');
+        
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner(from)
 

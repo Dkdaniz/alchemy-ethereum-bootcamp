@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { QRCode, message } from 'antd';
 
 import { useMetamaskStore } from '../../store/metamask';
@@ -6,10 +7,13 @@ import { FiCopy } from 'react-icons/fi';
 import Sidebar from '../../components/Sidebar';
 
 import { Container, Section, Headline, CopyPast, Line } from './style';
+import { useEffect } from 'react';
 
 function Receive() {
-  const { account } = useMetamaskStore();
+  const { account, requestAccounts } = useMetamaskStore();
   const [messageApi, contextHolder] = message.useMessage();
+
+  const navigate = useNavigate();
 
   const confirmMessage = () => {
     navigator.clipboard.writeText(account);
@@ -22,6 +26,12 @@ function Receive() {
       },
     });
   };
+
+  useEffect(() => {
+    if (!account) {
+      navigate('/');
+    }
+  }, [account]);
 
   return (
     <>

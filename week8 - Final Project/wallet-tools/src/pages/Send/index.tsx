@@ -7,6 +7,7 @@ import {
 
 import moment from 'moment';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 import { ethers, isAddress } from 'ethers';
 
@@ -140,9 +141,9 @@ function Send() {
     label: 'Custom Wallet',
   });
 
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { account, requestAccounts, sendEther, sendToken, callTokenSymbol } =
-    useMetamaskStore();
+  const { account, sendEther, sendToken, callTokenSymbol } = useMetamaskStore();
 
   const walletAssets = [
     { value: 'ethereum', label: 'Ethereum' },
@@ -354,11 +355,11 @@ function Send() {
 
   useEffect(() => {
     if (!account) {
-      requestAccounts();
+      navigate('/');
     } else {
       wsTransactionsEvent();
     }
-  }, []);
+  }, [account]);
 
   return (
     <>

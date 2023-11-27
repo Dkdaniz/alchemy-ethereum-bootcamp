@@ -1,4 +1,5 @@
 import { useToast, Container } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
@@ -7,7 +8,6 @@ import { alchemy } from '../../tools/alchemy';
 
 import { useMetamaskStore } from '../../store/metamask';
 
-import Header from './components/Header/index';
 import Search from './components/Search/index';
 import TabOptions from './components/TabOptions/index';
 import Tokens from './components/Tokens/index';
@@ -37,7 +37,9 @@ interface TypeTokens {
 }
 
 function Explorer() {
-  const { account, requestAccounts } = useMetamaskStore();
+  const { account } = useMetamaskStore();
+
+  const navigate = useNavigate();
 
   const [userAddress, setUserAddress] = useState('');
   const [userTokens, setUserTokens] = useState<UserTokenType[]>([]);
@@ -209,7 +211,7 @@ function Explorer() {
 
   useEffect(() => {
     if (account === '') {
-      requestAccounts();
+      navigate('/');
     } else {
       setSearchAddress(account);
       setUserAddress(account);
