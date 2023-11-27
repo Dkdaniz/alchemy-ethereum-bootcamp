@@ -246,28 +246,6 @@ function Sidebar() {
               </ItemList>
             </List>
           </Section>
-
-          <MetamaskButton
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              background: '#0038FF',
-              position: 'absolute',
-              bottom: 0,
-              justifyContent: 'center',
-              backgroundColor: '#A167FF',
-              marginLeft: 45,
-              marginTop: 55,
-              marginBottom: 55,
-              borderRadius: 10,
-              padding: 5,
-              width: 150,
-            }}
-            onClick={() => requestAccounts()}
-          >
-            <MetamaskIcon />
-            <p>Connect</p>
-          </MetamaskButton>
         </div>
       </Container>
     </>
