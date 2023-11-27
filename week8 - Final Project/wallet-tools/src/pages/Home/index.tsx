@@ -19,7 +19,24 @@ import { getPriceCoins, getPriceChart } from '../../tools/coingecko';
 
 import Sidebar from '../../components/Sidebar';
 
-import { Container, Section, Transaction, InputBlock } from './style';
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  useDisclosure,
+} from '@chakra-ui/react';
+
+import {
+  Container,
+  Section,
+  Transaction,
+  InputBlock,
+  Title,
+  IconDetails,
+  Icon,
+  TopicInfo,
+  ButtonModal,
+} from './style';
 
 import ReceiveBlue from '../../assets/receive_blue.svg';
 import ReceiveWhite from '../../assets/receive_white.svg';
@@ -27,6 +44,8 @@ import ReceiveRed from '../../assets/receive_red.svg';
 import SendBlue from '../../assets/send_blue.svg';
 import SendWhite from '../../assets/send_white.svg';
 import SendRed from '../../assets/send_red.svg';
+import BillingIcon from '../../assets/billing.svg';
+import PendingIcon from '../../assets/tx_pending_white.svg';
 
 interface Series {
   name: string;
@@ -38,7 +57,8 @@ interface TransactionType {
   hash: string;
   from: string;
   to: string;
-  value: string;
+  value: number;
+  tokenValue: number;
   fee: string;
   totalCostUsd: string;
   asset: string;
@@ -105,7 +125,8 @@ function Home() {
       hash: '-',
       from: '-',
       to: '-',
-      value: '0.0',
+      value: 0.0,
+      tokenValue: 0.0,
       fee: '0.00',
       totalCostUsd: '0.00',
       asset: '-',
@@ -116,6 +137,26 @@ function Home() {
       message: '',
     });
 
+  const [pendingTransaction, setPendingTransaction] = useState<TransactionType>(
+    {
+      id: '',
+      hash: '',
+      from: '',
+      to: '',
+      value: 0.0,
+      tokenValue: 0.0,
+      fee: '',
+      totalCostUsd: '',
+      asset: '',
+      confirmations: '',
+      timestamp: 0.0,
+      type: '',
+      status: '',
+      message: '',
+    }
+  );
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { account, requestAccounts } = useMetamaskStore();
 
   const [selectedOption, setSelectedOption] = useState({
@@ -157,6 +198,18 @@ function Home() {
       },
     },
   });
+
+  const totalCost = (
+    contractAddress: string,
+    amount: string,
+    fee: string
+  ): number => {
+    if (contractAddress !== '') {
+      return parseFloat(amount) + parseFloat(fee);
+    } else {
+      return parseFloat(fee);
+    }
+  };
 
   const sumOrSub = (transactionType: string): string => {
     switch (transactionType) {
@@ -549,6 +602,33 @@ function Home() {
   }, []);
 
   useEffect(() => {
+    switch (selectedOption.value) {
+      case 'receive':
+        setTransactionFilter([
+          ...transactions.filter(
+            (tx) => tx.type === 'Receive' && tx.status !== 'error'
+          ),
+        ]);
+        break;
+      case 'send':
+        setTransactionFilter([
+          ...transactions.filter(
+            (tx) => tx.type === 'Send' && tx.status !== 'error'
+          ),
+        ]);
+        break;
+      case 'error':
+        setTransactionFilter([
+          ...transactions.filter((tx) => tx.status === 'error'),
+        ]);
+        break;
+      default:
+        setTransactionFilter([]);
+        break;
+    }
+  }, [selectedOption]);
+
+  useEffect(() => {
     if (account === '') {
       requestAccounts();
     } else {
@@ -595,25 +675,36 @@ function Home() {
               borderRadius: '12px',
             }}
           >
-            <InputBlock>
-              <div>
-                <Select
-                  options={options}
-                  defaultValue={selectedOption}
-                  onChange={setSelectedOption}
-                  styles={{
-                    control: (baseStyles, state) => ({
-                      ...baseStyles,
-                      height: '50px',
-                      border: '2px solid #eae9ea',
-                      borderRadius: '12px',
-                      paddingLeft: '20px',
-                      margin: '10px 30px 0px 0px',
-                    }),
-                  }}
-                />
-              </div>
-            </InputBlock>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Title>
+                <h1>Transaction History</h1>
+              </Title>
+              <InputBlock>
+                <div>
+                  <Select
+                    options={options}
+                    defaultValue={selectedOption}
+                    onChange={setSelectedOption}
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        height: '50px',
+                        border: '2px solid #eae9ea',
+                        borderRadius: '12px',
+                        paddingLeft: '20px',
+                        margin: '10px 30px 0px 0px',
+                      }),
+                    }}
+                  />
+                </div>
+              </InputBlock>
+            </div>
             <div>
               {selectedOption.value !== 'all'
                 ? transactionFilter.map((transaction: TransactionType) => (
@@ -631,6 +722,121 @@ function Home() {
             </div>
           </div>
         </Section>
+        <Modal isCentered size={'2xl'} isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyItems: 'center',
+              width: '400px',
+              height: '892px',
+              borderRadius: '32px',
+              background: 'rgba(216,216,219,0.65)',
+              boxShadow: '0px 2px 48px 0px rgba(0, 0, 0, 0.04)',
+              backdropFilter: 'blur(5.4px)',
+              WebkitBackdropFilter: 'blur(1.4px)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginTop: '40px',
+                width: '335px',
+                height: '800px',
+                background: `url(${BillingIcon})`,
+                padding: '20px',
+              }}
+            >
+              <IconDetails>
+                <Icon>
+                  <img src={PendingIcon} width={40} alt='icon' />
+                </Icon>
+                <p>Pending Transaction</p>
+                <a
+                  href={`https://sepolia.etherscan.io/tx/${pendingTransaction.hash}`}
+                  target='_blank'
+                >
+                  {`${pendingTransaction.hash.substring(
+                    0,
+                    13
+                  )}...${pendingTransaction.hash.slice(
+                    pendingTransaction.hash.length - 13
+                  )}`}
+                </a>
+              </IconDetails>
+              <div style={{ marginTop: '50px' }}>
+                <TopicInfo>
+                  <p>Hash</p>
+                  <a
+                    href={`https://sepolia.etherscan.io/tx/${pendingTransaction.hash}`}
+                    target='_blank'
+                  >
+                    {`${pendingTransaction.hash.substring(
+                      0,
+                      13
+                    )}...${pendingTransaction.hash.slice(
+                      pendingTransaction.hash.length - 13
+                    )}`}
+                  </a>
+                </TopicInfo>
+              </div>
+              <div style={{ marginTop: '33px' }}>
+                <TopicInfo>
+                  <p>Date</p>
+                  <p>{moment().format('ll')}</p>
+                </TopicInfo>
+                <TopicInfo>
+                  <p>From</p>
+                  <p>{`${pendingTransaction.from.substring(
+                    0,
+                    8
+                  )}...${pendingTransaction.from.slice(
+                    pendingTransaction.from.length - 8
+                  )}`}</p>
+                </TopicInfo>
+                <TopicInfo>
+                  <p>To</p>
+                  <p>{`${pendingTransaction.to.substring(
+                    0,
+                    8
+                  )}...${pendingTransaction.to.slice(
+                    pendingTransaction.to.length - 8
+                  )}`}</p>
+                </TopicInfo>
+              </div>
+              <div style={{ marginTop: '40px' }}>
+                <TopicInfo>
+                  <p>Amount</p>
+                  <p>{`${pendingTransaction.value.toString()} ${
+                    pendingTransaction.asset
+                  }`}</p>
+                </TopicInfo>
+                <TopicInfo>
+                  <p>Fee</p>
+                  <p>{`${parseFloat(pendingTransaction.fee)} ETH`}</p>
+                </TopicInfo>
+              </div>
+              <div style={{ marginTop: '70px' }}>
+                <TopicInfo>
+                  <p>Total Cost</p>
+                  <p>{`${totalCost(
+                    '',
+                    pendingTransaction.value.toString(),
+                    pendingTransaction.fee
+                  )} ETH`}</p>
+                </TopicInfo>
+              </div>
+            </div>
+            <ButtonModal>
+              <div>
+                <button onClick={() => onClose()}>Done</button>
+              </div>
+            </ButtonModal>
+          </ModalContent>
+        </Modal>
       </Container>
     </>
   );
