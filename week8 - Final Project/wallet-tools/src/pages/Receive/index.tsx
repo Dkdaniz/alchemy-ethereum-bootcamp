@@ -33,6 +33,12 @@ function Receive() {
     }
   }, [account]);
 
+  useEffect(() => {
+    if (!account) {
+      requestAccounts();
+    }
+  }, []);
+
   return (
     <>
       {contextHolder}

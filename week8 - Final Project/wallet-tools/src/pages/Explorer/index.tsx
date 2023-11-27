@@ -37,7 +37,7 @@ interface TypeTokens {
 }
 
 function Explorer() {
-  const { account } = useMetamaskStore();
+  const { account, requestAccounts } = useMetamaskStore();
 
   const navigate = useNavigate();
 
@@ -221,6 +221,12 @@ function Explorer() {
   useEffect(() => {
     if (userAddress !== '') getTokens(userAddress, tokenImg);
   }, [userAddress]);
+
+  useEffect(() => {
+    if (account === '') {
+      requestAccounts();
+    }
+  }, []);
 
   return (
     <>

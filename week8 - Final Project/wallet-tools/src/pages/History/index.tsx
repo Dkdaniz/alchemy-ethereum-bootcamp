@@ -118,7 +118,7 @@ export default function History() {
   );
 
   const navigate = useNavigate();
-  const { account } = useMetamaskStore();
+  const { account, requestAccounts } = useMetamaskStore();
 
   const [selectedOption, setSelectedOption] = useState({
     value: 'all',
@@ -457,6 +457,12 @@ export default function History() {
       updateHistoryTransactions();
     }
   }, [account]);
+
+  useEffect(() => {
+    if (account === '') {
+      requestAccounts();
+    }
+  }, []);
 
   const TransactionsByFilter = (props: TransactionsByFilterProps) => {
     return (

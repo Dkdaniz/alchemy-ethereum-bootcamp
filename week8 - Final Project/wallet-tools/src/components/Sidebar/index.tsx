@@ -11,14 +11,7 @@ import {
 
 import { LuGlobe2, LuTicket, LuBookmarkMinus } from 'react-icons/lu';
 
-import {
-  Container,
-  Button,
-  Section,
-  List,
-  ItemList,
-  MetamaskButton,
-} from './style';
+import { Container, Button, Section, List, ItemList } from './style';
 
 const enum Option {
   Home,
@@ -140,7 +133,7 @@ function Sidebar() {
     const routeName = location.pathname;
 
     switch (routeName) {
-      case '/':
+      case '/home':
         setOption(Option.Home);
         break;
       case '/receive':
@@ -178,7 +171,7 @@ function Sidebar() {
             <List>
               <ItemList>
                 <Button
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/home')}
                   color={option === Option.Home ? '#0038FF' : '#323336'}
                 >
                   <FiHome size={24} />

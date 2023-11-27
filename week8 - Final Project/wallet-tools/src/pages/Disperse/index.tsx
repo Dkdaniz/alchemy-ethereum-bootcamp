@@ -179,8 +179,13 @@ export default function Disperse() {
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { account, callTokenSymbol, disperseSendEther, disperseSendToken } =
-    useMetamaskStore();
+  const {
+    account,
+    requestAccounts,
+    callTokenSymbol,
+    disperseSendEther,
+    disperseSendToken,
+  } = useMetamaskStore();
 
   const [savedWallets, setSavedWallets] = useState([
     { value: 'custom', label: 'Custom Wallet' },
@@ -535,6 +540,12 @@ export default function Disperse() {
       wsTransactionsEvent();
     }
   }, [account]);
+
+  useEffect(() => {
+    if (!account) {
+      requestAccounts();
+    }
+  }, []);
 
   const ListTransactionsDisperse = (props: ListTransactionsDisperseTypes) => {
     return (

@@ -28,7 +28,7 @@ interface TransactionType {
 }
 
 const settings = {
-    apiKey: '2lPXXKd4FSLDU6liwHV-iLcja6VD96cB', // Replace with your Alchemy API Key.
+    apiKey: import.meta.env.VITE_ALCHEMY_API_KEY, // Replace with your Alchemy API Key.
     network: Network.ETH_SEPOLIA, // Replace with your network.
 };
 

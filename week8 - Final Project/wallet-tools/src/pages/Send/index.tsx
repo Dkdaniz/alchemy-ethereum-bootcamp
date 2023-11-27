@@ -143,7 +143,8 @@ function Send() {
 
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { account, sendEther, sendToken, callTokenSymbol } = useMetamaskStore();
+  const { account, sendEther, sendToken, callTokenSymbol, requestAccounts } =
+    useMetamaskStore();
 
   const walletAssets = [
     { value: 'ethereum', label: 'Ethereum' },
@@ -360,6 +361,12 @@ function Send() {
       wsTransactionsEvent();
     }
   }, [account]);
+
+  useEffect(() => {
+    if (!account) {
+      requestAccounts();
+    }
+  }, []);
 
   return (
     <>

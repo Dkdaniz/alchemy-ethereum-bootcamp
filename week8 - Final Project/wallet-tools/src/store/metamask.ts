@@ -34,8 +34,7 @@ interface MetamaskState {
     disperseSendToken: (from: string, tokenContractAddress: string, recipients: string[], values: string[], gasPrice: string) => Promise<TokenTransactionResponse>
 }
 
-const DISPERSE_CONTRACT = '0xD152f549545093347A162Dce210e7293f1452150';
-
+const DISPERSE_CONTRACT = import.meta.env.VITE_DISPERSE_CONTRACT;
 
 const isSepoliaNetwork = (chainId: string) => {
     return chainId === '0xaa36a7'
@@ -49,7 +48,6 @@ const handleChainChanged = async (chainId: string) => {
         });
     }
 }
-
 
 export const useMetamaskStore = create<MetamaskState>((set, get) => ({
     account: '',

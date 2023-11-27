@@ -141,7 +141,7 @@ function Home() {
 
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { account } = useMetamaskStore();
+  const { account, requestAccounts } = useMetamaskStore();
 
   const [selectedOption, setSelectedOption] = useState({
     value: 'all',
@@ -501,6 +501,10 @@ function Home() {
     }
   };
 
+  const connectMetamask = async () => {
+    await requestAccounts();
+  };
+
   const TransactionsByFilter = (props: TransactionsByFilterProps) => {
     return (
       <Transaction
@@ -649,6 +653,10 @@ function Home() {
         },
       });
     });
+
+    if (!account) {
+      connectMetamask;
+    }
   }, []);
 
   useEffect(() => {
