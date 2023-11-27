@@ -45,6 +45,14 @@ const getPriceCoins = async (symbols: string[]): Promise<prices[]> => {
     return [...new Map(prices.map((m) => [m.coin, m])).values()];
 }
 
+const getPriceChart =  async (symbol: string): Promise<any> => {
+    const coinListResponse = await axios.get(`https://api.coingecko.com/api/v3/coins/${symbol}/market_chart?vs_currency=usd&days=30`);
+    const {prices} = coinListResponse.data;
+
+    return prices;
+}
+
 export {
-    getPriceCoins
+    getPriceCoins,
+    getPriceChart
 }
