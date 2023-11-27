@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
+import Login from './pages/Login';
 import Home from './pages/Home';
 import Receive from './pages/Receive';
 import Send from './pages/Send';
@@ -16,7 +17,8 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Login />} />
+          <Route path='/home' element={<Home />} />
           <Route path='/receive' element={<Receive />} />
           <Route path='/send' element={<Send />} />
           <Route path='/save' element={<Save />} />
