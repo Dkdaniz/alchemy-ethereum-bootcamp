@@ -16,12 +16,12 @@ export default function Search(props: Search) {
           onChange={(e) => props.onchange(e)}
           placeholder='Search'
           borderRadius={24}
-          marginTop={50}
+          marginTop={10}
           background={'#FFFFFF'}
           borderColor={'transparent'}
           value={props.value}
         />
-        <InputRightElement children={<SearchIcon />} marginTop={50} />
+        <InputRightElement children={<SearchIcon />} marginTop={10} />
       </InputGroup>
     </>
   );

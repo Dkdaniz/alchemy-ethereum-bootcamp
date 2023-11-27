@@ -173,7 +173,7 @@ export const ButtonGroup = styled.div`
 
 export const ButtonSendGroup = styled.div`
   display: flex;
-  margin-top: 50px;
+  margin-top: 30px;
   margin-left: 20px;
 
   div {
@@ -290,7 +290,7 @@ export const Search = styled.div`
   border: 2px solid #ececec;
   border-radius: 10px;
 
-  margin-top: 50px;
+  margin-top: 30px;
 
   padding: 12px;
 

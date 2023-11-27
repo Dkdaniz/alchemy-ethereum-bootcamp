@@ -226,7 +226,6 @@ function Explorer() {
         <Sidebar />
         <Section>
           <Container maxW='8xl' centerContent>
-            <Header value={'Token Indexer'} />
             <Search
               value={searchAddress}
               onkeydown={handleOnKeyDown}
