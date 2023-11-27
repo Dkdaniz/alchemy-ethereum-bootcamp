@@ -36,6 +36,7 @@ import {
   Icon,
   TopicInfo,
   ButtonModal,
+  ListTransactionsComplete,
 } from './style';
 
 import ReceiveBlue from '../../assets/receive_blue.svg';
@@ -137,25 +138,6 @@ function Home() {
       message: '',
     });
 
-  const [pendingTransaction, setPendingTransaction] = useState<TransactionType>(
-    {
-      id: '',
-      hash: '',
-      from: '',
-      to: '',
-      value: 0.0,
-      tokenValue: 0.0,
-      fee: '',
-      totalCostUsd: '',
-      asset: '',
-      confirmations: '',
-      timestamp: 0.0,
-      type: '',
-      status: '',
-      message: '',
-    }
-  );
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { account, requestAccounts } = useMetamaskStore();
 
@@ -178,6 +160,9 @@ function Home() {
       toolbar: {
         show: false,
       },
+      zoom: {
+        enabled: false,
+      },
     },
     dataLabels: {
       enabled: false,
@@ -195,6 +180,36 @@ function Home() {
     tooltip: {
       x: {
         format: 'dd/MM/yy HH:mm',
+      },
+    },
+    grid: {
+      show: true,
+      borderColor: '#90A4AE',
+      strokeDashArray: 0,
+      position: 'back',
+      xaxis: {
+        lines: {
+          show: false,
+        },
+      },
+      yaxis: {
+        lines: {
+          show: false,
+        },
+      },
+      row: {
+        colors: undefined,
+        opacity: 0.5,
+      },
+      column: {
+        colors: undefined,
+        opacity: 0.5,
+      },
+      padding: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
       },
     },
   });
@@ -484,6 +499,11 @@ function Home() {
     }
   };
 
+  const connectMetamask = async () => {
+    await requestAccounts();
+    updateHistoryTransactions();
+  };
+
   const TransactionsByFilter = (props: TransactionsByFilterProps) => {
     return (
       <Transaction
@@ -575,7 +595,10 @@ function Home() {
           height: 350,
           type: 'area',
           toolbar: {
-            show: true,
+            show: false,
+          },
+          zoom: {
+            enabled: false,
           },
         },
         dataLabels: {
@@ -595,6 +618,36 @@ function Home() {
           x: {
             show: true,
             format: 'MM/yy HH:mm',
+          },
+        },
+        grid: {
+          show: true,
+          borderColor: '#90A4AE',
+          strokeDashArray: 0,
+          position: 'back',
+          xaxis: {
+            lines: {
+              show: false,
+            },
+          },
+          yaxis: {
+            lines: {
+              show: false,
+            },
+          },
+          row: {
+            colors: undefined,
+            opacity: 0.5,
+          },
+          column: {
+            colors: undefined,
+            opacity: 0.5,
+          },
+          padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
           },
         },
       });
@@ -629,12 +682,14 @@ function Home() {
   }, [selectedOption]);
 
   useEffect(() => {
-    if (account === '') {
-      requestAccounts();
-    } else {
-      updateHistoryTransactions();
-    }
+    connectMetamask();
   }, [account]);
+
+  useEffect(() => {
+    if (transactionSelected.hash !== '-') {
+      onOpen();
+    }
+  }, [transactionSelected]);
 
   return (
     <>
@@ -643,7 +698,7 @@ function Home() {
         <Section>
           <div
             style={{
-              height: 450,
+              height: 500,
               marginTop: 30,
               background: '#fff',
               borderRadius: '12px',
@@ -651,11 +706,13 @@ function Home() {
           >
             <div
               style={{
-                marginTop: 30,
                 background: '#fff',
                 borderRadius: '12px',
               }}
             >
+              <Title>
+                <h1>Activity</h1>
+              </Title>
               <Chart
                 options={optionsChart}
                 series={seriesChart}
@@ -670,7 +727,7 @@ function Home() {
               display: 'flex',
               flexDirection: 'column',
               height: 'calc(100% - 450px)',
-              marginTop: 60,
+              marginTop: 50,
               background: '#fff',
               borderRadius: '12px',
             }}
@@ -705,20 +762,22 @@ function Home() {
                 </div>
               </InputBlock>
             </div>
-            <div>
-              {selectedOption.value !== 'all'
-                ? transactionFilter.map((transaction: TransactionType) => (
-                    <TransactionsByFilter
-                      key={transaction.id}
-                      transactionInfo={transaction}
-                    />
-                  ))
-                : transactions.map((transaction: TransactionType) => (
-                    <TransactionsByFilter
-                      key={transaction.id}
-                      transactionInfo={transaction}
-                    />
-                  ))}
+            <div style={{ margin: '0 20px 0 20px' }}>
+              <ListTransactionsComplete>
+                {selectedOption.value !== 'all'
+                  ? transactionFilter.map((transaction: TransactionType) => (
+                      <TransactionsByFilter
+                        key={transaction.id}
+                        transactionInfo={transaction}
+                      />
+                    ))
+                  : transactions.map((transaction: TransactionType) => (
+                      <TransactionsByFilter
+                        key={transaction.id}
+                        transactionInfo={transaction}
+                      />
+                    ))}
+              </ListTransactionsComplete>
             </div>
           </div>
         </Section>
@@ -754,16 +813,20 @@ function Home() {
                 <Icon>
                   <img src={PendingIcon} width={40} alt='icon' />
                 </Icon>
-                <p>Pending Transaction</p>
+                <p>
+                  {transactionSelected.status === 'error'
+                    ? 'Transaction with error'
+                    : 'Transaction completed'}
+                </p>
                 <a
-                  href={`https://sepolia.etherscan.io/tx/${pendingTransaction.hash}`}
+                  href={`https://sepolia.etherscan.io/tx/${transactionSelected.hash}`}
                   target='_blank'
                 >
-                  {`${pendingTransaction.hash.substring(
+                  {`${transactionSelected.hash.substring(
                     0,
                     13
-                  )}...${pendingTransaction.hash.slice(
-                    pendingTransaction.hash.length - 13
+                  )}...${transactionSelected.hash.slice(
+                    transactionSelected.hash.length - 13
                   )}`}
                 </a>
               </IconDetails>
@@ -771,14 +834,14 @@ function Home() {
                 <TopicInfo>
                   <p>Hash</p>
                   <a
-                    href={`https://sepolia.etherscan.io/tx/${pendingTransaction.hash}`}
+                    href={`https://sepolia.etherscan.io/tx/${transactionSelected.hash}`}
                     target='_blank'
                   >
-                    {`${pendingTransaction.hash.substring(
+                    {`${transactionSelected.hash.substring(
                       0,
                       13
-                    )}...${pendingTransaction.hash.slice(
-                      pendingTransaction.hash.length - 13
+                    )}...${transactionSelected.hash.slice(
+                      transactionSelected.hash.length - 13
                     )}`}
                   </a>
                 </TopicInfo>
@@ -790,33 +853,33 @@ function Home() {
                 </TopicInfo>
                 <TopicInfo>
                   <p>From</p>
-                  <p>{`${pendingTransaction.from.substring(
+                  <p>{`${transactionSelected.from.substring(
                     0,
                     8
-                  )}...${pendingTransaction.from.slice(
-                    pendingTransaction.from.length - 8
+                  )}...${transactionSelected.from.slice(
+                    transactionSelected.from.length - 8
                   )}`}</p>
                 </TopicInfo>
                 <TopicInfo>
                   <p>To</p>
-                  <p>{`${pendingTransaction.to.substring(
+                  <p>{`${transactionSelected.to.substring(
                     0,
                     8
-                  )}...${pendingTransaction.to.slice(
-                    pendingTransaction.to.length - 8
+                  )}...${transactionSelected.to.slice(
+                    transactionSelected.to.length - 8
                   )}`}</p>
                 </TopicInfo>
               </div>
               <div style={{ marginTop: '40px' }}>
                 <TopicInfo>
                   <p>Amount</p>
-                  <p>{`${pendingTransaction.value.toString()} ${
-                    pendingTransaction.asset
+                  <p>{`${transactionSelected.value.toString()} ${
+                    transactionSelected.asset
                   }`}</p>
                 </TopicInfo>
                 <TopicInfo>
                   <p>Fee</p>
-                  <p>{`${parseFloat(pendingTransaction.fee)} ETH`}</p>
+                  <p>{`${parseFloat(transactionSelected.fee)} ETH`}</p>
                 </TopicInfo>
               </div>
               <div style={{ marginTop: '70px' }}>
@@ -824,8 +887,8 @@ function Home() {
                   <p>Total Cost</p>
                   <p>{`${totalCost(
                     '',
-                    pendingTransaction.value.toString(),
-                    pendingTransaction.fee
+                    transactionSelected.value.toString(),
+                    transactionSelected.fee
                   )} ETH`}</p>
                 </TopicInfo>
               </div>

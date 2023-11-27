@@ -157,3 +157,17 @@ export const ButtonModal = styled.div`
     font-size: 24px;
   }
 `;
+
+export const ListTransactionsComplete = styled.ul`
+  margin-top: 10px;
+  overflow-y: auto;
+  height: 30vh;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
+
+  &::-webkit-scrollbar-track {
+    width: 0px;
+  }
+`;
