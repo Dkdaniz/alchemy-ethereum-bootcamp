@@ -7,7 +7,8 @@ import {
     SortingOrder,
     AssetTransfersCategory,
     AssetTransfersWithMetadataParams,
-    TransactionReceipt } from 'alchemy-sdk';
+    TransactionReceipt,
+ } from 'alchemy-sdk';
 import { ethers } from 'ethers';
 
 interface TransactionType {
@@ -28,7 +29,7 @@ interface TransactionType {
 
 const settings = {
     apiKey: '2lPXXKd4FSLDU6liwHV-iLcja6VD96cB', // Replace with your Alchemy API Key.
-    network: Network.ETH_SEPOLIA, // Replace with your network.
+    network: Network.ETH_MAINNET, // Replace with your network.
 };
 
 const alchemy = new Alchemy(settings);
@@ -121,4 +122,6 @@ const getBlockActual = async ():Promise<number> => {
     const blockNumber = await alchemy.core.getBlockNumber()
     return blockNumber
 }
+
+
 export { alchemy, getTransactions, getInfoTransactions, getBlockActual }

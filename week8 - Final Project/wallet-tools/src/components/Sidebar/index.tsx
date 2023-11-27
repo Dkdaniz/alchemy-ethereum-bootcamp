@@ -228,7 +228,7 @@ function Sidebar() {
             <List>
               <ItemList>
                 <Button
-                  onClick={() => setOption(Option.Explorer)}
+                  onClick={() => navigate('/explorer')}
                   color={option === Option.Explorer ? '#0038FF' : '#323336'}
                 >
                   <LuGlobe2 size={24} />

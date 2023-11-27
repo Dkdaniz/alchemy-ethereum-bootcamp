@@ -6,6 +6,7 @@ import Send from './pages/Send';
 import Save from './pages/Save';
 import History from './pages/History';
 import Disperse from './pages/Disperse';
+import Explorer from './pages/Explorer';
 
 import { ToastContainer } from 'react-toastify';
 
@@ -20,6 +21,7 @@ function App() {
           <Route path='/save' element={<Save />} />
           <Route path='/history' element={<History />} />
           <Route path='/disperse' element={<Disperse />} />
+          <Route path='/explorer' element={<Explorer />} />
         </Routes>
         <ToastContainer />
       </BrowserRouter>
