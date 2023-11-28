@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useMetamaskStore } from '../../store/metamask';
 
 import {
   FiClock,
@@ -23,108 +22,8 @@ const enum Option {
   Disperse,
 }
 
-function MetamaskIcon() {
-  return (
-    <>
-      <div>
-        <svg
-          width='24'
-          height='25'
-          viewBox='0 0 24 25'
-          fill='none'
-          xmlns='http://www.w3.org/2000/svg'
-        >
-          <g clipPath='url(#clip0_520_1094)'>
-            <path
-              d='M4.11508 4.57727L9.51008 7.06727H14.4901L19.8851 4.57727L21.1301 7.06727L19.8851 12.8773L21.5451 17.0273L20.3001 20.9698L16.5651 19.9323L14.2826 22.0073H9.71758L7.43508 19.9323L3.70008 20.9698L2.45508 17.0273L4.11508 12.8773L2.87008 7.06727L4.11508 4.57727Z'
-              stroke='white'
-              strokeWidth='0.83'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-            <path
-              d='M8.26514 14.1218L9.92514 14.5372'
-              stroke='white'
-              strokeWidth='0.83'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-            <path
-              d='M4.11499 12.8773L8.47249 12.0473L9.14687 11.1654L9.50999 7.06726'
-              stroke='white'
-              strokeWidth='0.83'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-            <path
-              d='M9.14687 11.1654L4.11499 4.57727'
-              stroke='white'
-              strokeWidth='0.83'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-            <path
-              d='M19.885 12.8773L15.5275 12.0473L14.8531 11.1654L14.49 7.06726'
-              stroke='white'
-              strokeWidth='0.83'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-            <path
-              d='M14.8533 11.1654L19.8851 4.57727'
-              stroke='white'
-              strokeWidth='0.83'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-            <path
-              d='M10.178 19.6411L10.6247 17.4423H13.3753L13.8221 19.6411H10.178Z'
-              stroke='white'
-              strokeWidth='0.83'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-            <path
-              d='M15.735 14.1218L14.075 14.5372'
-              stroke='white'
-              strokeWidth='0.83'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-            <path
-              d='M2.45508 17.0273L8.30954 16.1973L10.6513 17.4423'
-              stroke='white'
-              strokeWidth='0.83'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-            <path
-              d='M21.5451 17.0273L15.6906 16.1973L13.3489 17.4423'
-              stroke='white'
-              strokeWidth='0.83'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-            />
-          </g>
-          <defs>
-            <clipPath id='clip0_520_1094'>
-              <rect
-                width='24'
-                height='24'
-                fill='white'
-                transform='translate(0 0.877319)'
-              />
-            </clipPath>
-          </defs>
-        </svg>
-      </div>
-    </>
-  );
-}
-
 function Sidebar() {
   const navigate = useNavigate();
-  const { requestAccounts } = useMetamaskStore();
   const location = useLocation();
 
   const [option, setOption] = useState<Option>(Option.Receive);

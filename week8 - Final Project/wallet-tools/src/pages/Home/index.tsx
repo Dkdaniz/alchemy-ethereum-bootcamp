@@ -59,8 +59,8 @@ interface TransactionType {
   hash: string;
   from: string;
   to: string;
-  value: number;
-  tokenValue: number;
+  value: string;
+  tokenValue: string;
   fee: string;
   totalCostUsd: string;
   asset: string;
@@ -103,6 +103,11 @@ interface TransactionsByFilterProps {
   transactionInfo: TransactionType;
 }
 
+interface Option {
+  value: string;
+  label: string;
+}
+
 const options = [
   { value: 'all', label: 'All Transactions' },
   { value: 'receive', label: 'Receive' },
@@ -127,8 +132,8 @@ function Home() {
       hash: '-',
       from: '-',
       to: '-',
-      value: 0.0,
-      tokenValue: 0.0,
+      value: '0.0',
+      tokenValue: '0.0',
       fee: '0.00',
       totalCostUsd: '0.00',
       asset: '-',
@@ -215,6 +220,17 @@ function Home() {
       },
     },
   });
+
+  const handleOnchangeSelectedOption = (option: Option | null) => {
+    setSelectedOption(
+      option !== null
+        ? option
+        : {
+            value: 'all',
+            label: 'All Transactions',
+          }
+    );
+  };
 
   const totalCost = (
     contractAddress: string,
@@ -438,7 +454,12 @@ function Home() {
               tx.message = 'Check the block explorer for more details.';
             }
 
-            tx.fee = calcFee(txInfo?.effectiveGasPrice, txInfo?.gasUsed);
+            tx.fee = calcFee(
+              txInfo?.effectiveGasPrice
+                ? txInfo?.effectiveGasPrice.toString()
+                : '0x0',
+              txInfo?.gasUsed ? txInfo?.gasUsed.toString() : '0x0'
+            );
 
             const indexPriceEther = prices.findIndex(
               (price) => price.coin === 'ETH'
@@ -459,14 +480,14 @@ function Home() {
             const priceEther = prices[indexPriceEther].price;
 
             tx.totalCostUsd = totalCostTx(
-              parseFloat(tx.value),
+              parseFloat(tx.value.toString()),
               parseFloat(tx.fee),
               priceEther,
               tokenPrice
             );
 
             const blockNumberTransaction: number = parseInt(
-              txInfo?.blockNumber,
+              txInfo?.blockNumber ? txInfo?.blockNumber.toString() : '0',
               10
             );
             const confirmations = actualBlock - blockNumberTransaction;
@@ -756,9 +777,9 @@ function Home() {
                   <Select
                     options={options}
                     defaultValue={selectedOption}
-                    onChange={setSelectedOption}
+                    onChange={handleOnchangeSelectedOption}
                     styles={{
-                      control: (baseStyles, state) => ({
+                      control: (baseStyles) => ({
                         ...baseStyles,
                         height: '50px',
                         border: '2px solid #eae9ea',

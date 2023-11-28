@@ -1,4 +1,4 @@
-import { useToast, Container } from '@chakra-ui/react';
+import { Container } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
@@ -168,7 +168,7 @@ function Explorer() {
   };
 
   const orderListTypeTokens = (typeTokensRaw: any): TypeTokens[] => {
-    const orderList = typeTokensRaw.sort((a, b) => {
+    const orderList = typeTokensRaw.sort((a: any, b: any) => {
       if (a.name.length < b.name.length) {
         return -1;
       } else if (a.name.length > b.name.length) {

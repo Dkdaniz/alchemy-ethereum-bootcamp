@@ -78,6 +78,11 @@ interface TransactionEventMinted {
   transaction: TransactionEventPending;
 }
 
+interface Option {
+  value: string;
+  label: string;
+}
+
 import {
   Container,
   Section,
@@ -131,12 +136,12 @@ function Send() {
     { value: 'custom', label: 'Custom Wallet' },
   ]);
 
-  const [selectedAssetOption, setSelectedAssetOption] = useState({
+  const [selectedAssetOption, setSelectedAssetOption] = useState<Option>({
     value: 'ethereum',
     label: 'Ethereum',
   });
 
-  const [selectedWalletOption, setSelectedWalletOption] = useState({
+  const [selectedWalletOption, setSelectedWalletOption] = useState<Option>({
     value: 'custom',
     label: 'Custom Wallet',
   });
@@ -150,6 +155,28 @@ function Send() {
     { value: 'ethereum', label: 'Ethereum' },
     { value: 'custom', label: 'Custom Token' },
   ];
+
+  const handleOnchangeSelectedWallet = (option: Option | null) => {
+    setSelectedWalletOption(
+      option !== null
+        ? option
+        : {
+            value: 'custom',
+            label: 'Custom Wallet',
+          }
+    );
+  };
+
+  const handleOnchangeSelectionAsset = (option: Option | null) => {
+    setSelectedAssetOption(
+      option !== null
+        ? option
+        : {
+            value: 'ethereum',
+            label: 'Ethereum',
+          }
+    );
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
@@ -383,9 +410,9 @@ function Send() {
                 <Select
                   options={walletAssets}
                   defaultValue={selectedAssetOption}
-                  onChange={setSelectedAssetOption}
+                  onChange={handleOnchangeSelectionAsset}
                   styles={{
-                    control: (baseStyles, state) => ({
+                    control: (baseStyles) => ({
                       ...baseStyles,
                       height: '70px',
                       border: '3px solid #eae9ea',
@@ -426,9 +453,9 @@ function Send() {
                 <Select
                   options={savedWallets}
                   defaultValue={selectedWalletOption}
-                  onChange={setSelectedWalletOption}
+                  onChange={handleOnchangeSelectedWallet}
                   styles={{
-                    control: (baseStyles, state) => ({
+                    control: (baseStyles) => ({
                       ...baseStyles,
                       height: '70px',
                       border: '3px solid #eae9ea',

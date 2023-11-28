@@ -99,6 +99,11 @@ interface TransactionsByFilterProps {
   transactionInfo: TransactionType;
 }
 
+interface Option {
+  value: string;
+  label: string;
+}
+
 const options = [
   { value: 'all', label: 'All Transactions' },
   { value: 'receive', label: 'Receive' },
@@ -120,7 +125,7 @@ export default function History() {
   const navigate = useNavigate();
   const { account, requestAccounts } = useMetamaskStore();
 
-  const [selectedOption, setSelectedOption] = useState({
+  const [selectedOption, setSelectedOption] = useState<Option>({
     value: 'all',
     label: 'All Transactions',
   });
@@ -141,6 +146,17 @@ export default function History() {
       status: '-',
       message: '',
     });
+
+  const handleOnchangeSelectedOption = (option: Option | null) => {
+    setSelectedOption(
+      option !== null
+        ? option
+        : {
+            value: 'all',
+            label: 'All Transactions',
+          }
+    );
+  };
 
   const wsTransactionsEvent = () => {
     alchemy.ws.on(
@@ -272,7 +288,7 @@ export default function History() {
     }
   };
 
-  const setIconStatusDetails = (type: string, status: string): string => {
+  const setIconStatusDetails = (status: string): string => {
     if (status.toLowerCase() === 'error') {
       return TxError;
     } else {
@@ -378,7 +394,12 @@ export default function History() {
               tx.message = 'Check the block explorer for more details.';
             }
 
-            tx.fee = calcFee(txInfo?.effectiveGasPrice, txInfo?.gasUsed);
+            tx.fee = calcFee(
+              txInfo?.effectiveGasPrice
+                ? txInfo?.effectiveGasPrice.toString()
+                : '0x0',
+              txInfo?.gasUsed ? txInfo?.gasUsed.toString() : '0x0'
+            );
 
             const indexPriceEther = prices.findIndex(
               (price) => price.coin === 'ETH'
@@ -406,7 +427,7 @@ export default function History() {
             );
 
             const blockNumberTransaction: number = parseInt(
-              txInfo?.blockNumber,
+              txInfo?.blockNumber ? txInfo?.blockNumber.toString() : '0',
               10
             );
             const confirmations = actualBlock - blockNumberTransaction;
@@ -560,9 +581,9 @@ export default function History() {
                   <Select
                     options={options}
                     defaultValue={selectedOption}
-                    onChange={setSelectedOption}
+                    onChange={handleOnchangeSelectedOption}
                     styles={{
-                      control: (baseStyles, state) => ({
+                      control: (baseStyles) => ({
                         ...baseStyles,
                         height: '50px',
                         border: '2px solid #eae9ea',
@@ -671,10 +692,7 @@ export default function History() {
                 <IconDetails>
                   <Icon>
                     <img
-                      src={setIconStatusDetails(
-                        transactionSelected.type,
-                        transactionSelected.status
-                      )}
+                      src={setIconStatusDetails(transactionSelected.status)}
                       width={40}
                       alt='icon'
                     />

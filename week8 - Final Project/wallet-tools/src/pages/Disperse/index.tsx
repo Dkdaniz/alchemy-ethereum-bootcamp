@@ -70,6 +70,11 @@ const options = [
   { value: 'custom', label: 'Custom Token' },
 ];
 
+interface Option {
+  value: string;
+  label: string;
+}
+
 interface Wallet {
   name: string;
   address: string;
@@ -191,12 +196,12 @@ export default function Disperse() {
     { value: 'custom', label: 'Custom Wallet' },
   ]);
 
-  const [selectedAssetOption, setSelectedAssetOption] = useState({
+  const [selectedAssetOption, setSelectedAssetOption] = useState<Option>({
     value: 'ethereum',
     label: 'Ethereum',
   });
 
-  const [selectedWalletOption, setSelectedWalletOption] = useState({
+  const [selectedWalletOption, setSelectedWalletOption] = useState<Option>({
     value: 'custom',
     label: 'Custom Wallet',
   });
@@ -454,12 +459,27 @@ export default function Disperse() {
     setIsUpdate(false);
   };
 
-  const handleOnchangeSelectionAsset = (option: {
-    value: string;
-    label: string;
-  }) => {
+  const handleOnchangeSelectedWallet = (option: Option | null) => {
+    setSelectedWalletOption(
+      option !== null
+        ? option
+        : {
+            value: 'custom',
+            label: 'Custom Wallet',
+          }
+    );
+  };
+
+  const handleOnchangeSelectionAsset = (option: Option | null) => {
     if (transactionsDisperse.length === 0) {
-      setSelectedAssetOption(option);
+      setSelectedAssetOption(
+        option !== null
+          ? option
+          : {
+              value: 'ethereum',
+              label: 'Ethereum',
+            }
+      );
     } else {
       setTypeNotification('Alert');
     }
@@ -619,7 +639,7 @@ export default function Disperse() {
                     defaultValue={selectedAssetOption}
                     onChange={handleOnchangeSelectionAsset}
                     styles={{
-                      control: (baseStyles, state) => ({
+                      control: (baseStyles) => ({
                         ...baseStyles,
 
                         height: '70px',
@@ -661,9 +681,9 @@ export default function Disperse() {
                   <Select
                     options={savedWallets}
                     defaultValue={selectedWalletOption}
-                    onChange={setSelectedWalletOption}
+                    onChange={handleOnchangeSelectedWallet}
                     styles={{
-                      control: (baseStyles, state) => ({
+                      control: (baseStyles) => ({
                         ...baseStyles,
                         height: '70px',
                         border: '3px solid #eae9ea',

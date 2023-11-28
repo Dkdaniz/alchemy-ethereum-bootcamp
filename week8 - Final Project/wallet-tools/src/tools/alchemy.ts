@@ -59,7 +59,7 @@ const getTransactions = async (
     const body: AssetTransfersWithMetadataParams = {
         category: [AssetTransfersCategory.EXTERNAL, AssetTransfersCategory.ERC20],
         order: SortingOrder.DESCENDING,
-        maxCount: 1000,
+        maxCount: 100,
         excludeZeroValue: false,
         withMetadata: true,
     };
