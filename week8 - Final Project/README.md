@@ -5,7 +5,9 @@ Is an essential tool for the intelligent management of ethers and tokens. With i
 # Links
 
 [Figma - Prototype](https://www.figma.com/proto/29ZxOVzGeMGBS13C5RTiYd/Wallet-Tools?page-id=0%3A1&type=design&node-id=205-194&viewport=1540%2C1214%2C0.47&t=rt3UQ6GvFqFVks9j-1&scaling=scale-down&starting-point-node-id=205%3A194)
+
 [Figma - Design](https://www.figma.com/file/29ZxOVzGeMGBS13C5RTiYd/Wallet-Tools?type=design&node-id=0-1&mode=design)
+
 [Live project](https://wallet-tools-cyk2-d46opqoct-dkdanizs-projects.vercel.app)
 
 ## Preview
