@@ -8,7 +8,7 @@ Is an essential tool for the intelligent management of ethers and tokens. With i
 
 [Figma - Design](https://www.figma.com/file/29ZxOVzGeMGBS13C5RTiYd/Wallet-Tools?type=design&node-id=0-1&mode=design)
 
-[Live project](https://wallet-tools-cyk2-d46opqoct-dkdanizs-projects.vercel.app)
+[Live project](https://wallet-tools.vercel.app)
 
 ## Preview
 
