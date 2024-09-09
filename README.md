@@ -1,6 +1,6 @@
 # Alchemy University Ethereum Bootcamp Solutions  
 
-<img src="./img/alchemy-banner-3.jpg">
+<img src="./img/certificate-alchemy.png">
 
 This repository contains the code/solution and tests for all the Ethereum Alchemy University Bootcamp challenges. The solutions are structured according to the weeks, topics and challenges according to the bootcamp
 
